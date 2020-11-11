@@ -3,11 +3,14 @@ const app = express();
 const bodyParser = require ("body-parser");
 const mongoose = require('mongoose');
 const userRoutes = require('./api/routes/users');
+const meteoRoutes = require('./api/routes/meteos');
 require ('dotenv/config');
 
 app.use(bodyParser.urlencoded({extendeed:false}));
 app.use(bodyParser.json());
 app.use('/users', userRoutes);
+app.use('/moteos', meteoRoutes);
+app.use(meteoRoutes);
 app.use(userRoutes);
 
 
