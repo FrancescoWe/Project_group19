@@ -9,9 +9,9 @@ require ('dotenv/config');
 app.use(bodyParser.urlencoded({extendeed:false}));
 app.use(bodyParser.json());
 app.use('/users', userRoutes);
-app.use('/moteos', meteoRoutes);
-app.use(meteoRoutes);
-app.use(userRoutes);
+app.use('/meteos', meteoRoutes);
+//app.use(meteoRoutes);
+//app.use(userRoutes);
 
 
 
