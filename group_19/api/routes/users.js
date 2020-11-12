@@ -16,6 +16,10 @@ router.get('/', async(req,res,next) => {
 
 router.post('/',function(req,res){
     User.create(req.body).then(function(user){
+        if(!user.email || typeof user.email!= 'string' || !checkIfEmailInString(user.email)){
+            res.status(400).json({ error: 'The field "email" must be a non-empty string, in email format' });
+            return;
+        }
         res.send(user);
         console.log('ha funzionato(?)');
     });
@@ -33,5 +37,13 @@ router.get('/:userId', async (req,res)=>{
         res.json({message: err});
     }
 });
+
+
+function checkIfEmailInString(text) {
+    // eslint-disable-next-line
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(text);
+}
+
 
 module.exports = router;
