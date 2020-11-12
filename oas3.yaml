@@ -1,0 +1,78 @@
+openapi: 3.0.0
+info: 
+    version: '3.0'
+    title: "Prova API"
+    description: "provo a scrivere la api"
+    license: 
+      name: MIT
+servers: 
+  - url: http://localhost:3000/api/v1
+    description: LocalHost
+paths: 
+  /users: 
+    post: 
+      description: "Creates a new user in the system"
+      summary: Create a new user
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              type: object
+              required: 
+                - password
+                - email
+              properties: 
+                password:
+                  type: string
+                  description: 'Password dello user'
+                email: 
+                  type: string
+                  description: 'Email dello user'
+      responses:
+        '201':
+          description: 'The created user'
+          headers: 
+            Location:
+              schema:
+                type: string
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/User'
+
+  /users/{id}:    
+    get:
+      description: >-
+        Gets information about a specific user, identiied by an ID
+      summary: Get a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 'ID of the requested user'
+      responses: 
+        '200':
+          description: 'The user corresponding to the input ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  #/meteos:
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - password
+      properties:
+        id: 
+          type: string
+          description: 'ID of the user'
+        email:
+          type: string
+          description: 'email of the user'
+        password: 
+          type: string
+          description: 'password dello user'
