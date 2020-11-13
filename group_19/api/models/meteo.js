@@ -14,4 +14,6 @@ const MeteoSchema = mongoose.Schema({
 
 const Meteo = mongoose.model('meteo',MeteoSchema);
 
+
+
 module.exports = Meteo;//mongoose.model('User', userSchema);

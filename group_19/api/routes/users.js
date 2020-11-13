@@ -36,6 +36,7 @@ router.get('/:userId', async (req,res)=>{
     }
 });
 
+
 //elimina uno specifico user, _id perchè mongoDB genera automaticamente un _id
 router.delete('/:userId', async (req,res)=> {
     try{
