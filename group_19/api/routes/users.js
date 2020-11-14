@@ -22,7 +22,7 @@ router.post('/',function(req,res){
             return;
         }
         res.send(user);
-        console.log('ha funzionato(?)');
+        console.log('Aggiunto user');
     });
 });
 
