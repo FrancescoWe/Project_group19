@@ -10,6 +10,10 @@ const meteoUrl = 'http://api.openweathermap.org/data/2.5/weather?q=Trento,it&uni
 const userRoutes = require('./api/routes/users');
 const meteoRoutes = require('./api/routes/meteos');
 
+
+app.use(express.static(__dirname + "/"));
+
+
 //app.use middlewares
 app.use(bodyParser.urlencoded({extendeed:false}));
 app.use(bodyParser.json());

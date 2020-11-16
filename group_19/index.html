@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
+    </script>
+    <title>Sample Page</title>
+
+    <script>
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "http://api.openweathermap.org/data/2.5/weather?q="+search+"&units=metric&appid=70e867078f8f05319c29ecc700e59f23",
+            "method": "GET"
+        }
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+
+            var name= response.name;		//prende la response name dal DB e la salva nella variabile name
+            $("#name").append(name);
+
+            var content = response.wind.speed;	//prende la response wind.speed dal DB e la salva nella variabile content
+                $("#windSpeed").append(content);
+
+            var currentWeather = response.weather[0].main;	//prende la response weather[0] cioè il tempo attuale dal DB e la salva nella variabile currentweather
+                $("#currentWeather").append(currentWeather);
+
+            $("#form").submit( function(res) {			//crea una variabile form che prende il risultato del submit di un bottone e lo salva dentro alla variabile search
+                var search = $('#searchbar').val();
+                //$.get('http://api.openweathermap.org/data/2.5/weather?q="+search+"&units=metric&appid=', { searchTerm: search });
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+
+    <h1>Sample Page</h1>
+
+    <div id="name">City name: </div>
+    <div id="windSpeed">Wind speed: </div>
+    <div id="currentWeather">Current weather conditions: </div>
+
+    <form>
+        <button type="submit">Search</button>
+        <input type="text" id="searchbar" placeholder="Enter your search term...." />
+    </form>
+
+</body>
+
+</html>
