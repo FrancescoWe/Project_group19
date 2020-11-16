@@ -3,6 +3,8 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/user')
 
+const db = mongoose.connection;
+
 //ricerca tutti gli user
 router.get('/', async(req,res,next) => {
     try{
@@ -14,22 +16,39 @@ router.get('/', async(req,res,next) => {
     }
 });
 
+/*router.get('/:email', async(req,res)=>{
+    try{
+        const user = await User.findOne({email: req.params.email});
+        res.json(user);
+    
+    }catch(err){
+        res.json({message: err});
+    }
+})*/
+
 //crea uno user nel db lcoale
-router.post('/',function(req,res){
-    User.create(req.body).then(function(user){
-        if(!user.email || typeof user.email!= 'string' || !checkIfEmailInString(user.email)){
-            res.status(400).json({ error: 'The field "email" must be a non-empty string, in email format' });
-            return;
-        }
-        res.send(user);
-        console.log('Aggiunto user');
-    });
+router.post('/',async function(req,res){
+    console.log(req.body.email);
+    const usertwo = await User.findOne({email: req.body.email});
+    if(usertwo==null){
+        User.create(req.body).then(function(user){
+            if(!user.email || typeof user.email!= 'string' || !checkIfEmailInString(user.email)){
+                res.status(400).json({ error: 'The field "email" must be a non-empty string, in email format' });
+                return;
+                };
+            res.send(user);
+            console.log('Aggiunto user');
+        });
+    }else{
+        res.status(400).json({ error: 'This email is already taken' });
+        return;
+    }
 });
 
 //ricerca uno user specifico
 router.get('/:userId', async (req,res)=>{
     try{
-        const user =await User.findById(req.params.userId);
+        const user = await User.findById(req.params.userId);
         res.json(user);
     }catch(err){
         res.json({message: err});
