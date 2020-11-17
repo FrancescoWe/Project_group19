@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require ("body-parser");
 const mongoose = require('mongoose');
 require ('dotenv').config();
+require('dotenv').config({ path:__dirname +'/.env'})
 const request = require('request');
 const meteoUrl = 'http://api.openweathermap.org/data/2.5/weather?q=Trento,it&units=metric&appid='+ process.env.API_KEY;
 
@@ -33,6 +34,7 @@ db.once('open', () => {
     console.log('DB connected successfully!');
   });
 */
+
 //using request for weather api from openweather
 
 //faccio una richiesta allo url e una callback function che prende dei parametri

@@ -33,15 +33,25 @@ router.get('/:email', async (req,res)=> {
     }
 });
 
-/*router.get('/:email', async(req,res)=>{
-    try{
-        const user = await User.findOne({email: req.params.email});
-        res.json(user);
-    
-    }catch(err){
-        res.json({message: err});
-    }
-})*/
+//metodo get del prof
+/*router.get('/:email', async (req, res) => {
+    let users;
+
+    if (req.query.email)
+        // https://mongoosejs.com/docs/api.html#model_Model.find
+        users = await User.find({email: req.query.email}).exec();
+    else
+        users = await User.find().exec();
+
+    users = users.map( (entry) => {
+        return {
+            self: '/api/v1/users/' + entry.id,
+            email: entry.email
+        }
+    });
+
+    res.status(200).json(users);
+});*/
 
 //crea uno user nel db lcoale
 router.post('/',async function(req,res){
