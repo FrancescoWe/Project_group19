@@ -35,10 +35,11 @@ paths:
             Location:
               schema:
                 type: string
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/User'
+              description: Link to the newly created user
+          #content: 
+            #application/json:
+              #schema: 
+                #$ref: '#/components/schemas/User'
 
   /users/{id}:    
     get:
@@ -53,11 +54,63 @@ paths:
       responses: 
         '200':
           description: 'The user corresponding to the input ID'
+          #content:
+            #application/json:
+              #schema:
+                #$ref: '#/components/schemas/User'
+
+  /users/{email}:    
+    get:
+      description: >-
+        Gets information about a specific user, identiied by an email
+      summary: Get a user
+      parameters:
+        - name: email
+          in: path
+          required: true
+          description: 'email of the requested user'
+      responses: 
+        '200':
+          description: 'The user corresponding to the input email'
+          #content:
+            #application/json:
+              #schema:
+                #$ref: '#/components/schemas/User'  
+                
+  /meteos:
+    get:
+      description: >-
+        Gets the current meteo.
+      summary: View current meteo
+      responses: 
+        '200':
+          description: 'Collection of books'
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Meteo'
+    
+  /meteos/current/{city}:
+    get: 
+      description: >-
+        Gets information about current meteo of a city
+      summary: Get meteo
+      parameters: 
+        - name: city
+          in: path
+          required: true
+          description: 'Name of the requested city'
+      responses:
+        '200':
+          description: 'The meteo corresponding the city'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-  #/meteos:
+                $ref: '#/components/schemas/Meteo'
+
+
 components:
   schemas:
     User:
@@ -76,3 +129,15 @@ components:
         password: 
           type: string
           description: 'password dello user'
+    Meteo:
+      type: object
+      required:
+        - temperatura
+        - data
+      properties: 
+        temperatura: 
+          type: string
+          description: "yeah"
+        data: 
+          type: string
+          description: "yoah"
