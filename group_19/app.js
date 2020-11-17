@@ -11,6 +11,7 @@ const users = require('./api/routes/users');
 const userRoutes = require('./api/routes/users');
 const meteoRoutes = require('./api/routes/meteos');
 
+app.use('/', express.static('static'));
 //app.use middlewares
 app.use(bodyParser.urlencoded({extendeed:false}));
 app.use(bodyParser.json());
@@ -19,6 +20,7 @@ app.use('/meteos', meteoRoutes);
 app.use(express.static(__dirname + "/"));
 
 app.use('/api/v1/users', users);
+
 
 //connecting to db offline
 /*mongoose.connect('mongodb://localhost/testaroo',{

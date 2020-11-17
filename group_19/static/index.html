@@ -56,6 +56,13 @@
         <input type="text" id="searchbar" placeholder="Enter your search term...." />
     </form>
 
+    <form action="api/v1/users" method="post" name="loginform" id="loginform">
+        <span>Logged User:</span>
+        <span id="loggedUser"></span>
+        <input name="email" value="gigigig@gmail.com" id="loginEmail"/>
+        <button type="button" onclick="login()">LogIn</button>
+      </form>
+
 </body>
 
 </html>
