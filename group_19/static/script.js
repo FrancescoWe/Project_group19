@@ -19,3 +19,33 @@ function login(){
     .catch( error => console.error(error) ); // If there is any error you will catch them here
 
 }
+
+function waitForElement(){
+    var search = $('#searchbar').val();
+    console.log(search);
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "./meteos/current/"+search,
+        "method": "GET"
+    }
+
+    $.ajax(settings).done(function (response) {
+        console.log(response);
+
+        var name= response.name;		//prende la response name dal DB e la salva nella variabile name
+        $("#name").append(name);
+
+        var content = response.wind.speed;	//prende la response wind.speed dal DB e la salva nella variabile content
+            $("#windSpeed").append(content);
+
+        var currentWeather = response.weather[0].main;	//prende la response weather[0] cioè il tempo attuale dal DB e la salva nella variabile currentweather
+            $("#currentWeather").append(currentWeather);
+
+        $("#form").submit( function(res) {			//crea una variabile form che prende il risultato del submit di un bottone e lo salva dentro alla variabile search
+            var search = $('#searchbar').val();
+            // use the 'search' variable as needed here...
+            // $.post('url...', { searchTerm: search });
+        });
+    });
+}
