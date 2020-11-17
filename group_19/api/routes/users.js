@@ -16,6 +16,23 @@ router.get('/', async(req,res,next) => {
     }
 });
 
+//Funzione per ottenere lo user con quella determinata mail utilizzando la api
+router.get('/:email', async (req,res)=> {
+    try{
+        const users = await User.findOne({email: req.params.email})
+        .map((entry) => {
+            return{
+                self: '/api/v1/users/' +entry.id,
+                email: entry.email
+            }
+        });
+        //console.log(users);
+        res.status(200).json(users);
+    }catch(err){
+        res.json({message: err});
+    }
+});
+
 /*router.get('/:email', async(req,res)=>{
     try{
         const user = await User.findOne({email: req.params.email});
