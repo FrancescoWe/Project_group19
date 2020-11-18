@@ -4,7 +4,7 @@ const MeteoSchema = mongoose.Schema({
     //_id: mongoose.Schema.Types.ObjectId,
     temperatura: {
         type: String,
-        required: [true, 'Email field is required']
+        required: [true, 'temperature required']
     },
     data: {
         type: String,

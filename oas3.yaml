@@ -76,6 +76,21 @@ paths:
             #application/json:
               #schema:
                 #$ref: '#/components/schemas/User'  
+
+  /meteoComponents:  
+    get:
+      description: >-
+        Gets the list of all meteo components saved.
+      summary: View all meteos components that are part of an itinerario
+      responses:
+        '200':
+          description: 'Collection of meteoComponents'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MeteoComponent'
                 
   /meteos:
     get:
@@ -129,6 +144,25 @@ components:
         password: 
           type: string
           description: 'password dello user'
+    MeteoComponent:
+      type: object
+      required: 
+        - date
+        - temp_Min
+        - temp_Max
+      properties:
+        date: 
+          type: string
+          description: 'Data del meteo'
+        temp_Min:
+          type: string
+          description: 'temperatura minima di quel giorno in tal posto'
+        temp_Max:
+          type: string
+          description: 'temperatura massima di quel giorno in tal posto'
+        cityName: 
+          type: string
+          description: 'il nome della città di cui si vuole il meteo'
     Meteo:
       type: object
       required:

@@ -12,6 +12,7 @@ const users = require('./api/routes/users');
 //routes constant
 const userRoutes = require('./api/routes/users');
 const meteoRoutes = require('./api/routes/meteos');
+const meteoComponentRoutes = require('./api/routes/meteoComponents');
 
 app.use('/', express.static('static'));
 //app.use middlewares
@@ -19,9 +20,10 @@ app.use(bodyParser.urlencoded({extendeed:false}));
 app.use(bodyParser.json());
 app.use('/users', userRoutes);
 app.use('/meteos', meteoRoutes);
+app.use('/meteoComponents', meteoComponentRoutes);
 app.use(express.static(__dirname + "/"));
 
-
+app.use('/api/v1/meteoComponents', meteoComponentRoutes);
 app.use('/api/v1/users', users);
 
 
