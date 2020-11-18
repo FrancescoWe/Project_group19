@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html>
 
+    <style>
+        .container{
+            display: flex;
+            justify-content: space-between;  
+        }
+    </style>
+
 <head>
 
     <meta charset="UTF-8">
@@ -19,7 +26,7 @@
     <div id="currentWeather">Current weather conditions: </div>
 
     <form>
-        <button type="button" onclick="waitForElement();">Search</button>
+        <button type="button" onclick="fiveDayForeCast();">Search</button>
         <input type="text" id="searchbar" placeholder="Enter your search term...." />
     </form>
 
@@ -28,9 +35,74 @@
         <span id="loggedUser"></span>
         <input name="email" value="provaAdesso@gmail.com" id="loginEmail"/>
         <button type="button" onclick="login()">LogIn</button>
-      </form>
+    </form>
+<!-- -->
+    <div class = "container">
+        <div class = "day">
+            <h2 id = "data_uno" > date </h2>
+            <div class = "icon">
+                <img src = "http://openweathermap.org/img/w/01n.png" id="imm_uno">
+            </div>
+            <div>
+                <div class = "temp">
+                    <h3 id = "max_uno"> Max </h3>
+                    <h3 id = "min_uno"> Min </h3>
+                </div>
+            </div>
+        </div>
+        <div class = "day">
+            <h2 id = "data_due" > date </h2>
+            <div class = "icon">
+                <img src = "http://openweathermap.org/img/w/01n.png" id = "imm_due">
+            </div>
+            <div>
+                <div class = "temp">
+                    <h3 id = "max_due" >Max </h3>
+                    <h3 id = "min_due" > Min </h3>
+                </div>
+            </div>
+        </div>
+        <div class = "day">
+            <h2 id = "data_tre"> date </h2>
+            <div class = "icon">
+                <img src = "http://openweathermap.org/img/w/01n.png" id = "imm_tre" >
+            </div>
+            <div>
+                <div class = "temp">
+                    <h3 id = "max_tre"> Max </h3>
+                    <h3 id = "min_tre" > Min </h3>
+                </div>
+            </div>
+        </div>
+        <div class = "day">
+            <h2 id = "data_quattro"> date </h2>
+            <div class = "icon">
+                <img src = "http://openweathermap.org/img/w/01n.png" id = "imm_quattro">
+            </div>
+            <div>
+                <div class = "temp">
+                    <h3 id = "max_quattro"> Max </h3>
+                    <h3 id = "min_quattro" > Min </h3>
+                </div>
+            </div>
+        </div>
+        <div class = "day">
+            <h2 id = "data_cinque"> date </h2>
+            <div class = "icon">
+                <img src = "http://openweathermap.org/img/w/01n.png" id = "imm_cinque">
+            </div>
+            <div>
+                <div class = "temp">
+                    <h3 id = "max_cinque"> Max </h3>
+                    <h3 id = "min_cinque"> Min </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- -->
 
 <script src="script.js"></script> 
+<!--<script src="script.js" type="module"></script> -->
 
 </body>
 

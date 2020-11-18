@@ -7,6 +7,7 @@ require('dotenv').config({ path:__dirname +'/.env'})
 const request = require('request');
 const meteoUrl = 'http://api.openweathermap.org/data/2.5/weather?q=Trento,it&units=metric&appid='+ process.env.API_KEY;
 
+
 const users = require('./api/routes/users');
 //routes constant
 const userRoutes = require('./api/routes/users');
@@ -19,6 +20,7 @@ app.use(bodyParser.json());
 app.use('/users', userRoutes);
 app.use('/meteos', meteoRoutes);
 app.use(express.static(__dirname + "/"));
+
 
 app.use('/api/v1/users', users);
 
