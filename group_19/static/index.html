@@ -14,13 +14,17 @@
 
     <h1>Sample Page</h1>
 
+    <div id="daynum"></div>
+    <div id="hours"></div>
     <div id="name">City name: </div>
     <div id="windSpeed">Wind speed: </div>
     <div id="currentWeather">Current weather conditions: </div>
 
     <form>
-        <button type="button" onclick="waitForElement();">Search</button>
         <input type="text" id="searchbar" placeholder="Enter your search term...." />
+        <button type="button" onclick="waitForElement();">Search Current</button>
+        <button type="button" onclick="waitForElementForecast();">Search Forecast</button>
+        <button type="button" id="daysbutton" onclick="addday();waitForElementForecast();">+1 Day</button>
     </form>
 
     <form action="api/v1/users" method="post" name="loginform" id="loginform">
