@@ -1,6 +1,9 @@
 var loggedUser;
-var daycount=0;
+var daycount=8;
 var searchbefore = "";
+
+var currentfetch;
+var forecastfetch;
 
 class Forecast{
     constructor(date, icon, maxTemp, minTemp){
@@ -42,95 +45,75 @@ function login(){
 
 }
 
-function waitForElement(){
+async function waitForElement(){
     document.getElementById('daysbutton').style.visibility="hidden";
     document.getElementById('daynum').style.visibility="hidden";
     document.getElementById('hours').style.visibility="hidden";
     daycount=0;
     var search = $('#searchbar').val();
-    console.log(search);
 
     settings.url = "./meteos/current/"+search;
 
-    $.ajax(settings).done(function (response) {
-        console.log(response);
+    let currentfetchresponse = await fetch(settings.url);
+    currentfetch = await currentfetchresponse.json();
 
-        document.getElementById('daynum').innerHTML = "";
+    //console.log(currentfetch);
+    //console.log(search);
 
-        var name= response.name;		//prende la response name dal DB e la salva nella variabile name
-        document.getElementById('name').innerHTML = "City name : "+search;
+    var name= currentfetch.name;		//prende la response name dal DB e la salva nella variabile name
+    var wind = currentfetch.wind.speed;	//prende la response wind.speed dal DB e la salva nella variabile content
+    var mainWeather = currentfetch.weather[0].main;	//prende la response weather[0] cioè il tempo attuale dal DB e la salva nella variabile currentweather
 
-        var content = response.wind.speed;	//prende la response wind.speed dal DB e la salva nella variabile content
-        document.getElementById('windSpeed').innerHTML = "Wind speed: "+content;
-
-        var currentWeather = response.weather[0].main;	//prende la response weather[0] cioè il tempo attuale dal DB e la salva nella variabile currentweather
-        document.getElementById('currentWeather').innerHTML = "Current weather conditions : "+currentWeather;
-
-        /*
-        $("#form").submit( function(res) {			//crea una variabile form che prende il risultato del submit di un bottone e lo salva dentro alla variabile search
-            var search = $('#searchbar').val();
-            // use the 'search' variable as needed here...
-            // $.post('url...', { searchTerm: search });
-        });
-        */
-    });
+    document.getElementById('name').innerHTML = "City name : "+name;
+    document.getElementById('windSpeed').innerHTML = "Wind speed: "+wind;
+    document.getElementById('currentWeather').innerHTML = "Current weather conditions : "+mainWeather;
+    
 }
 
-function waitForElementForecast(){
-    document.getElementById('daynum').style.visibility="visible";
-    document.getElementById('hours').style.visibility="visible";
-    if(daycount>39){
-        document.getElementById('daysbutton').style.visibility="hidden";
-        daycount=0;
-        return;
-    } else {
-        document.getElementById('daysbutton').style.visibility="visible";
-        document.getElementById('daysbutton').innerHTML = "+1 Days";
-    }
-    
-    var search = $('#searchbar').val();
-
-    if((daycount/8)>=1 && search!==searchbefore){
-        document.getElementById('daynum').innerHTML = "City name changed";
-        document.getElementById('daysbutton').style.visibility="hidden";
-        return;
-    }
+function cityforecastCall(){
+    daycount=8;
     searchbefore = $('#searchbar').val();
-
-    settings.url = "./meteos/forecast/"+search;
-
-    $.ajax(settings).done(function (response) {
-        console.log(response);
-
-        document.getElementById('daynum').innerHTML = ((daycount/8)+1)+" days from now";
-
-        var hours = String(response.list[daycount].dt_txt).substring(11,13);
-        document.getElementById('hours').innerHTML = hours + ":00:00";
-
-        console.log(hours);
-
-        var name= response.city.name;		//prende la response name dal DB e la salva nella variabile name
-        document.getElementById('name').innerHTML = "City name : "+search;
-
-        var forecastwind = response.list[daycount].wind.speed;
-        document.getElementById('windSpeed').innerHTML = "Wind speed: : "+forecastwind;
-
-        var forecastWeather = response.list[daycount].weather[0].main;	//prende la response weather[0] cioè il tempo attuale dal DB e la salva nella variabile currentweather
-        document.getElementById('currentWeather').innerHTML = "Weather : "+forecastWeather;
-
-        /*
-        $("#form").submit( function(res) {			//crea una variabile form che prende il risultato del submit di un bottone e lo salva dentro alla variabile search
-            var search = $('#searchbar').val();
-            // use the 'search' variable as needed here...
-            // $.post('url...', { searchTerm: search });
-        });
-        */
-
-    });
 }
 
 function addday(){
     daycount = daycount+8;
+    if(daycount==40)     // protezione per non andare al di fuori dell' array "list" di 40 elementi
+        daycount=39;
+}
+
+async function waitForElementForecast(){
+    document.getElementById('daynum').style.visibility="visible";
+    document.getElementById('hours').style.visibility="visible";
+    document.getElementById('daysbutton').style.visibility="visible";
+    document.getElementById('daysbutton').innerHTML = "+1 Days";
+
+    var search = $('#searchbar').val();
+
+    settings.url = "./meteos/forecast/"+search;
+
+    if(daycount==8 && search==searchbefore) {                       //fa una fetch dall' api solo una volta (quando l' utente clicca sul bottone la prima volta) e dopo usa sempre gli stessi dati.
+        let forecastfetchresponse = await fetch(settings.url);
+        forecastfetch = await forecastfetchresponse.json();
+    } else if(search!==searchbefore){           //Se l' utente cambia il nome della città in corso d' opera verrà fatta ripartire la funzione autonomamente.
+        cityforecastCall();
+        waitForElementForecast();
+        return;
+    }
+
+    var hours = String(forecastfetch.list[daycount].dt_txt).substring(11,13);
+    var name= forecastfetch.city.name;		//prende la response name dal DB e la salva nella variabile name
+    var forecastwind = forecastfetch.list[daycount].wind.speed;
+    var forecastWeather = forecastfetch.list[daycount].weather[0].main;	//prende la response weather[0] cioè il tempo attuale dal DB e la salva nella variabile currentweather
+
+    document.getElementById('daynum').innerHTML = ((daycount/8)*24) + " hours from now";
+    document.getElementById('hours').innerHTML = hours + ":00:00";
+    document.getElementById('name').innerHTML = "City name : "+name;
+    document.getElementById('windSpeed').innerHTML = "Wind speed: : "+forecastwind;
+    document.getElementById('currentWeather').innerHTML = "Weather : "+forecastWeather;
+
+    if(daycount==39){                 //se l' utente arriva a guardare tutti e 5 i giorni successivi, non potrà più cliccare il pulsante per andare avanti
+        document.getElementById('daysbutton').style.visibility="hidden";
+    }
 }
 
 //seconda funzione per il forecast tramite le 5 immagini in basso 
