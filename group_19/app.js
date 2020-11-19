@@ -50,12 +50,16 @@ const data = JSON.parse(body);
 })*/
 
 //connessione al db online
-mongoose.connect(process.env.DB_CONNECTION_ONLINE,{
-  useUnifiedTopology: true,
-  useNewUrlParser:true
-}).then(()=>{
-  console.log("CONNESSO ONLINE")
-});
+try{
+  mongoose.connect(process.env.DB_CONNECTION_ONLINE,{
+    useUnifiedTopology: true,
+    useNewUrlParser:true
+  }).then(()=>{
+    console.log("Online Connection : TRUE");
+  });
+}catch{
+  console.log("Online Connection : FALSE");
+}
 
 
 module.exports=app;

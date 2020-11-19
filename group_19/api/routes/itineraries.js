@@ -22,14 +22,10 @@ router.get('/', async(req,res,next) => {
 //crea un itinerario vuoto e lo salva, connettendolo ad un utente singolo (specifica l'id dell' utente nel body della post)
 router.post('', async (req, res) => {
 
-    const userfound = await User.findOne({_id: req.body.id});
+    try{
+        const userfound = await User.findOne({_id: req.body.id});
+        console.log("User with id:"+req.body.id+" found");
 
-    console.log(req.body.id);
-
-    if(userfound == null){
-        res.status(400).json({ error: "This user with the id :"+ req.body.id +" does not exist" });
-        return;
-    } else {
         let newitinerary = new Itinerary({
             user_id : req.body.id,
         });
@@ -41,11 +37,12 @@ router.post('', async (req, res) => {
             {$push : {itinerary: newitinerary._id}}
         );
 
-        console.log('Itinerary saved successfully.');
+        console.log('Itinerary saved and binded successfully to user '+userfound._id);
+        res.send("Inviato e collegato all' utente :"+userfound._id+" correttamente");
+    }catch{
+        res.send("User with id: "+ req.body.id +" not found");
+        console.log("User with id: "+req.body.id+" not found");
     }
-
-    //res.send("Inviato e collegato all' utente :"+req.body.id+" correttamente");
-    res.send("Inviato e collegato all' utente :"+userfound._id+" correttamente");
 });
 
 module.exports = router;
