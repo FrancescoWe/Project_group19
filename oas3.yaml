@@ -92,7 +92,7 @@ paths:
   /users/{email}:    
     get:
       description: >-
-        Gets information about a specific user, identiied by an email
+        Gets information about a specific user, identified by an email
       summary: Get a user
       parameters:
         - name: email
@@ -121,6 +121,59 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/MeteoComponent'
+    post:
+      description: >-
+        Creates a new meteoComponent, >-
+        which is the set of the informations about the >-
+        meteo in a stage of an itinerario
+      summary: Create meteoComponent
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              type: object
+              required: 
+                - date
+                - cityName
+              properties: 
+                temp_Max:
+                  type: string
+                  description: 'Maximum temperature'
+                temp_Min: 
+                  type: string
+                  description: 'Minimum temperature'
+                date:
+                  type: string
+                  description: 'Date'
+                cityName:
+                  type: string
+                  description: 'Name of the city'
+      responses:
+        '201':
+          description: 'The created user'
+          headers: 
+            Location:
+              schema:
+                type: string
+              description: Link to the newly created user
+  
+  /meteoComponents/{id}:    
+    get:
+      description: >-
+        Gets information about a specific meteoComponent
+      summary: Get a specific meteoComponent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 'Id of the requested meteoComponent'
+      responses: 
+        '200':
+          description: 'The user corresponding to the input email'
+          #content:
+            #application/json:
+              #schema:
+                #$ref: '#/components/schemas/User'
                 
   /meteos:
     get:
