@@ -7,7 +7,7 @@ const User = require('../models/user');
 
 const db = mongoose.connection;
 
-//ricerca tutti gli user
+//ricerca gli itinerari di tutti gli user.
 router.get('/', async(req,res,next) => {
     let itineraries = await Itinerary.find({}).exec();
     itineraries = itineraries.map( (itinerary) => {
@@ -19,21 +19,7 @@ router.get('/', async(req,res,next) => {
     res.status(200).json(itineraries);
 });
 
-/*
-//ricerco un componente meteo di un itinerario
-router.get('/:id', async (req, res) => {
-    let meteoComponent = await MeteoComponent.findById(req.params.id).exec();
-    res.status(200).json({
-        self: '/api/v1/meteoComponents/' + meteoComponent.id,
-        temp_Max: meteoComponent.temp_Max,
-        temp_Min: meteoComponent.temp_Min,
-        date: meteoComponent.date,
-        cityName: meteoComponent.cityName
-    });
-});
-*/
-
-//crea un meteoComponent e lo salva
+//crea un itinerario vuoto e lo salva, connettendolo ad un utente singolo (specifica l'id dell' utente nel body della post)
 router.post('', async (req, res) => {
 
     const userfound = await User.findOne({_id: req.body.id});
@@ -54,36 +40,12 @@ router.post('', async (req, res) => {
             {_id: userfound},
             {$push : {itinerary: newitinerary._id}}
         );
-        
+
         console.log('Itinerary saved successfully.');
     }
 
-    res.send("Inviato Correttamente");
-    /*
-    let useridcheck = await User.find({}).exec();
-    useridcheck = useridcheck.map( (user) => {
-        if(userid == user.id)
-            console.log("One user with id "+userid+" found. Progressing.");
-    });
-    */
-
-    /*
-	let meteoComponent = new MeteoComponent({
-        temp_Max: req.body.temp_Max,
-        temp_Min: req.body.temp_Min,
-        date: req.body.date,
-        cityName: req.body.cityName
-    });
-    
-	meteoComponent = await meteoComponent.save();
-    
-    let meteoComponentId = meteoComponent.id;
-
-    console.log('meteoComponent saved successfully');
-
-    res.location("/api/v1/meteoComponents/" + meteoComponentId).status(201).send();
-    */
+    //res.send("Inviato e collegato all' utente :"+req.body.id+" correttamente");
+    res.send("Inviato e collegato all' utente :"+userfound._id+" correttamente");
 });
-
 
 module.exports = router;

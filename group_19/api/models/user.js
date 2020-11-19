@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const Itinerary = require('./itinerary');
 
 const UserSchema = mongoose.Schema({
-    //_id: mongoose.Schema.Types.ObjectId,
 
     email: {
         type: String,
@@ -22,4 +21,4 @@ const UserSchema = mongoose.Schema({
 
 const User = mongoose.model('user',UserSchema);
 
-module.exports = User;//mongoose.model('User', userSchema);
+module.exports = User;

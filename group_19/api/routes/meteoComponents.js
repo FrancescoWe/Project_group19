@@ -5,7 +5,7 @@ const MeteoComponent = require('../models/meteoComponent')
 
 const db = mongoose.connection;
 
-//ricerca tutti gli user
+//ricerca i meteocomponents di tutti gli user
 router.get('/', async(req,res,next) => {
     let meteoComponents = await MeteoComponent.find({}).exec();
     meteoComponents = meteoComponents.map( (meteoComponent) => {
@@ -48,10 +48,6 @@ router.post('', async (req, res) => {
 
     console.log('meteoComponent saved successfully');
 
-    /**
-     * Link to the newly created resource is returned in the Location header
-     * https://www.restapitutorial.com/lessons/httpmethods.html
-     */
     res.location("/api/v1/meteoComponents/" + meteoComponentId).status(201).send();
 });
 
