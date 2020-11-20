@@ -58,19 +58,22 @@ router.delete('/', async (req,res)=> {
 
     try{
 
-        let removedItinerary = await User.findOne({_id: req.body.id});
-        let itineraryUser = removedItinerary.user_id;
-      
-        res.json(removedItinerary);
+        let removedItinerary = await Itinerary.findOne({_id: req.body.id});
+        let itineraryUser = await User.findOne({_id: removedItinerary.user_id});
+        res.send(itineraryUser);
 
-        for(i=0; i<=remove; i++){
-            
-        }
+        // console.log(index);
+        // res.json(removedItinerary);
 
+        const updatedUser = await User.updateOne(
+            { _id: removedItinerary.user_id},
+            { $pull: { itinerary: req.body.id  } }
+        );      
+        console.log(User.findOne({_id: removedItinerary.user_id}));
 
-        await Itinerary.deleteOne({_id: req.params.itId})
+        await Itinerary.deleteOne({_id: req.body.id});
     }catch(err){
-        res.json({message: err});
+        res.json({message: 'Si è verificato un errore'});
     }
 
 });
