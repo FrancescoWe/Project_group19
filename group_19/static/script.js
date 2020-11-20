@@ -43,14 +43,14 @@ function login(){
     var email = document.getElementById("loginEmail").value;
     console.log(email);
 
-    fetch('../api/v1/users/' + email)
+    fetch('../api/v1/users/' + email)   // Ricerca l'utente corrispondente a quella mail richiamando l'API di users
     .then((resp) => resp.json()) // Trasforma i dati in json
-    .then(function(data) { // Qui otteniamo i dati da modificare a piacimento
+    .then(function(data) { // Qui inseriamo una funzione per modificare i dati a piacimento
         console.log(data);
         //loggedUser = data[0];
-        loggedUser=data;
-        loggedUser.id = loggedUser.self.substring(loggedUser.self.lastIndexOf('/') + 1);
-        document.getElementById("loggedUser").innerHTML = loggedUser.email + "<br>";
+        loggedUser=data;    // Logged user contiene i dati ottenuti con la fetch e parsati in json
+        loggedUser.id = loggedUser.self.substring(loggedUser.self.lastIndexOf('/') + 1);    // l'ID 
+        document.getElementById("loggedUser").innerHTML = loggedUser.email + "<br>";    // Viene aggiornato l'innerHTML dell'elemento "loggedUser" in index.html
         return;
     })
     .catch( error => console.error(error) ); // Se c'è un qualsiasi errore viene catturato qui

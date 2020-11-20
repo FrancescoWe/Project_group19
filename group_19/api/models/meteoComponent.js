@@ -18,8 +18,7 @@ const MeteoComponentSchema = mongoose.Schema({
     }
 });
 
+// Aggiunta del modello al DB
 const MeteoComponent = mongoose.model('meteoComponent',MeteoComponentSchema);
-
-
 
 module.exports = MeteoComponent;//mongoose.model('User', userSchema);

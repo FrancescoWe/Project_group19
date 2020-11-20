@@ -1,3 +1,6 @@
+// Route di "itineraries"
+
+// Costanti globali
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
@@ -5,9 +8,11 @@ const MeteoComponent = require('../models/meteoComponent');
 const Itinerary = require('../models/itinerary');
 const User = require('../models/user');
 
+// Connessione al DB
 const db = mongoose.connection;
 
-//ricerca gli itinerari di tutti gli user.
+
+// Definizione del metodo GET: ricerca gli itinerari di tutti gli user
 router.get('/', async(req,res,next) => {
     let itineraries = await Itinerary.find({}).exec();
     itineraries = itineraries.map( (itinerary) => {
@@ -19,7 +24,8 @@ router.get('/', async(req,res,next) => {
     res.status(200).json(itineraries);
 });
 
-//crea un itinerario vuoto e lo salva, connettendolo ad un utente singolo (specifica l'id dell' utente nel body della post)
+/* Definizione del metodo POST: crea un itinerario vuoto e lo salva,
+connettendolo ad un utente singolo (specifica l'id dell' utente nel body della post) */
 router.post('', async (req, res) => {
 
     try{
@@ -43,6 +49,7 @@ router.post('', async (req, res) => {
         res.send("User with id: "+ req.body.id +" not found");
         console.log("User with id: "+req.body.id+" not found");
     }
+
 });
 
 module.exports = router;
