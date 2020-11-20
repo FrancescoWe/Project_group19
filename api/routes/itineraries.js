@@ -61,13 +61,12 @@ router.delete('/', async (req,res)=> {
     try{
 
         let removedItinerary = await User.findOne({_id: req.body.id});
-        let itineraryUsers = [];
-        itineraryUsers = await User.find({_id: req.params.user_id});
+        let itineraryUser = removedItinerary.user_id;
       
         res.json(removedItinerary);
 
         for(i=0; i<=remove; i++){
-
+            
         }
 
 
