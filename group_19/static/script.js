@@ -1,10 +1,15 @@
+/* Non appena l'index.html viene caricato, questo script viene eseguito.
+Tutta via le funzioni in esso definite verranno eseguite solo se richiamate dagli
+eventi nell'index.html. */
+
+// Variabili globali
 var loggedUser;
 var daycount=8;
 var searchbefore = "";
-
 var currentfetch;
 var forecastfetch;
 
+// Definizione della classe Forecast con rispettivo costruttore
 class Forecast{
     constructor(date, icon, maxTemp, minTemp){
         this.date=date;
@@ -16,6 +21,7 @@ class Forecast{
 
 var cityForecast = [];
 
+// Definizione della strutture di "settings"
 var settings = {
     "async": true,
     "crossDomain": true,
@@ -23,47 +29,55 @@ var settings = {
     "method": "GET"
 }
 
+// Il bottone "+1 Day" viene settato a hidden.
 document.getElementById('daysbutton').style.visibility="hidden";
 
+
+
+// DEFINIZIONI DELLE FUNZIONI
+
+// Funzione per il login, verifica che la mail inserita corrisponda ad un utente.
 function login(){
     //var email = document
-    //get the form object
+    //Ottiene l'oggetto con id "loginEmail"
     var email = document.getElementById("loginEmail").value;
     console.log(email);
 
     fetch('../api/v1/users/' + email)
-    .then((resp) => resp.json()) // Transform the data into json
-    .then(function(data) { // Here you get the data to modify as you please
+    .then((resp) => resp.json()) // Trasforma i dati in json
+    .then(function(data) { // Qui otteniamo i dati da modificare a piacimento
         console.log(data);
         //loggedUser = data[0];
         loggedUser=data;
         loggedUser.id = loggedUser.self.substring(loggedUser.self.lastIndexOf('/') + 1);
-        document.getElementById("loggedUser").innerHTML = loggedUser.email;
+        document.getElementById("loggedUser").innerHTML = loggedUser.email + "<br>";
         return;
     })
-    .catch( error => console.error(error) ); // If there is any error you will catch them here
+    .catch( error => console.error(error) ); // Se c'è un qualsiasi errore viene catturato qui
 
 }
 
+// Funzione per il current meteo
 async function waitForElement(){
+    // I bottoni relativi al forecast non servono, vengono settati a hidden
     document.getElementById('daysbutton').style.visibility="hidden";
     document.getElementById('daynum').style.visibility="hidden";
     document.getElementById('hours').style.visibility="hidden";
     daycount=0;
-    var search = $('#searchbar').val();
+    var search = $('#searchbar').val();     // Recupera il testo inserito nel textfield con id "searchbar"
+    settings.url = "./meteos/current/"+search; // Viene settato il campo url di settings
 
-    settings.url = "./meteos/current/"+search;
-
-    let currentfetchresponse = await fetch(settings.url);
-    currentfetch = await currentfetchresponse.json();
+    let currentfetchresponse = await fetch(settings.url);   // Esegue una fetch dall'api all'URL "settings.url"
+    currentfetch = await currentfetchresponse.json();       // La variabile currentfetch è currentfetchresponse parsata in json
 
     //console.log(currentfetch);
     //console.log(search);
 
-    var name= currentfetch.name;		//prende la response name dal DB e la salva nella variabile name
-    var wind = currentfetch.wind.speed;	//prende la response wind.speed dal DB e la salva nella variabile content
-    var mainWeather = currentfetch.weather[0].main;	//prende la response weather[0] cioè il tempo attuale dal DB e la salva nella variabile currentweather
+    var name= currentfetch.name;		// Prende la response name dal DB e la salva nella variabile name
+    var wind = currentfetch.wind.speed;	// Prende la response wind.speed dal DB e la salva nella variabile wind
+    var mainWeather = currentfetch.weather[0].main;	// Prende la response weather[0] cioè il tempo attuale dal DB e la salva nella variabile mainWeather
 
+    // Vengono aggiornati gli innerHTML delle tag div di index.html contenenti le informazioni sul meteo
     document.getElementById('name').innerHTML = "City name : "+name;
     document.getElementById('windSpeed').innerHTML = "Wind speed: "+wind;
     document.getElementById('currentWeather').innerHTML = "Current weather conditions : "+mainWeather;
@@ -71,8 +85,8 @@ async function waitForElement(){
 }
 
 function cityforecastCall(){
-    daycount=8;
-    searchbefore = $('#searchbar').val();
+    daycount=8;                             // Resetta la variabile daycount a 8
+    searchbefore = $('#searchbar').val();   // Inizializza la variabile searchbefore con il testo del textfield 
 }
 
 function addday(){
@@ -81,20 +95,21 @@ function addday(){
         daycount=39;
 }
 
+
+// Funzione per il forecast
 async function waitForElementForecast(){
     document.getElementById('daynum').style.visibility="visible";
     document.getElementById('hours').style.visibility="visible";
     document.getElementById('daysbutton').style.visibility="visible";
-    document.getElementById('daysbutton').innerHTML = "+1 Days";
+    document.getElementById('daysbutton').innerHTML = "+1 Day";
 
-    var search = $('#searchbar').val();
+    var search = $('#searchbar').val(); // Recupera il testo inserito nel textfield con id "searchbar"
+    settings.url = "./meteos/forecast/"+search; // Viene settato il campo url di settings
 
-    settings.url = "./meteos/forecast/"+search;
-
-    if(daycount==8 && search==searchbefore) {                       //fa una fetch dall' api solo una volta (quando l' utente clicca sul bottone la prima volta) e dopo usa sempre gli stessi dati.
+    if(daycount==8 && search==searchbefore) {    // Esegue una fetch dall'api solo una volta (quando l'utente clicca sul bottone la prima volta) e dopo usa sempre gli stessi dati.
         let forecastfetchresponse = await fetch(settings.url);
         forecastfetch = await forecastfetchresponse.json();
-    } else if(search!==searchbefore){           //Se l' utente cambia il nome della città in corso d' opera verrà fatta ripartire la funzione autonomamente.
+    } else if(search!==searchbefore){       // Se l' utente cambia il nome della città in corso d' opera verrà fatta ripartire la funzione autonomamente.
         cityforecastCall();
         waitForElementForecast();
         return;
@@ -116,7 +131,7 @@ async function waitForElementForecast(){
     }
 }
 
-//seconda funzione per il forecast tramite le 5 immagini in basso 
+// Seconda funzione per il forecast tramite le 5 immagini in basso 
 function fiveDayForeCast(){
     var search = $('#searchbar').val();
     var settings = {
@@ -129,24 +144,29 @@ function fiveDayForeCast(){
     console.log(search);
     $.ajax(settings).done(function (response) {
         console.log(response);
-        for(let i=0; i<response.list.length; i+=8){
-            const tempName = response.list[i].dt_txt ;
-            const icon = response.list[i].weather[0].icon;
-            const temperatureMax = response.list[i].main.temp_max;
-            const temperatureMin = response.list[i].main.temp_min;
-            const windSpeed = response.list[i].wind.speed;
-            const currentWeather = response.list[i].weather[0].main;
+        for(let i=0; i<response.list.length; i+=8){         // Ogni 8 oggetti della lista, ognuno dei quali rappresenta un intervallo di 3 ore, quindi ogni 24 ore
+            const tempName = response.list[i].dt_txt;       // Data in formato testuale
+            const icon = response.list[i].weather[0].icon;  // Icona del meteo
+            const temperatureMax = response.list[i].main.temp_max;  // Temperatura massima, che è dentro al campo main (di tipo oggetto)
+            const temperatureMin = response.list[i].main.temp_min;  // Tempperatura minima
+            const windSpeed = response.list[i].wind.speed;          // Velocità del vento (wind è un object che ha il campo speed)
+            const currentWeather = response.list[i].weather[0].main;// Tempo corrente (il main, un oggetto)   
             /*console.log(tempName);
             //console.log(icon);
             console.log(temperatureMax);
             console.log(temperatureMin);
             console.log(windSpeed);
             console.log(currentWeather);*/
-            const temporary = new Forecast(tempName, icon, temperatureMax, temperatureMin); 
-            cityForecast.push(temporary);
+            const temporary = new Forecast(tempName, icon, temperatureMax, temperatureMin);     // Definizione della classe Forecast sopra nel codice
+            cityForecast.push(temporary);   // Inserisco questo forecast temporaneo nell'arrat cityForecast. Così ogni 8 "pezzi" (sono nel for), quindi 24 ore 
+                                            // La response infatti ha una lista con 40 oggetti, uno ogni 3 ore. In un giorno ci sono quindi 8 oggetti.
             //console.log(temporary);
         }
         console.log(cityForecast);
+
+        /* Inserimento dei dati nell'innerHTML dei div appartenenti alla classe "day" in index.html.
+        Ogni elemento in cityForecast è un oggetto della classe Forecast, quindi ha 4 campo:
+        date, icon, maxTemp e minTemp.*/
         document.getElementById("data_uno").innerHTML = cityForecast[0].date;
         document.getElementById("imm_uno").src = "http://openweathermap.org/img/w/"+cityForecast[0].icon+".png";
         document.getElementById("max_uno").innerHTML = "Max: "+ cityForecast[0].maxTemp + "°";
@@ -171,6 +191,7 @@ function fiveDayForeCast(){
         document.getElementById("imm_cinque").src = "http://openweathermap.org/img/w/"+cityForecast[4].icon+".png";
         document.getElementById("max_cinque").innerHTML = "Max: "+ cityForecast[4].maxTemp + "°";
         document.getElementById("min_cinque").innerHTML = "Min: "+ cityForecast[4].minTemp + "°";
+        
         /*const divC = document.createElement('div');
         const div = document.createElement('div');
         const h = document.createElement('h3');
@@ -181,5 +202,8 @@ function fiveDayForeCast(){
         divC.id='div_id';
         divC.innerHtml = h+"<h1>hello world</h1>";
         document.body.appendChild(divC);*/
+
     });
+
+
 }

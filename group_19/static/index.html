@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 
+    <!-- Classe CSS che definisce un container. -->
     <style>
         .container{
             display: flex;
@@ -9,40 +10,51 @@
     </style>
 
 <head>
-
     <meta charset="UTF-8">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <title>Sample Page</title>
 </head>
 
 <body>
 
-    <h1>Sample Page</h1>
+    <h2>Sample Page</h2>
 
+    <!-- Form per i pulsanti di search -->
+    <form>
+        <input type="text" id="searchbar" placeholder="Enter your search term...." />
+        <!-- <button type="button" onclick="fiveDayForeCast();">Search</button> -->
+        <br>
+        <button type="button" onclick="waitForElement();">Search Current</button>
+        <button type="button" onclick="cityforecastCall();waitForElementForecast();fiveDayForeCast()">Search Forecast</button>
+        <!-- Bottone inizialmente nascosto: apparirà solo nel caso di Forecast -->
+        <button type="button" id="daysbutton" onclick="addday();waitForElementForecast();">+1 Day</button>
+    </form>
+
+    <!-- Divs per le informazioni sul meteo -->
+    <br>
+    <!-- Queste due div appariranno nel caso di un Forecast -->
     <div id="daynum"></div>
     <div id="hours"></div>
+
     <div id="name">City name: </div>
     <div id="windSpeed">Wind speed: </div>
     <div id="currentWeather">Current weather conditions: </div>
 
-    <form>
-        <button type="button" onclick="fiveDayForeCast();">Search</button>
-        <input type="text" id="searchbar" placeholder="Enter your search term...." />
-        <button type="button" onclick="waitForElement();">Search Current</button>
-        <button type="button" onclick="cityforecastCall();waitForElementForecast();">Search Forecast</button>
-        <button type="button" id="daysbutton" onclick="addday();waitForElementForecast();">+1 Day</button>
-    </form>
-
+    <!-- Form per il login dell'utente -->
+    <br>
     <form action="api/v1/users" method="post" name="loginform" id="loginform">
-        <span>Logged User:</span>
+        <span>Logged User:</span> <br>
         <span id="loggedUser"></span>
         <input name="email" value="user@domain.com" id="loginEmail"/>
         <button type="button" onclick="login()">LogIn</button>
     </form>
 
+    <!-- Grafica per la ricerca forecast. 
+        La classe forecast è stata definita sopra nel codice -->
+    <br>
     <div class = "container">
+        <!-- Giorno uno -->
         <div class = "day">
             <h2 id = "data_uno" > date </h2>
             <div class = "icon">
@@ -55,6 +67,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Giorno due -->
         <div class = "day">
             <h2 id = "data_due" > date </h2>
             <div class = "icon">
@@ -67,6 +81,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Giorno tre -->
         <div class = "day">
             <h2 id = "data_tre"> date </h2>
             <div class = "icon">
@@ -79,6 +95,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Giorno quattro -->
         <div class = "day">
             <h2 id = "data_quattro"> date </h2>
             <div class = "icon">
@@ -91,6 +109,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Giorno cinque-->
         <div class = "day">
             <h2 id = "data_cinque"> date </h2>
             <div class = "icon">
@@ -105,6 +125,7 @@
         </div>
     </div>
  
+<!-- Esecuzione di script.js -->
 <script src="script.js"></script> 
 <!--<script src="script.js" type="module"></script> -->
 
