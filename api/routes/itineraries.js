@@ -52,4 +52,17 @@ router.post('', async (req, res) => {
 
 });
 
+router.delete('', async (req,res)=> {
+
+    try{
+        let removedItinerary = await Itinerary.deleteOne({_id: req.body.itId});
+        res.send("Itinerary with id "+req.body.itId+" successfully deleted.");
+        console.log("Itinerary with id "+req.body.itId+" successfully deleted.");
+    }catch(err){
+        res.send("Itinerary with id "+req.body.itId+" not found.");
+        console.log("Itinerary with id "+req.body.itId+" not found.");
+    }
+
+});
+
 module.exports = router;
