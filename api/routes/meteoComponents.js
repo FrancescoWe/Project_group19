@@ -15,7 +15,8 @@ router.get('/', async(req,res,next) => {
     let meteoComponents = await MeteoComponent.find({}).exec();
     meteoComponents = meteoComponents.map( (meteoComponent) => {
         return {
-            self: '/api/v1/meteoComponents/' + meteoComponent.id,
+            id: meteoComponent.id,
+            itinerary_id : meteoComponent.itinerary_id,
             temp_Max: meteoComponent.temp_Max,
             temp_Min: meteoComponent.temp_Min,
             date: meteoComponent.date,
@@ -46,6 +47,7 @@ router.post('', async (req, res) => {
         console.log("Itinerary with id:"+req.body.id+" found");
 
         let meteoComponent = new MeteoComponent({
+            itinerary_id: req.body.id,
             temp_Max: req.body.temp_Max,
             temp_Min: req.body.temp_Min,
             date: req.body.date,
@@ -55,17 +57,38 @@ router.post('', async (req, res) => {
         meteoComponent = await meteoComponent.save();
             
         await Itinerary.updateOne(
-            {_id: itineraryid},
+            {_id: itineraryid.id},
             {$push : {meteos_dates: meteoComponent._id}}
         );
 
-        const itineraryuser = await Itinerary.findById(itineraryid);
+        const itineraryuser = await Itinerary.findById(itineraryid.id);
         console.log("Meteo data binded to itinerary "+req.body.id);
         res.send("I dati del meteo con l' id: "+meteoComponent._id+"\nsono stati aggiunti all' itinerario con id: "+req.body.id+"\ncollegato all' utente con id: "+itineraryuser.user_id+"\n");
 
     }catch(err){
         console.log("Itinerary with id:"+req.body.id+" not found");
         res.send("Itinerary with id:"+req.body.id+" not found");
+    }
+
+});
+
+
+router.delete('', async (req,res)=> {
+
+    try{
+
+        let removedMeteoDate = await MeteoComponent.findOne({_id: req.body.id});        
+
+        await Itinerary.updateOne(
+            { _id: removedMeteoDate.itinerary_id},
+            { $pull: { meteos_dates: req.body.id  } }
+        );      
+        
+        await MeteoComponent.deleteOne({_id: req.body.id});
+
+        res.send("MeteoComponent "+req.body.id+" deleted\nItinerary "+removedMeteoDate.itinerary_id+" updated.\n");
+    }catch(err){
+        res.send("Meteocomponent "+req.body.id+" not found.\n");
     }
 
 });

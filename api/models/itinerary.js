@@ -12,6 +12,7 @@ const ItinerarySchema = mongoose.Schema({
     // Array che conterrà oggetti di tipo meteoComponent
     meteos_dates : {
         type : [String],
+        required: [true, 'Every Itinerary must have an array of dates initialized']
     }
 
 });

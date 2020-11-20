@@ -18,7 +18,8 @@ router.get('/', async(req,res,next) => {
     itineraries = itineraries.map( (itinerary) => {
         return {
             id: itinerary.id,
-            user_id : itinerary.user_id
+            user_id : itinerary.user_id,
+            meteos_dates : itinerary.meteos_dates
         };
     });
     res.status(200).json(itineraries);
@@ -34,6 +35,7 @@ router.post('', async (req, res) => {
 
         let newitinerary = new Itinerary({
             user_id : req.body.id,
+            meteos_dates : req.body.meteos_dates
         });
 
         newitinerary = await newitinerary.save();
@@ -54,27 +56,22 @@ router.post('', async (req, res) => {
 
 /* Definizione del metodo DELETE: elimina un determinato itinerario dal DB e dalla lista degli itinerari dell'utente che lo aveva.
 Richiede un oggetto JSON nel body della richiesta con il campo "id" dell'itinerario che si intende eliminare*/
-router.delete('/', async (req,res)=> {
+router.delete('', async (req,res)=> {
 
     try{
 
         let removedItinerary = await Itinerary.findOne({_id: req.body.id});
-        let itineraryUser = await User.findOne({_id: removedItinerary.user_id});
-        
 
-        // console.log(index);
-        // res.json(removedItinerary);
-
-        const updatedUser = await User.updateOne(
+        await User.updateOne(
             { _id: removedItinerary.user_id},
             { $pull: { itinerary: req.body.id  } }
-        );      
-        // console.log(User.findOne({_id: removedItinerary.user_id}));
-        res.send(itineraryUser);
+        ); 
         
         await Itinerary.deleteOne({_id: req.body.id});
+
+        res.send("Itinerary "+req.body.id+" deleted\nUser "+removedItinerary.user_id+" updated.\n");
     }catch(err){
-        res.json({message: 'Si è verificato un errore'});
+        res.send("Itinerary "+req.body.id+" not found.\n");
     }
 
 });
