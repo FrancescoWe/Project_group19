@@ -52,10 +52,8 @@ router.post('', async (req, res) => {
 
 });
 
-
-// Definizione del metodo DELETE con path "/:itId": elimina l'itinerario con id "itId"
-
-
+/* Definizione del metodo DELETE: elimina un determinato itinerario dal DB e dalla lista degli itinerari dell'utente che lo aveva.
+Richiede un oggetto JSON nel body della richiesta con il campo "id" dell'itinerario che si intende eliminare*/
 router.delete('/', async (req,res)=> {
 
     try{
@@ -76,6 +74,25 @@ router.delete('/', async (req,res)=> {
     }
 
 });
+
+/*
+router.delete('', async (req,res)=> {
+
+    try{
+        let removedItinerary = await Itinerary.deleteOne({_id: req.body.itId});
+        res.send("Itinerary with id "+req.body.itId+" successfully deleted.");
+        console.log("Itinerary with id "+req.body.itId+" successfully deleted.");
+    }catch(err){
+        res.send("Itinerary with id "+req.body.itId+" not found.");
+        console.log("Itinerary with id "+req.body.itId+" not found.");
+    }
+
+});
+*/
+
+
+
+
 
 /*
 router.delete('/', async (req,res)=> {

@@ -71,14 +71,17 @@ router.post('/',async function(req,res){
 });
 
 
-// Definizione del metodo DELETE con path "/:userId": elimina lo user con id "userId"; "_id" perchè mongoDB genera automaticamente questo id
-router.delete('/:userId', async (req,res)=> {
+/* Definizione del metodo DELETE: elimina un determinato user
+Richiede un oggetto JSON nel body della richiesta con il campo "userId" dell'utente che si intende eliminare*/
+router.delete('', async (req,res)=> {
 
     try{
-        const removedUser = await User.deleteOne({_id: req.params.userId})
-        res.json(removedUser);
+        let removedUser = await User.deleteOne({_id: req.body.userId})
+        res.send("User with id "+req.body.userId+" successfully deleted.");
+        console.log("User with id "+req.body.userId+" successfully deleted.");
     }catch(err){
-        res.json({message: err});
+        res.send("User with id "+req.body.userId+" not found.");
+        console.log("User with id "+req.body.userId+" not found.");
     }
 
 });
