@@ -1,7 +1,11 @@
+// Modello di un oggetto "meteoComponent"
+
 const mongoose = require('mongoose');
 
 const MeteoComponentSchema = mongoose.Schema({
+
     //_id: mongoose.Schema.Types.ObjectId,
+
     temp_Max: {
         type: String,
     },
@@ -21,4 +25,4 @@ const MeteoComponentSchema = mongoose.Schema({
 // Aggiunta del modello al DB
 const MeteoComponent = mongoose.model('meteoComponent',MeteoComponentSchema);
 
-module.exports = MeteoComponent;//mongoose.model('User', userSchema);
+module.exports = MeteoComponent;

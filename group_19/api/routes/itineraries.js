@@ -30,7 +30,7 @@ router.post('', async (req, res) => {
 
     try{
         const userfound = await User.findOne({_id: req.body.id});
-        console.log("User with id:"+req.body.id+" found");
+        console.log("User with id: "+req.body.id+" found");
 
         let newitinerary = new Itinerary({
             user_id : req.body.id,
@@ -44,7 +44,7 @@ router.post('', async (req, res) => {
         );
 
         console.log('Itinerary saved and binded successfully to user '+userfound._id);
-        res.send("Inviato e collegato all' utente :"+userfound._id+" correttamente");
+        res.send("Inviato e collegato all'utente: "+userfound._id+" correttamente");
     }catch{
         res.send("User with id: "+ req.body.id +" not found");
         console.log("User with id: "+req.body.id+" not found");

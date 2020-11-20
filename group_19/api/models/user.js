@@ -15,7 +15,8 @@ const UserSchema = mongoose.Schema({
         required: [true, 'Password field is required']
     },
 
-    // il campo "itinerary" serve per collegare itinerari all'utente
+    /* Il campo "itinerary" serve per collegare itinerari all'utente.
+    E' un array di ID itineraries. */
     itinerary : {
         type : [String],
     }
