@@ -69,7 +69,7 @@ router.delete('/', async (req,res)=> {
             { _id: removedItinerary.user_id},
             { $pull: { itinerary: req.body.id  } }
         );      
-        console.log(User.findOne({_id: removedItinerary.user_id}));
+        // console.log(User.findOne({_id: removedItinerary.user_id}));
 
         await Itinerary.deleteOne({_id: req.body.id});
     }catch(err){
