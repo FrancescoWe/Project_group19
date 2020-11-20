@@ -131,7 +131,7 @@ async function waitForElementForecast(){
     }
 }
 
-// Seconda funzione per il forecast tramite le 5 immagini in basso 
+// Seconda funzione per il forecast tramite le 5 immagini nella parte in basso della pagina /index.html
 function fiveDayForeCast(){
     var search = $('#searchbar').val();
     var settings = {
