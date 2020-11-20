@@ -61,7 +61,7 @@ router.post('/',async function(req,res){
                 res.status(400).json({ error: 'The field "email" must be a non-empty string, in email format' });
                 return;
                 };
-            res.send(user);                                         // altrimenti, viene restituito il nuovo utente
+            res.status(201).send(user);                                         // altrimenti, viene restituito il nuovo utente
             console.log('Aggiunto user');
         });
     }else{                                                          // Caso in cui esiste già un utente con la mail specificata
@@ -70,10 +70,20 @@ router.post('/',async function(req,res){
     }
 });
 
+router.delete('/:userId', async (req,res)=> {
+
+    try{
+        const removedUser = await User.deleteOne({_id: req.params.userId})
+        res.json(removedUser);
+    }catch(err){
+        res.json({message: err});
+    }
+
+});
 
 /* Definizione del metodo DELETE: elimina un determinato user
 Richiede un oggetto JSON nel body della richiesta con il campo "userId" dell'utente che si intende eliminare*/
-router.delete('', async (req,res)=> {
+/*router.delete('', async (req,res)=> {
 
     try{
         let removedUser = await User.deleteOne({_id: req.body.userId})
@@ -84,7 +94,7 @@ router.delete('', async (req,res)=> {
         console.log("User with id "+req.body.userId+" not found.");
     }
 
-});
+});*/
 
 /* Definizione del metodo PATCH con path "/:userId": aggiorna la mail dello user con id "userId".
 Richiede un oggetto JSON nel body della richiesta con il campo "email" e il nuovo valore dello stesso.*/
