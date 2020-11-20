@@ -60,7 +60,7 @@ router.delete('/', async (req,res)=> {
 
         let removedItinerary = await Itinerary.findOne({_id: req.body.id});
         let itineraryUser = await User.findOne({_id: removedItinerary.user_id});
-        res.send(itineraryUser);
+        
 
         // console.log(index);
         // res.json(removedItinerary);
@@ -70,7 +70,8 @@ router.delete('/', async (req,res)=> {
             { $pull: { itinerary: req.body.id  } }
         );      
         // console.log(User.findOne({_id: removedItinerary.user_id}));
-
+        res.send(itineraryUser);
+        
         await Itinerary.deleteOne({_id: req.body.id});
     }catch(err){
         res.json({message: 'Si è verificato un errore'});
