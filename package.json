@@ -8,7 +8,6 @@
     "test": "jest --watch"
   },
   "jest": {
-    "testTimeout": 10000,
     "testEnvironment": "node"
   },
   "author": "",

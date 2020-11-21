@@ -21,15 +21,16 @@ afterEach(()=>{
 })
 
 // Test relativi agli user per Jest
-
+/*
 test('Registra un utente con email "testfunction@gmail.com" e password "testpassword". ', async ()=>{
     await request(app).post('/users')
     .send({
         "email": "testfunction@gmail.com",
         "password": "testpassword"
     })
-    .expect(201)
+    .expect(400)
 })
+*/
 
 test('Restituisce un errore in quanto la mail non ha il formato corretto. ', async ()=>{
     await request(app).post('/users')
@@ -39,6 +40,7 @@ test('Restituisce un errore in quanto la mail non ha il formato corretto. ', asy
     })
     .expect(400)
 })
+
 /*
 test('Restituisce un errore in quanto la password è vuota. ', async ()=>{
     await request(app).post('/users')
@@ -49,6 +51,7 @@ test('Restituisce un errore in quanto la password è vuota. ', async ()=>{
     .expect(400)
 })
 */
+
 test('Esiste un utente nel database.', async ()=>{
     await request(app).get('/users')
     .send({
@@ -70,6 +73,6 @@ test('Cancella un utente dal database.', async ()=>{
     .send({
         "email": "delete@gmail.com"
     })
-    .expect(201)
+    .expect(200)    // in questo caso 200 perchè non è un 201 created ma 200 OK
 })
 
