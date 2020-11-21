@@ -14,9 +14,9 @@ router.get('/', async(req,res,next) => {
     try{
         const users = await User.find();
         console.log(users);
-        res.json(users);
+        res.status(201).json(users);
     }catch(err){
-        res.json({message: err});
+        res.status(400).json({message: err});
     }
 });
 
@@ -31,9 +31,9 @@ router.get('/:email', async (req,res)=> {
             }
         });
         //console.log(users);
-        res.status(200).json(users);
+        res.status(201).json(users);
     }catch(err){
-        res.json({message: err});
+        res.status(400).json({message: err});
     }
 });
 
@@ -42,9 +42,9 @@ router.get('/:email', async (req,res)=> {
 router.get('/:userId', async (req,res)=>{
     try{
         const user = await User.findById(req.params.userId);
-        res.json(user);
+        res.status(201).json(user);
     }catch(err){
-        res.json({message: err});
+        res.status(400).json({message: err});
     }
 });
 
@@ -74,9 +74,21 @@ router.delete('/:userId', async (req,res)=> {
 
     try{
         const removedUser = await User.deleteOne({_id: req.params.userId})
-        res.json(removedUser);
+        res.status(201).json(removedUser);
     }catch(err){
-        res.json({message: err});
+        res.status(400).json({message: err});
+    }
+
+});
+
+router.delete('', async (req,res)=> {
+    try{
+        let removedUser = await User.deleteOne({email: req.body.userMail})
+        res.status(201).send("User with email "+req.body.userMail+" successfully deleted.");
+        console.log("User with email "+req.body.userMail+" successfully deleted.");
+    }catch(err){
+        res.status(400).send("User with email "+req.body.userMail+" not found.");
+        console.log("User with email "+req.body.userMail+" not found.");
     }
 
 });
@@ -108,9 +120,9 @@ router.patch('/:userId', async (req,res)=> {
             {_id: req.params.userId},
             {$set : {email:  req.body.email}}
         );
-        res.json(updatedUser);                      // Restituzione dell'utente con le informazioni aggiornate
+        res.status(201).json(updatedUser);                      // Restituzione dell'utente con le informazioni aggiornate
     }catch(err){
-        res.json({message: err});
+        res.status(400).json({message: err});
     }
 })
 
