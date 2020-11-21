@@ -71,7 +71,7 @@ test('Permette all utente con email "user@domain.com" e password "abracadabra" d
 test('Cancella un utente dal database.', async ()=>{
     await request(app).delete('/users')
     .send({
-        "email": "delete@gmail.com"
+        "id": "5fb8ecfd14ab343c8c9d6ebe"
     })
     .expect(201)    // in questo caso 200 perchè non è un 201 created ma 200 OK
 })
