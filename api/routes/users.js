@@ -138,7 +138,7 @@ router.delete('', async (req,res)=> {
 
 });
 
-<<<<<<< HEAD
+
 router.delete('', async (req,res)=> {
     try{
         let removedUser = await User.deleteOne({email: req.body.userMail})
@@ -161,7 +161,7 @@ Richiede un oggetto JSON nel body della richiesta con il campo "email" dell'uten
 
 // DA AGGIORNARE <------------------------------------------------------------------------------------------------------------
 router.delete('', async (req,res)=> {
->>>>>>> d4b1c04e3b166889ac51e12b60a88e36b556b8d4
+    
 
     try{
         let removedUser = await User.deleteOne({email: req.body.userMail})
