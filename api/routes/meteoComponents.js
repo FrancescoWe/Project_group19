@@ -23,14 +23,14 @@ router.get('/', async(req,res,next) => {
             cityName: meteoComponent.cityName
         };
     });
-    res.status(200).json(meteoComponents);
+    res.status(201).json(meteoComponents);
 });
 
 /* Definizione del metodo GET con path "/:id": ricerca di un componente meteo tramite id.
 Utile per avere informazioni su un meteoComponent dopo averne ottenuto l'ID da un itinerario di un utente*/
 router.get('/:id', async (req, res) => {
     let meteoComponent = await MeteoComponent.findById(req.params.id).exec();
-    res.status(200).json({
+    res.status(201).json({
         self: '/api/v1/meteoComponents/' + meteoComponent.id,
         temp_Max: meteoComponent.temp_Max,
         temp_Min: meteoComponent.temp_Min,
@@ -63,11 +63,11 @@ router.post('', async (req, res) => {
 
         const itineraryuser = await Itinerary.findById(itineraryid.id);
         console.log("Meteo data binded to itinerary "+req.body.id);
-        res.send("I dati del meteo con l' id: "+meteoComponent._id+"\nsono stati aggiunti all' itinerario con id: "+req.body.id+"\ncollegato all' utente con id: "+itineraryuser.user_id+"\n");
+        res.status(201).send("I dati del meteo con l' id: "+meteoComponent._id+"\nsono stati aggiunti all' itinerario con id: "+req.body.id+"\ncollegato all' utente con id: "+itineraryuser.user_id+"\n");
 
     }catch(err){
         console.log("Itinerary with id:"+req.body.id+" not found");
-        res.send("Itinerary with id:"+req.body.id+" not found");
+        res.status(400).send("Itinerary with id:"+req.body.id+" not found");
     }
 
 });
@@ -88,9 +88,9 @@ router.delete('', async (req,res)=> {
         
         await MeteoComponent.deleteOne({_id: req.body.id});
 
-        res.send("MeteoComponent "+req.body.id+" deleted\nItinerary "+removedMeteoDate.itinerary_id+" updated.\n");
+        res.status(201).send("MeteoComponent "+req.body.id+" deleted\nItinerary "+removedMeteoDate.itinerary_id+" updated.\n");
     }catch(err){
-        res.send("Meteocomponent "+req.body.id+" not found.\n");
+        res.status(400).send("Meteocomponent "+req.body.id+" not found.\n");
     }
 
 });

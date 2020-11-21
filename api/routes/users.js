@@ -102,17 +102,21 @@ router.delete('', async (req,res)=> {
         }
 
         await User.deleteOne({_id: req.body.id});
-        res.send("User with id "+req.body.id+" successfully deleted.\n"+infolen+" itineraries cleared.");
+        res.status(201).send("User with id "+req.body.id+" successfully deleted.\n"+infolen+" itineraries cleared.");
 
     }catch(err){
-        res.send("User with id "+req.body.id+" not found.");
+        res.status(400).send("User with id "+req.body.id+" not found.");
     }
 
 });
 
+
 /* Definizione del metodo DELETE: elimina un determinato user tramite la email.
 Richiede un oggetto JSON nel body della richiesta con il campo "email" dell'utente che si intende eliminare*/
+
+// DA AGGIORNARE <------------------------------------------------------------------------------------------------------------
 router.delete('', async (req,res)=> {
+
     try{
         let removedUser = await User.deleteOne({email: req.body.userMail})
         res.status(201).send("User with email "+req.body.userMail+" successfully deleted.");

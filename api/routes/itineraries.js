@@ -47,9 +47,9 @@ router.post('', async (req, res) => {
         );
 
         console.log('Itinerary saved and binded successfully to user '+userfound._id);
-        res.send("Inviato e collegato all'utente: "+userfound._id+" correttamente");
+        res.status(201).send("Inviato e collegato all'utente: "+userfound._id+" correttamente");
     }catch{
-        res.send("User with id: "+ req.body.id +" not found");
+        res.status(400).send("User with id: "+ req.body.id +" not found");
         console.log("User with id: "+req.body.id+" not found");
     }
 
@@ -86,9 +86,9 @@ router.delete('', async (req,res)=> {
         
         await Itinerary.deleteOne({_id: req.body.id});
 
-        res.send("Itinerary "+req.body.id+" deleted\n"+infolen+" Meteos removed\nUser "+removedItinerary.user_id+" updated.\n");
+        res.status(201).send("Itinerary "+req.body.id+" deleted\n"+infolen+" Meteos removed\nUser "+removedItinerary.user_id+" updated.\n");
     }catch(err){
-        res.send("Itinerary "+req.body.id+" not found.\n");
+        res.status(400).send("Itinerary "+req.body.id+" not found.\n");
     }
 
 });
