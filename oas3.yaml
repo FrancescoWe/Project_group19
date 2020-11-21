@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info: 
     version: '3.0'
-    title: "Prova API"
-    description: "provo a scrivere la api"
+    title: "API IngSoft2 group #19"
+    description: "Prova API"
     license: 
       name: MIT
 servers: 
@@ -11,7 +11,7 @@ servers:
 paths: 
   /users: 
     post: 
-      description: "Creates a new user in the system"
+      description: "Create a new user in the system"
       summary: Create a new user
       requestBody:
         content: 
@@ -24,33 +24,37 @@ paths:
               properties: 
                 password:
                   type: string
-                  description: 'Password dello user'
+                  description: "User's email"
                 email: 
                   type: string
-                  description: 'Email dello user'
+                  description: "User's email"
       responses:
         '201':
-          description: 'The created user'
+          description: 'The respond provides the created user'
           headers: 
             Location:
               schema:
                 type: string
               description: Link to the newly created user
+        '400':
+          description: "This email is already taken / generic error"
               
     get: 
       description: "Get all the users in the system"
       summary: Get all users
       parameters:
       responses:
-        '200':
-          description: "All the users"
-          #content: 
-            #application/json:
-              #schema: 
-                #$ref: '#/components/schemas/User'
+        '201':
+          description: "The response provides the list of all the users"
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/User'
+        '400':
+          description: "Error"
                 
     patch:
-      description: "Updates the user's email"
+      description: "Update the email of the specified user"
       summary: Update email
       parameters:
         - name: id
@@ -58,23 +62,27 @@ paths:
         - name: email
           in: body
       responses:
-        '200':
-          description: "Email updated"
+        '201':
+          description: "The response provides the updated user"
+        '400':
+          description: "Error"
           
     delete:
-      description: "Delete a user"
-      summary: Delete user
+      description: "Delete a user and all the itineraries linked to it"
+      summary: Delete a user
       parameters:
         - name: id
-          in: path
+          in: body
       responses:
-        '200':
+        '201':
           description: "User deleted"
+        '400':
+          description: "User not found"
 
   /users/{id}:    
     get:
       description: >-
-        Gets information about a specific user, identiied by an ID
+        Get information about a specific user, identiied by an ID
       summary: Get a user
       parameters:
         - name: id
@@ -82,35 +90,58 @@ paths:
           required: true
           description: 'ID of the requested user'
       responses: 
-        '200':
+        '201':
           description: 'The user corresponding to the input ID'
           #content:
             #application/json:
               #schema:
                 #$ref: '#/components/schemas/User'
+        '400':
+          description: 'User not found'
 
   /users/{email}:    
     get:
       description: >-
-        Gets information about a specific user, identified by an email
+        Get information about a specific user, identified by the email
       summary: Get a user
       parameters:
         - name: email
           in: path
           required: true
-          description: 'email of the requested user'
+          description: 'Email of the requested user'
       responses: 
-        '200':
+        '201':
           description: 'The user corresponding to the input email'
           #content:
             #application/json:
               #schema:
-                #$ref: '#/components/schemas/User'  
+                #$ref: '#/components/schemas/User'
+        '400':
+          description: 'User not found'
+                
+    delete:
+      description: >-
+        Delete a specific user, identified by the email
+      summary: Delete a user
+      parameters:
+        - name: email
+          in: path
+          required: true
+          description: 'email of the user to be removed'
+      responses:
+        '201':
+          description: 'User deleted'
+          #content:
+            #application/json:
+              #schema:
+                #$ref: '#/components/schemas/User'
+        '400':
+          description: 'User not found'
 
   /meteoComponents:  
     get:
       description: >-
-        Gets the list of all meteo components saved.
+        Get the list of all meteo components saved.
       summary: View all meteos components that are part of an itinerario
       responses:
         '201':
@@ -121,9 +152,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/MeteoComponent'
+        '400':
+          description: "Error"
+          
     post:
       description: >-
-        Creates a new meteoComponent, >-
+        Create a new meteoComponent, >-
         which is the set of the informations about the >-
         meteo in a stage of an itinerario
       summary: Create meteoComponent
@@ -136,6 +170,9 @@ paths:
                 - date
                 - cityName
               properties: 
+                itinerary_id:
+                  type: string
+                  description: 'Id of the itinerary to which the new meteoComponent is linked'
                 temp_Max:
                   type: string
                   description: 'Maximum temperature'
@@ -150,17 +187,39 @@ paths:
                   description: 'Name of the city'
       responses:
         '201':
-          description: 'The created user'
-          headers: 
-            Location:
-              schema:
+          description: 'The created itinerary'
+        '400':
+          description: "Itinerary not found"
+  
+    delete:
+      description: >-
+        Delete a meteoComponent and remove it from the itinerary to which it belongs
+      summary: Delete meteoComponent
+      requestBody:
+        content:
+          application/json:
+          schema:
+            type: object
+            required:
+              - id
+            properties:
+              id:
                 type: string
-              description: Link to the newly created user
+      parameters:
+        - name: id
+          in: body
+          descripion: "Id of the meteoComponent to be removed"
+          required: true
+      responses:
+        '201':
+          description: 'meteoComponent deleted'
+        '400':
+          description: 'meteoComponent not found'
   
   /meteoComponents/{id}:    
     get:
       description: >-
-        Gets information about a specific meteoComponent
+        Get information about a specific meteoComponent
       summary: Get a specific meteoComponent
       parameters:
         - name: id
@@ -174,11 +233,13 @@ paths:
             #application/json:
               #schema:
                 #$ref: '#/components/schemas/User'
+        '400':
+          description: 'meteoComponent not found'
                 
   /meteos:
     get:
       description: >-
-        Gets the current meteo.
+        Get the current meteo.
       summary: View current meteo
       responses: 
         '200':
@@ -190,11 +251,19 @@ paths:
                 items: 
                   $ref: '#/components/schemas/Meteo'
     
+    post:
+      description: >-
+        Create meteo
+      summary: Create meteo
+      responses:
+        '200':
+          description: "Confirmation string"
+    
   /meteos/current/{city}:
     get: 
       description: >-
-        Gets information about current meteo of a city
-      summary: Get meteo
+        Get informations about current meteo of a city
+      summary: Get current meteo
       parameters: 
         - name: city
           in: path
@@ -202,16 +271,29 @@ paths:
           description: 'Name of the requested city'
       responses:
         '200':
-          description: 'The meteo corresponding the city'
+          description: 'The current meteo of the specified city'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Meteo'
+                
+  /meteos/forecast/{city}:
+    get:
+      description: >-
+        Get informations about the meteo of the next 5 days of a city
+      summary: Get forecast meteo
+      parameters: 
+        - name: ciry
+          in: path
+          description: 'Name of the requested city'
+      responses:
+        '200':
+          description: 'The forecast meteo of the specified city'
 
   /itineraries:
     get:
       description: >-
-        Gets the list of all the itineraries
+        Get the list of all the itineraries
       summary: Get itineraries
       responses:
         '200':
@@ -221,7 +303,7 @@ paths:
               schema: 
     post:
       description: >-
-        Creates a new itinerary 
+        Create a new itinerary 
       summary: Creates itinerary
       requestBody:
         content:
@@ -235,6 +317,25 @@ paths:
       responses:
         '200':
           description: 'Itinerary saved successfully.'
+    
+    delete:
+      description: >-
+        Delete an itinerary and remove it from the list of itineraries of the user who had it
+      summary: Delete itinerary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: 'Id of the itinerary to be removed'
+      responses:
+        '200':
+          description: 'Itinerary deleted'
+        '400':
+          description: 'Itinerary not foundat'
    
 
 components:
@@ -251,29 +352,32 @@ components:
           description: 'ID of the user'
         email:
           type: string
-          description: 'email of the user'
+          description: 'Email of the user'
         password: 
           type: string
-          description: 'password dello user'
+          description: 'Password dof the user'
+          
     MeteoComponent:
       type: object
       required: 
         - date
         - temp_Min
         - temp_Max
+        - cityName
       properties:
         date: 
           type: string
-          description: 'Data del meteo'
+          description: 'Date of the meteo'
         temp_Min:
           type: string
-          description: 'temperatura minima di quel giorno in tal posto'
+          description: 'Minimum temperature in that place in that day'
         temp_Max:
           type: string
-          description: 'temperatura massima di quel giorno in tal posto'
+          description: 'Maximum temperature in that place in that day'
         cityName: 
           type: string
-          description: 'il nome della città di cui si vuole il meteo'
+          description: 'The name of the city of witch the user wants to know the meteo conditions'
+          
     Meteo:
       type: object
       required:
@@ -282,7 +386,19 @@ components:
       properties: 
         temperatura: 
           type: string
-          description: "prova_uno"
+          description: "Temperature"
         data: 
           type: string
-          description: "prova_uno"
+          description: "Date"
+          
+    Itinerary:
+      type: object
+      required:
+        - meteos_date
+      properties:
+        user_id:
+          type: ObjectId
+          description: "Id of the user who created the itinerary"
+        meteos_dates:
+          type: Array of strings
+          description: "Array of IDs of the meteoComponents belonging to the itinerary"
