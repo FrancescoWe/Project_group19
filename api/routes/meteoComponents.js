@@ -75,6 +75,8 @@ router.post('', async (req, res) => {
 
 router.delete('', async (req,res)=> {
 
+    //console.log("Id ottenuto : "+req.body.id);
+
     try{
 
         let removedMeteoDate = await MeteoComponent.findOne({_id: req.body.id});        

@@ -2,6 +2,8 @@
 Tutta via le funzioni in esso definite verranno eseguite solo se richiamate dagli
 eventi nell'index.html. */
 
+// const { base } = require("../api/models/user");
+
 // Variabili globali
 var loggedUser;
 var daycount=8;
@@ -31,7 +33,6 @@ var settings = {
 
 // Il bottone "+1 Day" viene settato a hidden.
 document.getElementById('daysbutton').style.visibility="hidden";
-
 
 
 // DEFINIZIONI DELLE FUNZIONI
