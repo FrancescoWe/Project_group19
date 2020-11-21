@@ -6,6 +6,8 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const request = require('request');
 const User = require('../models/user');
+const Itinerary = require('../models/itinerary');
+const MeteoComponent = require('../models/meteoComponent');
 
 // Connessione al DB
 const db = mongoose.connection;
@@ -102,36 +104,27 @@ router.post('/',async function(req,res){
 
 
 /* Definizione del metodo DELETE: elimina un determinato user tramite l'id.
-Richiede un oggetto JSON nel body della richiesta con il campo "userId" dell'utente che si intende eliminare*/
+Richiede un oggetto JSON nel body della richiesta con il campo "id" dell'utente che si intende eliminare*/
 router.delete('', async (req,res)=> {
 
     try{
         var usertomodify = await User.findOne({_id: req.body.id});
+        var infolenIT = Object.keys(usertomodify.itinerary).length;
 
-        var infolen = Object.keys(usertomodify.itinerary).length;
+        for(let i=0;i<infolenIT;i++){
 
-        //console.log("La lughezza del campo itinerario dell' utente "+usertomodify._id+" è "+infolen);
+            var itinerarytomodify = await Itinerary.findOne({_id : usertomodify.itinerary[i]});
+            var infolenMETEO = Object.keys(itinerarytomodify.meteos_dates).length;
 
-        for(let i=0;i<infolen;i++){
-            var data = JSON.stringify({
-                id: usertomodify.itinerary[i]
-            });
-
-            try{
-                request.delete({
-                    url : 'http://'+req.get('host')+'/itineraries',
-                    headers : {'content-type': 'application/json'},
-                    body: data
-                }, function(error, response, body){});
-            } catch(error){
-                console.log(error);
+            for(let j=0;j<infolenMETEO;j++){
+                await MeteoComponent.deleteOne({_id: itinerarytomodify.meteos_dates[j]});
             }
 
-            //console.log("\nItinerario "+i+" eliminato.");
+            await Itinerary.deleteOne({_id: usertomodify.itinerary[i]});
         }
 
         await User.deleteOne({_id: req.body.id});
-        res.status(201).send("User with id "+req.body.id+" successfully deleted.\n"+infolen+" itineraries cleared.");
+        res.status(201).send("User with id "+req.body.id+" successfully deleted.\n"+infolenIT+" itineraries completely cleared.\n");
 
     }catch(err){
         res.status(400).send("User with id "+req.body.id+" not found.");
