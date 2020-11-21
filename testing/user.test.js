@@ -5,18 +5,15 @@ const app = require('../app');
 jest.useFakeTimers();
 
 beforeEach(async()=>{
-    await request(app).delete('/users')
+    await request(app).delete('/users/testfunction@gmail.com')
     .send({
         "userMail": "testfunction@gmail.com"
     })
-<<<<<<< HEAD
-=======
     await request(app).post('/users')
     .send({
         "email":"delete@gmail.com",
         "password":"password"
     })
->>>>>>> d4b1c04e3b166889ac51e12b60a88e36b556b8d4
     console.log('beforeEach')
 })
 afterEach(()=>{
@@ -31,7 +28,7 @@ test('Registra un utente con email "testfunction@gmail.com" e password "testpass
         "email": "testfunction@gmail.com",
         "password": "testpassword"
     })
-    .expect(400)
+    .expect(201)
 })
 
 
@@ -76,6 +73,6 @@ test('Cancella un utente dal database.', async ()=>{
     .send({
         "email": "delete@gmail.com"
     })
-    .expect(200)    // in questo caso 200 perchè non è un 201 created ma 200 OK
+    .expect(201)    // in questo caso 200 perchè non è un 201 created ma 200 OK
 })
 
