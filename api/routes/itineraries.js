@@ -4,6 +4,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const request = require('request');
 const MeteoComponent = require('../models/meteoComponent');
 const Itinerary = require('../models/itinerary');
 const User = require('../models/user');
@@ -46,9 +47,9 @@ router.post('', async (req, res) => {
         );
 
         console.log('Itinerary saved and binded successfully to user '+userfound._id);
-        res.send("Inviato e collegato all'utente: "+userfound._id+" correttamente");
+        res.status(201).send("Inviato e collegato all'utente: "+userfound._id+" correttamente");
     }catch{
-        res.send("User with id: "+ req.body.id +" not found");
+        res.status(400).send("User with id: "+ req.body.id +" not found");
         console.log("User with id: "+req.body.id+" not found");
     }
 
@@ -59,8 +60,24 @@ Richiede un oggetto JSON nel body della richiesta con il campo "id" dell'itinera
 router.delete('', async (req,res)=> {
 
     try{
-
         let removedItinerary = await Itinerary.findOne({_id: req.body.id});
+        var infolen = Object.keys(removedItinerary.meteos_dates).length;
+
+        for(let i=0;i<infolen;i++){
+            var data = JSON.stringify({
+                id: removedItinerary.meteos_dates[i]
+            });
+            try{
+                request.delete({
+                    url: 'http://' + req.get('host') + '/meteoComponents',
+                    headers: { 'content-type': 'application/json' },
+                    body: data
+                }, function (error, response, body) { });
+            } catch(error){
+                console.log(error);
+            }
+            //console.log("\nMeteo "+i+" eliminato.");
+        }
 
         await User.updateOne(
             { _id: removedItinerary.user_id},
@@ -69,9 +86,9 @@ router.delete('', async (req,res)=> {
         
         await Itinerary.deleteOne({_id: req.body.id});
 
-        res.send("Itinerary "+req.body.id+" deleted\nUser "+removedItinerary.user_id+" updated.\n");
+        res.status(201).send("Itinerary "+req.body.id+" deleted\n"+infolen+" Meteos removed\nUser "+removedItinerary.user_id+" updated.\n");
     }catch(err){
-        res.send("Itinerary "+req.body.id+" not found.\n");
+        res.status(400).send("Itinerary "+req.body.id+" not found.\n");
     }
 
 });
@@ -90,9 +107,6 @@ router.delete('', async (req,res)=> {
 
 });
 */
-
-
-
 
 
 /*

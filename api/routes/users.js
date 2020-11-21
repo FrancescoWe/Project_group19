@@ -4,7 +4,8 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const User = require('../models/user')
+const request = require('request');
+const User = require('../models/user');
 
 // Connessione al DB
 const db = mongoose.connection;
@@ -14,9 +15,9 @@ router.get('/', async(req,res,next) => {
     try{
         const users = await User.find();
         console.log(users);
-        res.json(users);
+        res.status(201).json(users);
     }catch(err){
-        res.json({message: err});
+        res.status(400).json({message: err});
     }
 });
 
@@ -31,9 +32,9 @@ router.get('/:email', async (req,res)=> {
             }
         });
         //console.log(users);
-        res.status(200).json(users);
+        res.status(201).json(users);
     }catch(err){
-        res.json({message: err});
+        res.status(400).json({message: err});
     }
 });
 
@@ -42,9 +43,9 @@ router.get('/:email', async (req,res)=> {
 router.get('/:userId', async (req,res)=>{
     try{
         const user = await User.findById(req.params.userId);
-        res.json(user);
+        res.status(201).json(user);
     }catch(err){
-        res.json({message: err});
+        res.status(400).json({message: err});
     }
 });
 
@@ -98,17 +99,46 @@ router.post('', async (req, res) => {
     }
 });
 
-router.delete('/:userId', async (req,res)=> {
+
+/* Definizione del metodo DELETE: elimina un determinato user tramite l'id.
+Richiede un oggetto JSON nel body della richiesta con il campo "userId" dell'utente che si intende eliminare*/
+router.delete('', async (req,res)=> {
 
     try{
-        const removedUser = await User.deleteOne({_id: req.params.userId})
-        res.json(removedUser);
+        var usertomodify = await User.findOne({_id: req.body.id});
+
+        var infolen = Object.keys(usertomodify.itinerary).length;
+
+        //console.log("La lughezza del campo itinerario dell' utente "+usertomodify._id+" è "+infolen);
+
+        for(let i=0;i<infolen;i++){
+            var data = JSON.stringify({
+                id: usertomodify.itinerary[i]
+            });
+
+            try{
+                request.delete({
+                    url : 'http://'+req.get('host')+'/itineraries',
+                    headers : {'content-type': 'application/json'},
+                    body: data
+                }, function(error, response, body){});
+            } catch(error){
+                console.log(error);
+            }
+
+            //console.log("\nItinerario "+i+" eliminato.");
+        }
+
+        await User.deleteOne({_id: req.body.id});
+        res.status(201).send("User with id "+req.body.id+" successfully deleted.\n"+infolen+" itineraries cleared.");
+
     }catch(err){
-        res.json({message: err});
+        res.status(400).send("User with id "+req.body.id+" not found.");
     }
 
 });
 
+<<<<<<< HEAD
 router.delete('', async (req,res)=> {
     try{
         let removedUser = await User.deleteOne({email: req.body.userMail})
@@ -124,17 +154,26 @@ router.delete('', async (req,res)=> {
 /* Definizione del metodo DELETE: elimina un determinato user
 Richiede un oggetto JSON nel body della richiesta con il campo "userId" dell'utente che si intende eliminare*/
 /*router.delete('', async (req,res)=> {
+=======
+
+/* Definizione del metodo DELETE: elimina un determinato user tramite la email.
+Richiede un oggetto JSON nel body della richiesta con il campo "email" dell'utente che si intende eliminare*/
+
+// DA AGGIORNARE <------------------------------------------------------------------------------------------------------------
+router.delete('', async (req,res)=> {
+>>>>>>> d4b1c04e3b166889ac51e12b60a88e36b556b8d4
 
     try{
-        let removedUser = await User.deleteOne({_id: req.body.userId})
-        res.send("User with id "+req.body.userId+" successfully deleted.");
-        console.log("User with id "+req.body.userId+" successfully deleted.");
+        let removedUser = await User.deleteOne({email: req.body.userMail})
+        res.status(201).send("User with email "+req.body.userMail+" successfully deleted.");
+        console.log("User with email "+req.body.userMail+" successfully deleted.");
     }catch(err){
-        res.send("User with id "+req.body.userId+" not found.");
-        console.log("User with id "+req.body.userId+" not found.");
+        res.status(400).send("User with email "+req.body.userMail+" not found.");
+        console.log("User with email "+req.body.userMail+" not found.");
     }
 
-});*/
+});
+
 
 /* Definizione del metodo PATCH con path "/:userId": aggiorna la mail dello user con id "userId".
 Richiede un oggetto JSON nel body della richiesta con il campo "email" e il nuovo valore dello stesso.*/
@@ -148,9 +187,9 @@ router.patch('/:userId', async (req,res)=> {
             {_id: req.params.userId},
             {$set : {email:  req.body.email}}
         );
-        res.json(updatedUser);                      // Restituzione dell'utente con le informazioni aggiornate
+        res.status(201).json(updatedUser);                      // Restituzione dell'utente con le informazioni aggiornate
     }catch(err){
-        res.json({message: err});
+        res.status(400).json({message: err});
     }
 })
 

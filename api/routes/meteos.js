@@ -14,7 +14,7 @@ var meteoForecastUrl= ""; // 'http://api.openweathermap.org/data/2.5/forecast?q=
 
 // Definizione del metodo GET: restituisce un messaggio che informa riguardo la gestione della richiesta
 router.get('/', (req,res,next) => {
-    res.status(200).json({
+    res.status(201).json({
         message: 'Handling GET request to /meteos'
     });
 });
@@ -24,7 +24,7 @@ router.get('/current/:cityName', function(req,res){
     meteoCurrentUrl = 'http://api.openweathermap.org/data/2.5/weather?q='+req.params.cityName+'&units=metric&appid='+ process.env.API_KEY;
     request(meteoCurrentUrl, function(error,response,body){     // Viene mandata una richiesta all'URL specificato, passando come parametro la funzione per la gestione della response
         const meteo_json=JSON.parse(body);                      // Parsing del body in JSON
-        res.json(meteo_json);                                   // Restituzione dell'oggetto in formato JSON
+        res.status(201).json(meteo_json);                                   // Restituzione dell'oggetto in formato JSON
         console.log(meteo_json);
     });
     /*request(meteoForecastUrl, function(error,response,body){
@@ -39,7 +39,7 @@ router.get('/forecast/:cityName', function(req,res){
     meteoForecastUrl = 'http://api.openweathermap.org/data/2.5/forecast?q='+req.params.cityName+'&units=metric&appid='+ process.env.API_KEY; 
     request(meteoForecastUrl, function(error,response,body){        // Viene mandata una richiesta all'URL specificato, passando come parametro la funzione per la gestione della response
         const meteo_fore_json=JSON.parse(body);                     // Parsing del body in JSON
-        res.json(meteo_fore_json);                                  // Restituzione dell'oggetto in formato JSON
+        res.status(201).json(meteo_fore_json);                                  // Restituzione dell'oggetto in formato JSON
         console.log(meteo_fore_json);           
     });     
 });
@@ -48,7 +48,7 @@ router.get('/forecast/:cityName', function(req,res){
 // Definizione del metodo POST: crea un oggetto meteo
 router.post('/',function(req,res){
     Meteo.create(req.body).then(function(meteo){
-        res.send(meteo);
+        res.status(201).send(meteo);
         console.log('Ha funzionato(!)');
     });
 });

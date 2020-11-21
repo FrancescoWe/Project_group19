@@ -9,17 +9,73 @@ beforeEach(async()=>{
     .send({
         "userMail": "testfunction@gmail.com"
     })
+<<<<<<< HEAD
+=======
+    await request(app).post('/users')
+    .send({
+        "email":"delete@gmail.com",
+        "password":"password"
+    })
+>>>>>>> d4b1c04e3b166889ac51e12b60a88e36b556b8d4
     console.log('beforeEach')
 })
 afterEach(()=>{
-    console.log('afterEach');    
+    console.log('afterEach');
 })
 
-test('Should sign up for a user ', async ()=>{
+// Test relativi agli user per Jest
+
+test('Registra un utente con email "testfunction@gmail.com" e password "testpassword". ', async ()=>{
     await request(app).post('/users')
     .send({
         "email": "testfunction@gmail.com",
         "password": "testpassword"
     })
+    .expect(400)
+})
+
+
+test('Restituisce un errore in quanto la mail non ha il formato corretto. ', async ()=>{
+    await request(app).post('/users')
+    .send({
+        "email": "pinodaniele",
+        "password": "testpassword"
+    })
+    .expect(400)
+})
+
+/*
+test('Restituisce un errore in quanto la password è vuota. ', async ()=>{
+    await request(app).post('/users')
+    .send({
+        "email": "testfunction@gmail.com",
+        "password":""
+    })
+    .expect(400)
+})
+*/
+
+test('Esiste un utente nel database.', async ()=>{
+    await request(app).get('/users')
+    .send({
+    })
     .expect(201)
 })
+
+test('Permette all utente con email "user@domain.com" e password "abracadabra" di effettuare il login (user predefinito). ', async ()=>{
+    await request(app).get('/users')
+    .send({
+        "email": "user@domain.com",
+        "password": "abracadabra"
+    })
+    .expect(201)
+})
+
+test('Cancella un utente dal database.', async ()=>{
+    await request(app).delete('/users')
+    .send({
+        "email": "delete@gmail.com"
+    })
+    .expect(200)    // in questo caso 200 perchè non è un 201 created ma 200 OK
+})
+

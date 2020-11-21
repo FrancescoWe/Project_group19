@@ -1,7 +1,6 @@
 // Modello di un oggetto "user"
 
 const mongoose = require('mongoose');
-const Itinerary = require('./itinerary');
 
 const UserSchema = mongoose.Schema({
 
