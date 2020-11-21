@@ -28,7 +28,8 @@ router.get('/:email', async (req,res)=> {
         .map((entry) => {
             return{
                 self: '/api/v1/users/' +entry.id,
-                email: entry.email
+                email: entry.email,
+                itinerary: entry.itinerary
             }
         });
         //console.log(users);
@@ -142,10 +143,9 @@ router.delete('', async (req,res)=> {
 /* Definizione del metodo DELETE: elimina un determinato user tramite la email.
 Richiede un oggetto JSON nel body della richiesta con il campo "email" dell'utente che si intende eliminare*/
 
-// DA AGGIORNARE <------------------------------------------------------------------------------------------------------------
-router.delete('/:email', async (req,res)=> {
-    
+// DA AGGIORNARE <-----------------------------------------------------------------------------------------------------------
 
+router.delete('/:email', async (req,res)=> {
     try{
         let removedUser = await User.deleteOne({email: req.params.email})
         res.status(201).send("User with email "+req.params.email+" successfully deleted.");
@@ -154,9 +154,7 @@ router.delete('/:email', async (req,res)=> {
         res.status(400).send("User with email "+req.params.email+" not found.");
         console.log("User with email "+req.params.email+" not found.");
     }
-
 });
-
 
 /* Definizione del metodo PATCH con path "/:userId": aggiorna la mail dello user con id "userId".
 Richiede un oggetto JSON nel body della richiesta con il campo "email" e il nuovo valore dello stesso.*/
