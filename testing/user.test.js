@@ -4,7 +4,11 @@ const app = require('../app');
 
 jest.useFakeTimers();
 
-beforeEach(()=>{
+beforeEach(async()=>{
+    await request(app).delete('/users')
+    .send({
+        "userMail": "testfunction@gmail.com"
+    })
     console.log('beforeEach')
 })
 afterEach(()=>{

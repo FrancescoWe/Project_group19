@@ -52,21 +52,49 @@ router.get('/:userId', async (req,res)=>{
 /* Definizione del metodo POST: crea uno user e lo salva nel DB.
 Richiede un oggetto JSON nel body della richiesta con i campi relativi ad uno user.
 Se esiste giù un utente con la mail specificata, restituisce un messaggio di errore. */
-router.post('/',async function(req,res){
-    console.log(req.body.email);
+/*router.post('/',async function(req,res){
+    //console.log(req.body.email);
+    try{
     const usertwo = await User.findOne({email: req.body.email});    // Ricerca nel DB di un utente con la mail specificata
-    if(usertwo==null){                                              // Caso in cui non esiste già un utente con la mail specificata
-        User.create(req.body).then(function(user){                  // Viene creato un utente
-            if(!user.email || typeof user.email!= 'string' || !checkIfEmailInString(user.email)){   // Se la mail non è nel formato corretto, restituisce un errore
-                res.status(400).json({ error: 'The field "email" must be a non-empty string, in email format' });
-                return;
-                };
-            res.status(201).send(user);                                         // altrimenti, viene restituito il nuovo utente
-            console.log('Aggiunto user');
+        if(usertwo==null){                                              // Caso in cui non esiste già un utente con la mail specificata
+            User.create(req.body).then(function(user){                  // Viene creato un utente
+                if(!user.email || typeof user.email!= 'string' || !checkIfEmailInString(user.email)){   // Se la mail non è nel formato corretto, restituisce un errore
+                    res.status(400).json({ error: 'The field "email" must be a non-empty string, in email format' });
+                    return;
+                    };
+                res.status(201).send(user);                                         // altrimenti, viene restituito il nuovo utente
+                console.log('Aggiunto user');
+            });
+        }else{                                                          // Caso in cui esiste già un utente con la mail specificata
+            res.status(400).json({ error: 'This email is already taken' }); // Errore
+            return;
+        }
+    }catch{
+        res.status(400).send({message: error});
+    }
+});*/
+
+router.post('', async (req, res) => {
+    try{
+        const usertwo = await User.findOne({email: req.body.email});
+        if(usertwo!=null){
+            console.log("Esiste già uno user con questa mail");
+            res.status(400).send({message: "Esiste già uno user con questa mail"});
+            return;
+        }
+        let userCreated = new User({
+            email: req.body.email,
+            password: req.body.password
         });
-    }else{                                                          // Caso in cui esiste già un utente con la mail specificata
-        res.status(400).json({ error: 'This email is already taken' }); // Errore
-        return;
+        if (!userCreated.email || typeof userCreated.email != 'string' || !checkIfEmailInString(userCreated.email)) {
+            res.status(400).send({ mesage: 'The field "email" must be a non-empty string, in email format' });
+            return;
+        }
+        userCreated = await userCreated.save();
+        res.location("/api/v1/users/" + userId).status(201).send();
+    }catch(err){
+        console.log("Devi inserire il campo mail e il campo password oppure esiste già uno user con questa mail");
+        res.status(400).send({message: err});
     }
 });
 
@@ -77,6 +105,18 @@ router.delete('/:userId', async (req,res)=> {
         res.json(removedUser);
     }catch(err){
         res.json({message: err});
+    }
+
+});
+
+router.delete('', async (req,res)=> {
+    try{
+        let removedUser = await User.deleteOne({email: req.body.userMail})
+        res.status(201).send("User with email "+req.body.userMail+" successfully deleted.");
+        console.log("User with email "+req.body.userMail+" successfully deleted.");
+    }catch(err){
+        res.status(400).send("User with email "+req.body.userMail+" not found.");
+        console.log("User with email "+req.body.userMail+" not found.");
     }
 
 });
