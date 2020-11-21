@@ -62,7 +62,7 @@ router.post('/',async function(req,res){
                 res.status(400).json({ error: 'The field "email" must be a non-empty string, in email format' });
                 return;
                 };
-            res.send(user);                                         // altrimenti, viene restituito il nuovo utente
+            res.status(201).send(user);                                         // altrimenti, viene restituito il nuovo utente
             console.log('Aggiunto user');
         });
     }else{                                                          // Caso in cui esiste già un utente con la mail specificata
@@ -71,8 +71,20 @@ router.post('/',async function(req,res){
     }
 });
 
+/*
+router.delete('/:userId', async (req,res)=> {
 
-/* Definizione del metodo DELETE: elimina un determinato user
+    try{
+        const removedUser = await User.deleteOne({_id: req.params.userId})
+        res.json(removedUser);
+    }catch(err){
+        res.json({message: err});
+    }
+
+});
+*/
+
+/* Definizione del metodo DELETE: elimina un determinato user tramite l'id.
 Richiede un oggetto JSON nel body della richiesta con il campo "userId" dell'utente che si intende eliminare*/
 router.delete('', async (req,res)=> {
 
@@ -109,6 +121,21 @@ router.delete('', async (req,res)=> {
     }
 
 });
+
+/* Definizione del metodo DELETE: elimina un determinato user tramite la email.
+Richiede un oggetto JSON nel body della richiesta con il campo "email" dell'utente che si intende eliminare*/
+router.delete('', async (req,res)=> {
+    try{
+        let removedUser = await User.deleteOne({email: req.body.userMail})
+        res.status(201).send("User with email "+req.body.userMail+" successfully deleted.");
+        console.log("User with email "+req.body.userMail+" successfully deleted.");
+    }catch(err){
+        res.status(400).send("User with email "+req.body.userMail+" not found.");
+        console.log("User with email "+req.body.userMail+" not found.");
+    }
+
+});
+
 
 /* Definizione del metodo PATCH con path "/:userId": aggiorna la mail dello user con id "userId".
 Richiede un oggetto JSON nel body della richiesta con il campo "email" e il nuovo valore dello stesso.*/
