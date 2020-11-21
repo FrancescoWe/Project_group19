@@ -71,33 +71,6 @@ router.post('/',async function(req,res){
     }
 });
 
-<<<<<<< HEAD
-/*
-router.delete('/:userId', async (req,res)=> {
-
-    try{
-        const removedUser = await User.deleteOne({_id: req.params.userId})
-        res.status(201).json(removedUser);
-    }catch(err){
-        res.status(400).json({message: err});
-    }
-
-});
-
-router.delete('', async (req,res)=> {
-    try{
-        let removedUser = await User.deleteOne({email: req.body.userMail})
-        res.status(201).send("User with email "+req.body.userMail+" successfully deleted.");
-        console.log("User with email "+req.body.userMail+" successfully deleted.");
-    }catch(err){
-        res.status(400).send("User with email "+req.body.userMail+" not found.");
-        console.log("User with email "+req.body.userMail+" not found.");
-    }
-
-});
-*/
-=======
->>>>>>> b67d90a67a0963ada5bc82ddffa6e06a79a958bf
 
 /* Definizione del metodo DELETE: elimina un determinato user tramite l'id.
 Richiede un oggetto JSON nel body della richiesta con il campo "userId" dell'utente che si intende eliminare*/

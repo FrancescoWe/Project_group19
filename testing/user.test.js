@@ -21,7 +21,7 @@ afterEach(()=>{
 })
 
 // Test relativi agli user per Jest
-/*
+
 test('Registra un utente con email "testfunction@gmail.com" e password "testpassword". ', async ()=>{
     await request(app).post('/users')
     .send({
@@ -30,7 +30,7 @@ test('Registra un utente con email "testfunction@gmail.com" e password "testpass
     })
     .expect(400)
 })
-*/
+
 
 test('Restituisce un errore in quanto la mail non ha il formato corretto. ', async ()=>{
     await request(app).post('/users')
