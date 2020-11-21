@@ -12,31 +12,39 @@ const db = mongoose.connection;
 
 // Definizione del metodo GET: ricerca i meteoComponents di tutti gli user
 router.get('/', async(req,res,next) => {
-    let meteoComponents = await MeteoComponent.find({}).exec();
-    meteoComponents = meteoComponents.map( (meteoComponent) => {
-        return {
-            id: meteoComponent.id,
-            itinerary_id : meteoComponent.itinerary_id,
-            temp_Max: meteoComponent.temp_Max,
-            temp_Min: meteoComponent.temp_Min,
-            date: meteoComponent.date,
-            cityName: meteoComponent.cityName
-        };
-    });
-    res.status(201).json(meteoComponents);
+    try{
+        let meteoComponents = await MeteoComponent.find({}).exec();
+        meteoComponents = meteoComponents.map( (meteoComponent) => {
+            return {
+                id: meteoComponent.id,
+                itinerary_id : meteoComponent.itinerary_id,
+                temp_Max: meteoComponent.temp_Max,
+                temp_Min: meteoComponent.temp_Min,
+                date: meteoComponent.date,
+                cityName: meteoComponent.cityName
+            };
+        });
+        res.status(201).json(meteoComponents);
+    } catch(err){
+        res.status(400).send("Si è verificato un errore.");
+    }
 });
 
 /* Definizione del metodo GET con path "/:id": ricerca di un componente meteo tramite id.
 Utile per avere informazioni su un meteoComponent dopo averne ottenuto l'ID da un itinerario di un utente*/
 router.get('/:id', async (req, res) => {
-    let meteoComponent = await MeteoComponent.findById(req.params.id).exec();
-    res.status(201).json({
-        self: '/api/v1/meteoComponents/' + meteoComponent.id,
-        temp_Max: meteoComponent.temp_Max,
-        temp_Min: meteoComponent.temp_Min,
-        date: meteoComponent.date,
-        cityName: meteoComponent.cityName
-    });
+    try {
+        let meteoComponent = await MeteoComponent.findById(req.params.id).exec();
+        res.status(201).json({
+            self: '/api/v1/meteoComponents/' + meteoComponent.id,
+            temp_Max: meteoComponent.temp_Max,
+            temp_Min: meteoComponent.temp_Min,
+            date: meteoComponent.date,
+            cityName: meteoComponent.cityName
+        });
+    } catch(err){
+        res.status(400).send("La meteoComponent con id: " + req.params.id + " non esiste.");
+    }
 });
 
 //Definizione del metodo POST: crea un meteoComponent e lo salva nel DB

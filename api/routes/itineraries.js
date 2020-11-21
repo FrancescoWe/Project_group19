@@ -15,15 +15,19 @@ const db = mongoose.connection;
 
 // Definizione del metodo GET: ricerca gli itinerari di tutti gli user
 router.get('/', async(req,res,next) => {
-    let itineraries = await Itinerary.find({}).exec();
-    itineraries = itineraries.map( (itinerary) => {
-        return {
-            id: itinerary.id,
-            user_id : itinerary.user_id,
-            meteos_dates : itinerary.meteos_dates
-        };
-    });
-    res.status(200).json(itineraries);
+    try{
+        let itineraries = await Itinerary.find({}).exec();
+        itineraries = itineraries.map( (itinerary) => {
+            return {
+                id: itinerary.id,
+                user_id : itinerary.user_id,
+                meteos_dates : itinerary.meteos_dates
+            };
+        });
+        res.status(200).json(itineraries);
+    } catch(err){
+        res.status(400).send("Si è veririficato un errore.");
+    }
 });
 
 /* Definizione del metodo POST: crea un itinerario vuoto e lo salva,
