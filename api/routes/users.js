@@ -4,7 +4,8 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const User = require('../models/user')
+const request = require('request');
+const User = require('../models/user');
 
 // Connessione al DB
 const db = mongoose.connection;
@@ -76,12 +77,35 @@ Richiede un oggetto JSON nel body della richiesta con il campo "userId" dell'ute
 router.delete('', async (req,res)=> {
 
     try{
-        let removedUser = await User.deleteOne({_id: req.body.userId})
-        res.send("User with id "+req.body.userId+" successfully deleted.");
-        console.log("User with id "+req.body.userId+" successfully deleted.");
+        var usertomodify = await User.findOne({_id: req.body.id});
+
+        var infolen = Object.keys(usertomodify.itinerary).length;
+
+        //console.log("La lughezza del campo itinerario dell' utente "+usertomodify._id+" è "+infolen);
+
+        for(let i=0;i<infolen;i++){
+            var data = JSON.stringify({
+                id: usertomodify.itinerary[i]
+            });
+
+            try{
+                request.delete({
+                    url : 'http://'+req.get('host')+'/itineraries',
+                    headers : {'content-type': 'application/json'},
+                    body: data
+                }, function(error, response, body){});
+            } catch(error){
+                console.log(error);
+            }
+
+            //console.log("\nItinerario "+i+" eliminato.");
+        }
+
+        await User.deleteOne({_id: req.body.id});
+        res.send("User with id "+req.body.id+" successfully deleted.\n"+infolen+" itineraries cleared.");
+
     }catch(err){
-        res.send("User with id "+req.body.userId+" not found.");
-        console.log("User with id "+req.body.userId+" not found.");
+        res.send("User with id "+req.body.id+" not found.");
     }
 
 });
