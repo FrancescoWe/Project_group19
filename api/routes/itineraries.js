@@ -59,19 +59,14 @@ router.post('', async (req, res) => {
 Richiede un oggetto JSON nel body della richiesta con il campo "id" dell'itinerario che si intende eliminare*/
 router.delete('', async (req,res)=> {
 
-    //console.log("Id ottenuto : "+req.body.id);
-
     try{
-
         let removedItinerary = await Itinerary.findOne({_id: req.body.id});
-
         var infolen = Object.keys(removedItinerary.meteos_dates).length;
 
         for(let i=0;i<infolen;i++){
             var data = JSON.stringify({
                 id: removedItinerary.meteos_dates[i]
             });
-
             try{
                 request.delete({
                     url: 'http://' + req.get('host') + '/meteoComponents',
@@ -81,7 +76,6 @@ router.delete('', async (req,res)=> {
             } catch(error){
                 console.log(error);
             }
-
             //console.log("\nMeteo "+i+" eliminato.");
         }
 
