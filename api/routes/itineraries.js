@@ -64,33 +64,21 @@ Richiede un oggetto JSON nel body della richiesta con il campo "id" dell'itinera
 router.delete('', async (req,res)=> {
 
     try{
-        let removedItinerary = await Itinerary.findOne({_id: req.body.id});
-        var infolen = Object.keys(removedItinerary.meteos_dates).length;
+        var itinerarytomodify = await Itinerary.findOne({_id : req.body.id});
+        var infolenMETEO = Object.keys(itinerarytomodify.meteos_dates).length;
 
-        for(let i=0;i<infolen;i++){
-            var data = JSON.stringify({
-                id: removedItinerary.meteos_dates[i]
-            });
-            try{
-                request.delete({
-                    url: 'http://' + req.get('host') + '/meteoComponents',
-                    headers: { 'content-type': 'application/json' },
-                    body: data
-                }, function (error, response, body) { });
-            } catch(error){
-                console.log(error);
-            }
-            //console.log("\nMeteo "+i+" eliminato.");
+        for(let j=0;j<infolenMETEO;j++){
+            await MeteoComponent.deleteOne({_id: itinerarytomodify.meteos_dates[j]});
         }
 
         await User.updateOne(
-            { _id: removedItinerary.user_id},
+            { _id: itinerarytomodify.user_id},
             { $pull: { itinerary: req.body.id  } }
         ); 
         
         await Itinerary.deleteOne({_id: req.body.id});
 
-        res.status(201).send("Itinerary "+req.body.id+" deleted\n"+infolen+" Meteos removed\nUser "+removedItinerary.user_id+" updated.\n");
+        res.status(201).send("Itinerary "+req.body.id+" deleted\n"+infolenMETEO+" Meteos removed\nUser "+itinerarytomodify.user_id+" updated.\n");
     }catch(err){
         res.status(400).send("Itinerary "+req.body.id+" not found.\n");
     }
