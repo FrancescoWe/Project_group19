@@ -2,17 +2,16 @@
 
 
 const mongoose = require('mongoose');
-// const MeteoComponent = require('./meteoComponent');
+const MeteoComponent = require('./meteoComponent').schema;
 
 const ItinerarySchema = mongoose.Schema({
     
     // Il campo user_id serve per collegare un itinerario ad un utente.
-    user_id: mongoose.Schema.Types.ObjectId,
+    //user_id: mongoose.Schema.Types.ObjectId,
     
     // Array che conterrà oggetti di tipo meteoComponent
     meteos_dates : {
-        type : [String],
-        required: [true, 'Every Itinerary must have an array of dates initialized']
+        type : [MeteoComponent],
     }
 
 });

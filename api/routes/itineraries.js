@@ -14,19 +14,15 @@ const db = mongoose.connection;
 
 
 // Definizione del metodo GET: ricerca gli itinerari di tutti gli user
-router.get('/', async(req,res,next) => {
+router.get('/', async(req,res) => {
     try{
-        let itineraries = await Itinerary.find({}).exec();
-        itineraries = itineraries.map( (itinerary) => {
-            return {
-                id: itinerary.id,
-                user_id : itinerary.user_id,
-                meteos_dates : itinerary.meteos_dates
-            };
-        });
-        res.status(200).json(itineraries);
+        let founduser = await User.findById(req.body.user_id);
+        if(founduser != undefined)
+            res.status(200).json(founduser.itinerary);
+        else
+            res.status(400).send("User with id: "+req.body.user_id+" not found");
     } catch(err){
-        res.status(400).send("Si è veririficato un errore.");
+        res.status(400).send(err);
     }
 });
 
@@ -35,23 +31,18 @@ connettendolo ad un utente singolo (specifica l'id dell' utente nel body della p
 router.post('', async (req, res) => {
 
     try{
-        const userfound = await User.findOne({_id: req.body.id});
-        console.log("User with id: "+req.body.id+" found");
+        let userfound = await User.findOne({_id: req.body.user_id});
+        //console.log("User with id: "+req.body.user_id+" found");
 
-        let newitinerary = new Itinerary({
-            user_id : req.body.id,
-            meteos_dates : req.body.meteos_dates
-        });
-
-        newitinerary = await newitinerary.save();
+        let newitinerary = new Itinerary();
 
         await User.updateOne(
             {_id: userfound},
-            {$push : {itinerary: newitinerary._id}}
+            {$push : {itinerary: newitinerary}}
         );
 
-        console.log('Itinerary saved and binded successfully to user '+userfound._id);
-        res.status(201).send("Inviato e collegato all'utente: "+userfound._id+" correttamente");
+        //console.log('Itinerary saved and binded successfully to user '+userfound._id);
+        res.status(201).send('Itinerary saved and binded successfully to user '+userfound._id);
     }catch{
         res.status(400).send("User with id: "+ req.body.id +" not found");
         console.log("User with id: "+req.body.id+" not found");
@@ -64,23 +55,32 @@ Richiede un oggetto JSON nel body della richiesta con il campo "id" dell'itinera
 router.delete('', async (req,res)=> {
 
     try{
-        var itinerarytomodify = await Itinerary.findOne({_id : req.body.id});
-        var infolenMETEO = Object.keys(itinerarytomodify.meteos_dates).length;
+        var usertomodify = await User.findById(req.body.user_id);
+        var itinerarytomodify;
+        var count=-1;
 
-        for(let j=0;j<infolenMETEO;j++){
-            await MeteoComponent.deleteOne({_id: itinerarytomodify.meteos_dates[j]});
+        var infolenIT = Object.keys(usertomodify.itinerary).length;
+
+        for(let i=0;i<infolenIT;i++){
+            if(usertomodify.itinerary[i].id == req.body.itinerary_id){
+                itinerarytomodify = usertomodify.itinerary[i];
+                count=i;
+                infolenIT=-1;
+            }
         }
 
-        await User.updateOne(
-            { _id: itinerarytomodify.user_id},
-            { $pull: { itinerary: req.body.id  } }
-        ); 
-        
-        await Itinerary.deleteOne({_id: req.body.id});
+        if(count!=-1){
+            await User.updateOne(
+                { _id: req.body.user_id},
+                { $pull:  {itinerary : itinerarytomodify} }
+            ); 
+            res.status(201).send("Itinerary "+req.body.itinerary_id+" deleted\nUser "+usertomodify.id+" updated.\n");
+        } else {
+            res.status(400).send("Itinerary "+req.body.itinerary_id+" not found.\n");
 
-        res.status(201).send("Itinerary "+req.body.id+" deleted\n"+infolenMETEO+" Meteos removed\nUser "+itinerarytomodify.user_id+" updated.\n");
+        } 
     }catch(err){
-        res.status(400).send("Itinerary "+req.body.id+" not found.\n");
+        res.status(400).send("Itinerary "+req.body.itinerary_id+" not found.\n");
     }
 
 });

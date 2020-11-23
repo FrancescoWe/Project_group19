@@ -1,6 +1,7 @@
 // Modello di un oggetto "user"
 
 const mongoose = require('mongoose');
+const Itinerary = require('./itinerary').schema;
 
 const UserSchema = mongoose.Schema({
 
@@ -17,7 +18,7 @@ const UserSchema = mongoose.Schema({
     /* Il campo "itinerary" serve per collegare itinerari all'utente.
     E' un array di ID itineraries. */
     itinerary : {
-        type : [String],
+        type : [Itinerary],
        // required: [true, 'Every user must have an array of Itinaries initialized']
     }
     

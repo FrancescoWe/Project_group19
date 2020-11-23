@@ -4,27 +4,29 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const MeteoComponent = require('../models/meteoComponent');
-const Itinerary = require('../models/itinerary');
+const User = require("../models/user");
+const MeteoComponent = require("../models/meteoComponent");
 
 // Connessione al DB
 const db = mongoose.connection;
 
 // Definizione del metodo GET: ricerca i meteoComponents di tutti gli user
-router.get('/', async(req,res,next) => {
+router.get('/', async(req,res) => {
     try{
-        let meteoComponents = await MeteoComponent.find({}).exec();
-        meteoComponents = meteoComponents.map( (meteoComponent) => {
-            return {
-                id: meteoComponent.id,
-                itinerary_id : meteoComponent.itinerary_id,
-                temp_Max: meteoComponent.temp_Max,
-                temp_Min: meteoComponent.temp_Min,
-                date: meteoComponent.date,
-                cityName: meteoComponent.cityName
-            };
-        });
-        res.status(201).json(meteoComponents);
+        let founduser = await User.findById(req.body.user_id);
+        let founditinerary;
+
+        let infolenIT = Object.keys(founduser.itinerary).length;
+
+        for(let i=0;i<infolenIT;i++){
+            if(founduser.itinerary[i].id == req.body.itinerary_id){
+                founditinerary = founduser.itinerary[i];
+                infolenIT=-1;
+            }
+        }
+
+        let meteoComponents = founditinerary.meteos_dates;
+        res.status(201).send(meteoComponents);
     } catch(err){
         res.status(400).send("Si è verificato un errore.");
     }
@@ -51,31 +53,41 @@ router.get('/:id', async (req, res) => {
 router.post('', async (req, res) => {
 
     try{
-        const itineraryid = await Itinerary.findById(req.body.id);
-        console.log("Itinerary with id:"+req.body.id+" found");
+        let founduser = await User.findById(req.body.user_id);
+        //console.log("Itinerary with id:"+req.body.id+" found");
 
-        let meteoComponent = new MeteoComponent({
-            itinerary_id: req.body.id,
-            temp_Max: req.body.temp_Max,
-            temp_Min: req.body.temp_Min,
-            date: req.body.date,
-            cityName: req.body.cityName
+        let founditinerary;
+        var count=-1;
+
+        let infolenIT = Object.keys(founduser.itinerary).length;
+
+        for(let i=0;i<infolenIT;i++){
+            if(founduser.itinerary[i].id == req.body.itinerary_id){
+                founditinerary = founduser.itinerary[i];
+                infolenIT=-1;
+                count=i;
+            }
+        }
+
+        let meteoComponents = new MeteoComponent({
+            temp_Max : req.body.temp_Max,
+            temp_Min : req.body.temp_Min,
+            date : req.body.date,
+            cityName : req.body.cityName
         });
-            
-        meteoComponent = await meteoComponent.save();
-            
-        await Itinerary.updateOne(
-            {_id: itineraryid.id},
-            {$push : {meteos_dates: meteoComponent._id}}
-        );
 
-        const itineraryuser = await Itinerary.findById(itineraryid.id);
-        console.log("Meteo data binded to itinerary "+req.body.id);
-        res.status(201).send("I dati del meteo con l' id: "+meteoComponent._id+"\nsono stati aggiunti all' itinerario con id: "+req.body.id+"\ncollegato all' utente con id: "+itineraryuser.user_id+"\n");
-
+        if(count!=-1){
+            await User.updateOne(
+                {"_id": req.body.user_id, "itinerary._id" : req.body.itinerary_id},
+                {"$push" : { "itinerary.$.meteos_dates" : meteoComponents } },
+            );
+            console.log("Meteo data binded to itinerary "+req.body.itinerary_id);
+            res.status(201).send("I dati del meteo sono stati aggiunti all' itinerario con id: "+req.body.itinerary_id+"\ncollegato all' utente con id: "+req.body.user_id+"\n");    
+        } else
+            res.status(400).send("Itinerary with id:"+req.body.itinerary_id+" not found");
     }catch(err){
-        console.log("Itinerary with id:"+req.body.id+" not found");
-        res.status(400).send("Itinerary with id:"+req.body.id+" not found");
+        console.log("Itinerary with id:"+req.body.itinerary_id+" not found");
+        res.status(400).send("Itinerary with id:"+req.body.itinerary_id+" not found");
     }
 
 });
@@ -87,18 +99,44 @@ router.delete('', async (req,res)=> {
 
     try{
 
-        let removedMeteoDate = await MeteoComponent.findOne({_id: req.body.id});        
+        let founduser = await User.findById(req.body.user_id);
+        //console.log("Itinerary with id:"+req.body.id+" found");
 
-        await Itinerary.updateOne(
-            { _id: removedMeteoDate.itinerary_id},
-            { $pull: { meteos_dates: req.body.id  } }
-        );      
-        
-        await MeteoComponent.deleteOne({_id: req.body.id});
+        let founditinerary;
+        let foundmeteocomponent;
+        var count1=-1;
+        var count2=-1;
 
-        res.status(201).send("MeteoComponent "+req.body.id+" deleted\nItinerary "+removedMeteoDate.itinerary_id+" updated.\n");
+        let infolenIT = Object.keys(founduser.itinerary).length;
+
+        for(let i=0;i<infolenIT;i++){
+            if(founduser.itinerary[i].id == req.body.itinerary_id){
+                founditinerary = founduser.itinerary[i];
+                infolenIT=-1;
+                count1=i;
+            }
+        }
+
+        let infolenMETEO = Object.keys(founditinerary.meteos_dates).length;
+
+        for(let i=0;i<infolenMETEO;i++){
+            if(founditinerary.meteos_dates[i].id == req.body.meteo_id){
+                foundmeteocomponent = founditinerary.meteos_dates[i];
+                infolenMETEO=-1;
+                count2=i;
+            }
+        }
+
+        if(count2!=-1){
+            await User.updateOne(
+                {"_id": req.body.user_id, "itinerary._id" : req.body.itinerary_id},
+                {"$pull" : { "itinerary.$.meteos_dates" : foundmeteocomponent } }
+            );
+            res.status(201).send("MeteoComponent "+req.body.meteo_id+" deleted\nItinerary "+req.body.itinerary_id+" updated.\n");
+        } else
+            res.status(400).send("Meteocomponent "+req.body.meteo_id+" not found.\n");
     }catch(err){
-        res.status(400).send("Meteocomponent "+req.body.id+" not found.\n");
+        res.status(400).send("Meteocomponent "+req.body.meteo_id+" not found.\n");
     }
 
 });

@@ -65,7 +65,7 @@ router.post('/',async function(req,res){
                 if(!user.email || typeof user.email!= 'string' || !checkIfEmailInString(user.email)){   // Se la mail non è nel formato corretto, restituisce un errore
                     res.status(400).json({ error: 'The field "email" must be a non-empty string, in email format' });
                     return;
-                    };
+                };
                 res.status(201).send(user);                                         // altrimenti, viene restituito il nuovo utente
                 console.log('Aggiunto user');
             });
@@ -108,23 +108,14 @@ Richiede un oggetto JSON nel body della richiesta con il campo "id" dell'utente 
 router.delete('', async (req,res)=> {
 
     try{
-        var usertomodify = await User.findOne({_id: req.body.id});
+        var usertomodify = await User.findOne({_id: req.body.user_id});
         var infolenIT = Object.keys(usertomodify.itinerary).length;
 
-        for(let i=0;i<infolenIT;i++){
-
-            var itinerarytomodify = await Itinerary.findOne({_id : usertomodify.itinerary[i]});
-            var infolenMETEO = Object.keys(itinerarytomodify.meteos_dates).length;
-
-            for(let j=0;j<infolenMETEO;j++){
-                await MeteoComponent.deleteOne({_id: itinerarytomodify.meteos_dates[j]});
-            }
-
-            await Itinerary.deleteOne({_id: usertomodify.itinerary[i]});
-        }
-
-        await User.deleteOne({_id: req.body.id});
-        res.status(201).send("User with id "+req.body.id+" successfully deleted.\n"+infolenIT+" itineraries completely cleared.\n");
+        await User.deleteOne({_id: req.body.user_id});
+        if(infolenIT>0)
+            res.status(201).send("User with id "+req.body.user_id+" successfully deleted.\n"+infolenIT+" itineraries completely cleared.\n");
+        else
+            res.status(201).send("User with id "+req.body.user_id+" successfully deleted.\n");
 
     }catch(err){
         res.status(400).send("User with id "+req.body.id+" not found.");

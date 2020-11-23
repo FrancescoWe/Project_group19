@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const MeteoComponentSchema = mongoose.Schema({
 
-    itinerary_id: mongoose.Schema.Types.ObjectId,
+    //itinerary_id: mongoose.Schema.Types.ObjectId,
 
     temp_Max: {
         type: String,
