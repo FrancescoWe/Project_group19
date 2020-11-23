@@ -259,11 +259,11 @@ paths:
         '200':
           description: "Confirmation string"
     
-  /meteos/current/{city}:
+  /meteos/{city}:
     get: 
       description: >-
-        Get informations about current meteo of a city
-      summary: Get current meteo
+        Get informations about current meteo and the meteo of the next 6 days of a city
+      summary: Get current and forecast meteo
       parameters: 
         - name: city
           in: path
@@ -271,24 +271,11 @@ paths:
           description: 'Name of the requested city'
       responses:
         '200':
-          description: 'The current meteo of the specified city'
+          description: 'The current and forecast meteo of the specified city'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Meteo'
-                
-  /meteos/forecast/{city}:
-    get:
-      description: >-
-        Get informations about the meteo of the next 5 days of a city
-      summary: Get forecast meteo
-      parameters: 
-        - name: ciry
-          in: path
-          description: 'Name of the requested city'
-      responses:
-        '200':
-          description: 'The forecast meteo of the specified city'
 
   /itineraries:
     get:
