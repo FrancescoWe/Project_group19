@@ -8,6 +8,8 @@ const request = require('request');
 const User = require('../models/user');
 const Itinerary = require('../models/itinerary');
 const MeteoComponent = require('../models/meteoComponent');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 // Connessione al DB
 const db = mongoose.connection;
@@ -56,7 +58,7 @@ router.get('/:userId', async (req,res)=>{
 /* Definizione del metodo POST: crea uno user e lo salva nel DB.
 Richiede un oggetto JSON nel body della richiesta con i campi relativi ad uno user.
 Se esiste giù un utente con la mail specificata, restituisce un messaggio di errore. */
-router.post('/',async function(req,res){
+/*router.post('/',async function(req,res){
     //console.log(req.body.email);
     try{
     const usertwo = await User.findOne({email: req.body.email});    // Ricerca nel DB di un utente con la mail specificata
@@ -76,31 +78,52 @@ router.post('/',async function(req,res){
     }catch{
         res.status(400).send({message: error});
     }
+});*/
+
+router.post('', async(req,res) =>{
+
+    //Check if user already in database
+    const emailExist = await User.findOne({email: req.body.email});
+    if(emailExist) return res.status(400).send('Email already exists');
+    if(req.body.password==null){
+        return res.status(400).send("Error");
+    }else if(req.body.password==""){
+        return res.status(400).send("Error");
+    }
+    //Hash passwords
+    const salt = await bcrypt.genSalt(10) // genera una chiave complessa, il numero indica la"complessità" della stringa generata
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    //Create a new User
+    const user = new User({
+        email: req.body.email,
+        password: hashedPassword
+        //password: req.body.password
+    });
+    try{
+        const savedUser = await user.save();
+        console.log(savedUser);
+        let userId = savedUser.id;
+        //res.status(201).send(savedUser);
+        res.location("/api/v1/users/" + userId).status(201).send(savedUser);
+    }catch(err){
+        res.status(400).send(err);
+    }
 });
 
-/*router.post('', async (req, res) => {
-    try{
-        const usertwo = await User.findOne({email: req.body.email});
-        if(usertwo!=null){
-            console.log("Esiste già uno user con questa mail");
-            res.status(400).send({message: "Esiste già uno user con questa mail"});
-            return;
-        }
-        let userCreated = new User({
-            email: req.body.email,
-            password: req.body.password
-        });
-        if (!userCreated.email || typeof userCreated.email != 'string' || !checkIfEmailInString(userCreated.email)) {
-            res.status(400).send({ mesage: 'The field "email" must be a non-empty string, in email format' });
-            return;
-        }
-        userCreated = await userCreated.save();
-        res.location("/api/v1/users/" + userId).status(201).send();
-    }catch(err){
-        console.log("Devi inserire il campo mail e il campo password oppure esiste già uno user con questa mail");
-        res.status(400).send({message: err});
-    }
-});*/
+router.post('/login', async (req,res)=>{
+    //Check if user exists
+    const user = await User.findOne({email: req.body.email});
+    if(!user) return res.status(400).send('Email not found');
+    //Check if password is correct
+    const validPass = await bcrypt.compare(req.body.password, user.password);
+    if(!validPass) return res.status(400).send('Invalid password');
+
+    //Create and assing a token usefull to know that a user is logged in
+    const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
+    res.header('auth-token', token).status(201).send(token);
+
+    //res.status(201).send("logged in");
+})
 
 
 /* Definizione del metodo DELETE: elimina un determinato user tramite l'id.

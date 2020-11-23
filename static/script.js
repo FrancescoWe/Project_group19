@@ -115,23 +115,23 @@ async function waitForElementForecast(){
     settings.url = "./meteos/"+search; // Viene settato il campo url di settings
 
     if(search==searchbefore && forecastfetch == null) {    // Esegue una fetch dall'api solo una volta (quando l'utente clicca sul bottone la prima volta) e dopo usa sempre gli stessi dati.
-        let forecastfetchresponse = await fetch(settings.url);
-        forecastfetch = await forecastfetchresponse.json();
-    } else if(search!==searchbefore){       // Se l' utente cambia il nome della città in corso d' opera verrà fatta ripartire la funzione autonomamente.
-        forecastfetch = null;
-        cityforecastCall();
-        waitForElementForecast();
-        return;
-    }
+    let forecastfetchresponse = await fetch(settings.url);
+    forecastfetch = await forecastfetchresponse.json();
+} else if(search!==searchbefore){       // Se l' utente cambia il nome della città in corso d' opera verrà fatta ripartire la funzione autonomamente.
+    forecastfetch = null;
+    cityforecastCall();
+    waitForElementForecast();
+    return;
+}
 
-    var name= forecastfetch.name;		//prende la response name dal DB e la salva nella variabile name
-    var forecastwind = forecastfetch.daily[daycount].wind_speed;
-    var forecastWeather = forecastfetch.daily[daycount].weather[0].main;	//prende la response weather[0] cioè il tempo attuale dal DB e la salva nella variabile currentweather
+var name= forecastfetch.name;		//prende la response name dal DB e la salva nella variabile name
+var forecastwind = forecastfetch.daily[daycount].wind_speed;
+var forecastWeather = forecastfetch.daily[daycount].weather[0].main;	//prende la response weather[0] cioè il tempo attuale dal DB e la salva nella variabile currentweather
 
-    document.getElementById('daynum').innerHTML = (daycount+1) + " days from now";
-    document.getElementById('name').innerHTML = "City name : "+name;
-    document.getElementById('windSpeed').innerHTML = "Wind speed: : "+forecastwind;
-    document.getElementById('currentWeather').innerHTML = "Weather : "+forecastWeather;
+document.getElementById('daynum').innerHTML = (daycount+1) + " days from now";
+document.getElementById('name').innerHTML = "City name : "+name;
+document.getElementById('windSpeed').innerHTML = "Wind speed: : "+forecastwind;
+document.getElementById('currentWeather').innerHTML = "Weather : "+forecastWeather;
 }
 
 // Seconda funzione per il forecast tramite le 5 immagini nella parte in basso della pagina /index.html
