@@ -41,7 +41,7 @@ test('Restituisce un errore in quanto la mail non ha il formato corretto. ', asy
     .expect(400)
 })
 
-/*
+
 test('Restituisce un errore in quanto la password è vuota. ', async ()=>{
     await request(app).post('/users')
     .send({
@@ -50,7 +50,7 @@ test('Restituisce un errore in quanto la password è vuota. ', async ()=>{
     })
     .expect(400)
 })
-*/
+
 
 test('Esiste un utente nel database.', async ()=>{
     await request(app).get('/users')

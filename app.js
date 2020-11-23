@@ -14,6 +14,7 @@ const userRoutes = require('./api/routes/users');
 const meteoRoutes = require('./api/routes/meteos');
 const meteoComponentRoutes = require('./api/routes/meteoComponents');
 const itinerariesRoutes = require('./api/routes/itineraries');
+const provaVerificaRoute = require('./api/routes/provaVerifica');
 
 app.use('/', express.static('static'));
 //app.use middlewares
@@ -27,6 +28,7 @@ app.use('/itineraries',itinerariesRoutes);
 
 app.use('/api/v1/meteoComponents', meteoComponentRoutes);
 app.use('/api/v1/users', users);
+app.use('/api/provaVerifica', provaVerificaRoute);
 
 
 //connecting to db offline
