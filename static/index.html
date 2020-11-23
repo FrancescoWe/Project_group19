@@ -24,13 +24,14 @@
 
     <!-- Form per i pulsanti di search -->
     <form>
-        <input type="text" id="searchbar" placeholder="Enter your search term...." />
+        <input type="text" id="searchbar" class="form-control" placeholder="Enter your search term...." />
         <!-- <button type="button" onclick="fiveDayForeCast();">Search</button> -->
         <br>
         <button type="button" onclick="waitForElement();">Search Current</button>
-        <button type="button" onclick="cityforecastCall();waitForElementForecast();fiveDayForeCast()">Search Forecast</button>
+        <button type="button" id="forecast" onclick="cityforecastCall();waitForElementForecast();fiveDayForeCast()">Search Forecast</button>
         <!-- Bottone inizialmente nascosto: apparirà solo nel caso di Forecast -->
-        <button type="button" id="daysbutton" onclick="addday();waitForElementForecast();">+1 Day</button>
+        <button type="button" id="daysbutton1" onclick="removeday();waitForElementForecast();">&lt</button>
+        <button type="button" id="daysbutton2" onclick="addday();waitForElementForecast();">&gt</button>
     </form>
 
     <!-- Divs per le informazioni sul meteo -->
