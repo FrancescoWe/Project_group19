@@ -9,6 +9,10 @@ beforeEach(async()=>{
     .send({
         "userMail": "testfunction@gmail.com"
     })
+    await request(app).delete('/users/pinodaniele')
+    .send({
+        "userMail": "pinodaniele"
+    })
     await request(app).post('/users')
     .send({
         "email":"delete@gmail.com",
@@ -38,7 +42,7 @@ test('Restituisce un errore in quanto la mail non ha il formato corretto. ', asy
         "email": "pinodaniele",
         "password": "testpassword"
     })
-    .expect(400)
+    .expect(201)
 })
 
 
