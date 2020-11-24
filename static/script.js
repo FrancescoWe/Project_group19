@@ -224,7 +224,8 @@ function viewItineraries(){
         loggedUser=data;    // Logged user contiene i dati ottenuti con la fetch e parsati in json
         loggedUser.id = loggedUser.self.substring(loggedUser.self.lastIndexOf('/') + 1);    // l'ID    // Viene aggiornato l'innerHTML dell'elemento "loggedUser" in index.html
         console.log("stampo id dell'itinerario");
-        let ITlenght = Object.keys(loggedUser.itinerary).length();
+        let ITlenght = Object.keys(loggedUser.itinerary).length;
+        console.log(loggedUser.itinerary);
         let OutputString="";
         for(let i=0;i<ITlenght;i++){
             OutputString += loggedUser.itinerary[i]._id + ", ";
