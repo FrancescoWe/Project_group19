@@ -14,21 +14,21 @@ const jwt = require('jsonwebtoken');
 // Connessione al DB
 const db = mongoose.connection;
 
-// Definizione del metodo GET: ricerca tutti gli user
+// Definizione del metodo GET: ricerca di tutti gli user.
 router.get('/', async(req,res,next) => {
     try{
-        const users = await User.find();
+        const users = await User.find();       // Ricerca degli user
         console.log(users);
-        res.status(201).json(users);
+        res.status(201).json(users);           // Restituzione della lista nella risposta
     }catch(err){
-        res.status(400).json({message: err});
+        res.status(400).json({message: err});   // Messaggio in caso di errore
     }
 });
 
-// Definizione del metodo GET con path "/:email": ottiene le informazioni sullo user con la mail "email" utilizzando la API
+// Definizione del metodo GET con path "/:email": ottiene le informazioni sullo user con la mail "email" utilizzando la API.
 router.get('/:email', async (req,res)=> {
     try{
-        const users = await User.findOne({email: req.params.email})
+        const users = await User.findOne({email: req.params.email}) // Ricerca dell'utente con tale email
         .map((entry) => {
             return{
                 self: '/api/v1/users/' +entry.id,
@@ -37,24 +37,25 @@ router.get('/:email', async (req,res)=> {
             }
         });
         //console.log(users);
-        res.status(201).json(users);
+        res.status(201).json(users);            // Restituzione dell'utente nella risposta
     }catch(err){
-        res.status(400).json({message: err});
+        res.status(400).json({message: err});   // Messaggio in caso di errore
     }
 });
 
 
-// Definizione del metodo GET con path ":userId": ottiene le informazioni sullo user con id "userId" utilizzando la API
+// Definizione del metodo GET con path "/:userId": ottiene le informazioni sullo user con id "userId" utilizzando la API.
 router.get('/:userId', async (req,res)=>{
     try{
-        const user = await User.findById(req.params.userId);
-        res.status(201).json(user);
+        const user = await User.findById(req.params.userId);        // Ricerca dell'utente con tale ID
+        res.status(201).json(user);                                 // Restituzione dell'utente nella risposta
     }catch(err){
-        res.status(400).json({message: err});
+        res.status(400).json({message: err});   // Messaggio in caso di errore
     }
 });
 
 
+// DA RIMUOVERE (?)
 /* Definizione del metodo POST: crea uno user e lo salva nel DB.
 Richiede un oggetto JSON nel body della richiesta con i campi relativi ad uno user.
 Se esiste giù un utente con la mail specificata, restituisce un messaggio di errore. */
@@ -80,25 +81,32 @@ Se esiste giù un utente con la mail specificata, restituisce un messaggio di er
     }
 });*/
 
+
+
+/* Definizione del metodo POST: crea uno user e lo salva nel DB.
+Richiede un oggetto JSON nel body della richiesta con i campi:
+- email: la mail del nuovo utente
+- password: la password del nuovo utente.
+*/
 router.post('', async(req,res) =>{
 
-    //Check if user already in database
-    const emailExist = await User.findOne({email: req.body.email});
-    if(emailExist) return res.status(400).send('Email already exists');
-    if(req.body.password==null){
-        return res.status(400).send("Error");
+    const emailExist = await User.findOne({email: req.body.email});     // Controlla se un utente con tale email esiste già
+    if(emailExist) return res.status(400).send('Email already exists'); // Se esiste, viene mandato un messaggio di errore
+    if(req.body.password==null){                                        // Se i campi email e/o password sono null, viene mandato un messaggio di errore
+        return res.status(400).send("Error");   
     }else if(req.body.password==""){
         return res.status(400).send("Error");
     }
     //Hash passwords
-    const salt = await bcrypt.genSalt(10) // genera una chiave complessa, il numero indica la"complessità" della stringa generata
+    const salt = await bcrypt.genSalt(10)       // Genera una chiave complessa, il numero indica la "complessità" della stringa generata
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
-    //Create a new User
-    const user = new User({
+
+    const user = new User({             // Creazione di un nuovo utente
         email: req.body.email,
         password: hashedPassword
         //password: req.body.password
     });
+
     try{
         const savedUser = await user.save();
         console.log(savedUser);
@@ -106,28 +114,34 @@ router.post('', async(req,res) =>{
         //res.status(201).send(savedUser);
         res.location("/api/v1/users/" + userId).status(201).send(savedUser);
     }catch(err){
-        res.status(400).send(err);
+        res.status(400).send(err);          // Messaggio in caso di errore
     }
 });
 
+/* Definizione del metodo POST con path "/login": controlla se l'utente che sta eseguendo il log-in esiste e,
+in caso positivo, la correttezza della password. In questa ultima situazione, crea e assegna un token.
+Richiede un oggetto JSON nel body della richiesta con i campi:
+- email: la email dell'utente di cui si vuole approvare il log-in
+- password: la password dell'utente di cui si vuole approvare il login.
+*/
 router.post('/login', async (req,res)=>{
-    //Check if user exists
-    const user = await User.findOne({email: req.body.email});
-    if(!user) return res.status(400).send('Email not found');
-    //Check if password is correct
-    const validPass = await bcrypt.compare(req.body.password, user.password);
-    if(!validPass) return res.status(400).send('Invalid password');
-
-    //Create and assing a token usefull to know that a user is logged in
-    const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
-    res.header('auth-token', token).status(201).send(token);
+    const user = await User.findOne({email: req.body.email});   // Controlla se un utente con tale mail esiste
+    if(!user) return res.status(400).send('Email not found');   // Se l'utente non esiste, manda un messaggio di errore
+                                                                // Altrimenti..
+    const validPass = await bcrypt.compare(req.body.password, user.password);   // Controlla la correttezza della password
+    if(!validPass) return res.status(400).send('Invalid password');             // Se è invalida, manda un messaggio di errroe
+                                                                                // Altrimenti..
+    const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);          // Crea e assegna un token utile a sapere che l'utente è loggato
+    res.header('auth-token', token).status(201).send(token);                    // Manda il token nella response
 
     //res.status(201).send("logged in");
 })
 
 
 /* Definizione del metodo DELETE: elimina un determinato user tramite l'id.
-Richiede un oggetto JSON nel body della richiesta con il campo "id" dell'utente che si intende eliminare*/
+Richiede un oggetto JSON nel body della richiesta con il campo:
+- user_id: l'ID dell'utente che si intende eliminare.
+*/
 router.delete('', async (req,res)=> {
 
     try{
@@ -147,9 +161,8 @@ router.delete('', async (req,res)=> {
 });
 
 
-/* Definizione del metodo DELETE: elimina un determinato user tramite la email.
-Richiede un oggetto JSON nel body della richiesta con il campo "email" dell'utente che si intende eliminare*/
-
+/* Definizione del metodo DELETE con path '/:email': elimina lo user identificato dalla email "email".
+*/
 // DA AGGIORNARE <-----------------------------------------------------------------------------------------------------------
 
 router.delete('/:email', async (req,res)=> {
@@ -163,8 +176,9 @@ router.delete('/:email', async (req,res)=> {
     }
 });
 
-/* Definizione del metodo PATCH con path "/:userId": aggiorna la mail dello user con id "userId".
-Richiede un oggetto JSON nel body della richiesta con il campo "email" e il nuovo valore dello stesso.*/
+/* Definizione del metodo PATCH con path "/:userId": aggiorna la mail dello user identificato dall'id "userId".
+Richiede un oggetto JSON nel body della richiesta con il campo:
+- email: la nuova email dell'utente specificato.*/
 router.patch('/:userId', async (req,res)=> {
     if(!req.body.email || typeof req.body.email!= 'string' || !checkIfEmailInString(req.body.email)){       // Verifica del formato della mail.
         res.status(400).json({ error: 'The field "email" must be a non-empty string, in email format' });
@@ -181,7 +195,7 @@ router.patch('/:userId', async (req,res)=> {
     }
 })
 
-// Funzione ausiliaria: verifica che il campo compilato sia effetticamente una stringa
+// Funzione ausiliaria: verifica che il campo compilato sia effettivamente una stringa
 function checkIfEmailInString(text) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(text);

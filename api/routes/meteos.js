@@ -18,6 +18,8 @@ router.get('/', (req,res,next) => {
     });
 });
 
+
+// Funzione ausiliaria per la richiesta delle coordinate.
 function requestcoords(path,callback){
     request(path, function(err, response, body) {
         if (err) {
@@ -44,7 +46,7 @@ router.get('/testing/:cityName',function(req,res){
 });
 */
 
-// Definizione del metodo GET con path "/cityName": ottiene i dati del meteo in forma di json della città "cityName".
+// Definizione del metodo GET con path "/cityName": ottiene i dati del meteo in forma di JSON della città "cityName".
 router.get('/:cityName', function(req,res){
     if(!req.params.cityName)
         res.status(400).send("You must provide a city name in the URL.");
@@ -69,7 +71,7 @@ router.get('/:cityName', function(req,res){
                 else
                     meteo_json.name = jsoncoords.features[0].properties.name + ", "+jsoncoords.features[0].properties.county+", "+jsoncoords.features[0].properties.country;
                 //console.log("Nome citta': "+meteo_json.name);
-                res.send(meteo_json);
+                res.status(200).send(meteo_json);
                 //res.status(201).json(meteo_json);                                   // Restituzione dell'oggetto in formato JSON
             });
         }

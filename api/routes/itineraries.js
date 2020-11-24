@@ -12,53 +12,59 @@ const User = require('../models/user');
 const db = mongoose.connection;
 
 
-// Definizione del metodo GET: ricerca gli itinerari di tutti gli user
+/* Definizione del metodo GET: ricerca gli itinerari appartenenti allo user specificato.
+Richiede un oggetto JSON nel body della richiesta con il campo:
+- "user_id": l'ID dell'utente di cui si vuole ottenere la lista degli itinerari.*/
 router.get('/', async(req,res) => {
     try{
 
-        let founduser = await User.findById(req.body.user_id);
-        res.status(200).json(founduser.itinerary);
+        let founduser = await User.findById(req.body.user_id);      // Cerca l'utente tramite l'ID inserito nel body della request
+        res.status(201).json(founduser.itinerary);                  // Restituzione nella risposta della lista di itinerary dell'utente
 
-    } catch(err){
-        res.status(400).send("User with id: "+req.body.user_id+" not found");
+    } catch(err){                                       
+        res.status(400).send("User with id: "+req.body.user_id+" not found");      // Messaggio in caso di errore
     }
 });
 
 /* Definizione del metodo POST: crea un itinerario vuoto e lo salva,
-connettendolo ad un utente singolo (specifica l'id dell' utente nel body della post) */
+connettendolo ad un utente specificato.
+Richiede un oggetto JSON nel body della richiesta con il campo:
+- "user_id": l'ID dell'utente a cui si vuole aggiungere l'itinerario.*/
 router.post('/', async (req, res) => {
 
     try{
-        let userfound = await User.findOne({_id: req.body.user_id});
+        let userfound = await User.findOne({_id: req.body.user_id});        // Ricerca dell'utente con l'ID specificato
 
-        let newitinerary = new Itinerary();
+        let newitinerary = new Itinerary();                     
 
-        await User.updateOne(
+        await User.updateOne(                                               // Aggiornamento della lista di itinerari di tale utente, aggiungendo un elemento
             {"_id" : userfound._id},
             {"$push" : {"itinerary" : newitinerary}}
         );
 
-        res.status(201).send('Itinerary saved and binded successfully to user '+req.body.user_id);
+        res.status(201).send('Itinerary saved and binded successfully to user '+req.body.user_id);  // Messaggio di risposta
     }catch{
-        res.status(400).send("User with id: "+ req.body.user_id +" not found");
+        res.status(400).send("User with id: "+ req.body.user_id +" not found");                     // Messaggio in caso di errore
     }
 
 });
 
-/* Definizione del metodo DELETE: elimina un determinato itinerario dal DB e dalla lista degli itinerari dell'utente che lo aveva.
-Richiede un oggetto JSON nel body della richiesta con il campo "id" dell'itinerario che si intende eliminare*/
+/* Definizione del metodo DELETE: elimina un determinato itinerario dalla lista di itinerari dell'utente specificato.
+Richiede un oggetto JSON nel body della richiesta con i campi:
+- "user_id": l'ID dell'utente a cui si vuole rimuovere l'itinerario
+- "itinerary_id": l'ID dell'itinerario che si intende eliminare.*/
 router.delete('/', async (req,res)=> {
 
     try{
 
-        await User.updateOne(
-            { "_id": req.body.user_id},
+        await User.updateOne(                                                 // Aggiornamento della lista di itinerari dell'utente specificato, tramite la rimozione
+            { "_id": req.body.user_id},                                       // l'itinerario corrispondente all'ID specificato
             { "$pull" :  {"itinerary" : {"_id" : req.body.itinerary_id} } }
         );
         
-        res.status(201).send("Itinerary "+req.body.itinerary_id+" deleted\nUser "+req.body.user_id+" updated.\n");
+        res.status(201).send("Itinerary "+req.body.itinerary_id+" deleted\nUser "+req.body.user_id+" updated.\n");  // Messaggio di risposta
     }catch(err){
-        res.status(400).send("Itinerary "+req.body.itinerary_id+" not found.\n");
+        res.status(400).send("Itinerary "+req.body.itinerary_id+" not found.\n");   // Messaggio in caso di errore
     }
 
 });
