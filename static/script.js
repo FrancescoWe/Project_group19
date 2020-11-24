@@ -224,7 +224,12 @@ function viewItineraries(){
         loggedUser=data;    // Logged user contiene i dati ottenuti con la fetch e parsati in json
         loggedUser.id = loggedUser.self.substring(loggedUser.self.lastIndexOf('/') + 1);    // l'ID    // Viene aggiornato l'innerHTML dell'elemento "loggedUser" in index.html
         console.log("stampo id dell'itinerario");
-        document.getElementById("idItiner").innerHTML = loggedUser.itinerary;
+        let ITlenght = Object.keys(loggedUser.itinerary).length();
+        let OutputString="";
+        for(let i=0;i<ITlenght;i++){
+            OutputString += loggedUser.itinerary[i]._id + ", ";
+        }
+        document.getElementById("idItiner").innerHTML = OutputString;
         return;
     })
     .catch( error => console.error(error) ); // Se c'è un qualsiasi errore viene catturato qui
