@@ -204,7 +204,8 @@ paths:
     post:
       description: >-
         Create a new meteoComponent, which is the set of the informations about the 
-        meteo in a stage of an itinerario, and add it to the specified itinerary (belonging to a user)
+        meteo in a stage of an itinerario, and add it to the specified itinerary belonging to 
+        the specified user.
       summary: Create meteoComponent
       requestBody:
         content: 
@@ -215,9 +216,13 @@ paths:
                 - date
                 - cityName
               properties: 
+                user_id:
+                  type: string
+                  description: 'Id of the itinerary to which the specified itinerary is linked'
                 itinerary_id:
                   type: string
-                  description: 'Id of the itinerary to which the new meteoComponent is linked'
+                  description: >-
+                    Id of the itinerary of the specified user to which the new meteoComponent will be linked
                 temp_Max:
                   type: string
                   description: 'Maximum temperature'
