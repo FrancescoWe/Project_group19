@@ -2,7 +2,16 @@ openapi: 3.0.0
 info: 
     version: '3.0'
     title: "API IngSoft2 group #19"
-    description: "Prova API"
+    description: "Il nostro gruppo vorrebbe presentare come prodotto un sito web che idealmente permetta di consultare il meteo di una città ricercata dall'utente. In particolare, le features finali dovrebbero riguardare:
+
+    1. Ricerca del meteo attuale
+    
+    2. Ricerca del meteo nell'arco di un tempo predeterminato (fino a 5 giorni più avanti, considerando anche scarsa la attendibilità dei dati successivi)
+    
+    3. Ricerca del meteo di un itinerario di città (per permettere di verificare il meteo di tutte le città inserite, utile ad esempio per un viaggio)
+    
+    4. Registrazione e Login utente per poter salvare i propri itinerari meteo
+"
     license: 
       name: MIT
 servers: 
