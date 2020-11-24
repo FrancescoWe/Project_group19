@@ -31,27 +31,25 @@ paths:
                 - password
                 - email
               properties: 
-                password:
+                email:
                   type: string
                   description: "User's email"
-                email: 
+                password: 
                   type: string
-                  description: "User's email"
+                  description: "User's password"
       responses:
         '201':
-          description: 'The respond provides the created user'
+          description: 'The respond provides the link to the newly created user'
           headers: 
-            Location:
+            'Location':
               schema:
                 type: string
-              description: Link to the newly created user
         '400':
           description: "This email is already taken / generic error"
               
     get: 
       description: "Get all the users in the system"
       summary: Get all users
-      parameters:
       responses:
         '201':
           description: "The response provides the list of all the users"
@@ -61,52 +59,75 @@ paths:
                 $ref: '#/components/schemas/User'
         '400':
           description: "Error"
-                
-    patch:
-      description: "Update the email of the specified user"
-      summary: Update email
-      parameters:
-        - name: id
-          in: path
-        - name: email
-          in: body
-      responses:
-        '201':
-          description: "The response provides the updated user"
-        '400':
-          description: "Error"
           
     delete:
       description: "Delete a user and all the itineraries linked to it"
       summary: Delete a user
-      parameters:
-        - name: id
-          in: body
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+              properties:
+                user_id:
+                  type: string
+                  description: "Id of the user to be deleted"
       responses:
         '201':
           description: "User deleted"
         '400':
           description: "User not found"
 
-  /users/{id}:    
+  /users/{userId}:    
     get:
       description: >-
-        Get information about a specific user, identiied by an ID
+        Get information about a specific user, identified by an ID
       summary: Get a user
       parameters:
-        - name: id
+        - name: userId
           in: path
           required: true
           description: 'ID of the requested user'
       responses: 
         '201':
-          description: 'The user corresponding to the input ID'
-          #content:
-            #application/json:
-              #schema:
-                #$ref: '#/components/schemas/User'
+          description: 'The user corresponding to the specified ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
         '400':
           description: 'User not found'
+                
+    patch:
+      description: "Update the email of a user, identified by the ID, by specifing the new email in the body of the request"
+      summary: Update email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  description: "The new user's email"
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "Id of the user"
+      responses:
+        '201':
+          description: "The response provides the updated user"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: "The field email must be non-empty / general error"
 
   /users/{email}:    
     get:
@@ -121,16 +142,16 @@ paths:
       responses: 
         '201':
           description: 'The user corresponding to the input email'
-          #content:
-            #application/json:
-              #schema:
-                #$ref: '#/components/schemas/User'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
         '400':
           description: 'User not found'
                 
     delete:
       description: >-
-        Delete a specific user, identified by the email
+        Delete a specific user, identified by the email. TO BE UPDATED.
       summary: Delete a user
       parameters:
         - name: email
@@ -146,12 +167,28 @@ paths:
                 #$ref: '#/components/schemas/User'
         '400':
           description: 'User not found'
+          
 
   /meteoComponents:  
     get:
       description: >-
-        Get the list of all meteo components saved.
-      summary: View all meteos components that are part of an itinerario
+        Get the list of the meteoComponents corrisponding to the specified itinerary of the specified user
+      summary: Get meteoComponents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - itinerary_id
+              properties:
+                user_id:
+                  type: string
+                  description: "ID of the user to which the specified itinerary belongs"
+                itinerary_id:
+                  type: string
+                  description: "ID of the itinerary of the specified user, whose meteoComponents you want to know"
       responses:
         '201':
           description: 'Collection of meteoComponents'
@@ -166,9 +203,8 @@ paths:
           
     post:
       description: >-
-        Create a new meteoComponent, >-
-        which is the set of the informations about the >-
-        meteo in a stage of an itinerario
+        Create a new meteoComponent, which is the set of the informations about the 
+        meteo in a stage of an itinerario, and add it to the specified itinerary (belonging to a user)
       summary: Create meteoComponent
       requestBody:
         content: 
@@ -196,63 +232,47 @@ paths:
                   description: 'Name of the city'
       responses:
         '201':
-          description: 'The created itinerary'
+          description: 'Meteo data added to the itinerary'
         '400':
           description: "Itinerary not found"
   
     delete:
       description: >-
-        Delete a meteoComponent and remove it from the itinerary to which it belongs
+        Remove a meteoComponent from the specified itinerary belonging to the specified user
       summary: Delete meteoComponent
       requestBody:
         content:
           application/json:
-          schema:
-            type: object
-            required:
-              - id
-            properties:
-              id:
-                type: string
-      parameters:
-        - name: id
-          in: body
-          descripion: "Id of the meteoComponent to be removed"
-          required: true
+            schema:
+              type: object
+              required:
+                - user_id
+                - itinerary_id
+                - meteo_id
+              properties:
+                user_id:
+                  type: string
+                  description: "Id of the user"
+                itinerary_id: 
+                  type: string
+                  description: "Id of the itinerary belonging to the specified user"
+                meteo_id:
+                  type: string
+                  description: "Id of the meteoComponent to be removed from the specified itinerary"
       responses:
         '201':
           description: 'meteoComponent deleted'
-        '400':
-          description: 'meteoComponent not found'
-  
-  /meteoComponents/{id}:    
-    get:
-      description: >-
-        Get information about a specific meteoComponent
-      summary: Get a specific meteoComponent
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: 'Id of the requested meteoComponent'
-      responses: 
-        '200':
-          description: 'The user corresponding to the input email'
-          #content:
-            #application/json:
-              #schema:
-                #$ref: '#/components/schemas/User'
         '400':
           description: 'meteoComponent not found'
                 
   /meteos:
     get:
       description: >-
-        Get the current meteo.
+        Get the current meteo from OpenWeather
       summary: View current meteo
       responses: 
         '200':
-          description: 'Collection of books'
+          description: 'Collection of informations'
           content:
             application/json:
               schema: 
@@ -265,54 +285,75 @@ paths:
         Create meteo
       summary: Create meteo
       responses:
-        '200':
+        '201':
           description: "Confirmation string"
     
-  /meteos/{city}:
+  /meteos/{cityName}:
     get: 
       description: >-
-        Get informations about current meteo and the meteo of the next 6 days of a city
+        Get informations about current meteo and the meteo of the next 4 days of a city
       summary: Get current and forecast meteo
       parameters: 
-        - name: city
+        - name: cityName
           in: path
           required: true
           description: 'Name of the requested city'
       responses:
-        '200':
+        '201':
           description: 'The current and forecast meteo of the specified city'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Meteo'
+        '400':
+          description: "An error occurred"
 
   /itineraries:
     get:
       description: >-
-        Get the list of all the itineraries
+        Get the list of all the itineraries belonging to the specified user
       summary: Get itineraries
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+              properties:
+               user_id:
+                  type: string
+                  description: "Id of the user of which you want to get the itineraries"
       responses:
-        '200':
-          description: 'All the itineraries of all the users'
-          content:
-            application/json:
-              schema: 
+        '201':
+          description: 'List of the itineraries of the specified user'
+          #content:
+            #application/json:
+              #schema: 
+                #$ref: '#/components/schemas/Itinerary'
+        '400':
+          description: "User not found"
+          
     post:
       description: >-
-        Create a new itinerary 
+        Create a new itinerary and link it to the specified user
       summary: Creates itinerary
       requestBody:
         content:
           application/json:
             schema:
               type: object
+              required:
+                - user_id
               properties:
                 user_id:
                   type: string
-                  description: 'ID of the user who made the itinerary'
+                  description: 'ID of the user to which the itinerary will be linked'
       responses:
-        '200':
+        '201':
           description: 'Itinerary saved successfully.'
+        '400':
+          description: "User not found"
     
     delete:
       description: >-
@@ -323,35 +364,41 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - user_id
+                - itinerary_id
               properties:
-                id:
+                user_id:
+                  type: string
+                  description: 'Id of the user whose specified itinerary will be removed'
+                itinerary_id:
                   type: string
                   description: 'Id of the itinerary to be removed'
       responses:
         '200':
           description: 'Itinerary deleted'
         '400':
-          description: 'Itinerary not foundat'
-   
+          description: 'Itinerary not found'
+          
+  #/provaVerifica
 
 components:
   schemas:
     User:
       type: object
       required:
-        - id
         - email
         - password
       properties:
-        id: 
-          type: string
-          description: 'ID of the user'
         email:
           type: string
           description: 'Email of the user'
         password: 
           type: string
           description: 'Password dof the user'
+        itinerary:
+          type: array
+          description: 'Array of the itineraries linked to the user'
           
     MeteoComponent:
       type: object
@@ -378,7 +425,6 @@ components:
       type: object
       required:
         - temperatura
-        - data
       properties: 
         temperatura: 
           type: string
@@ -392,9 +438,6 @@ components:
       required:
         - meteos_date
       properties:
-        user_id:
-          type: ObjectId
-          description: "Id of the user who created the itinerary"
         meteos_dates:
-          type: Array of strings
+          type: array
           description: "Array of IDs of the meteoComponents belonging to the itinerary"
