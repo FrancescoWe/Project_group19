@@ -97,6 +97,10 @@ router.post('', async(req,res) =>{
     }else if(req.body.password==""){
         return res.status(400).send("Error");
     }
+    if(!req.body.email || typeof req.body.email!= 'string' || !checkIfEmailInString(req.body.email)){   // Se la mail non è nel formato corretto, restituisce un errore
+        return res.status(400).send({ error: 'The field "email" must be a non-empty string, in email format' });
+        //return;
+    };
     //Hash passwords
     const salt = await bcrypt.genSalt(10)       // Genera una chiave complessa, il numero indica la "complessità" della stringa generata
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -126,13 +130,13 @@ Richiede un oggetto JSON nel body della richiesta con i campi:
 */
 router.post('/login', async (req,res)=>{
     const user = await User.findOne({email: req.body.email});   // Controlla se un utente con tale mail esiste
-    if(!user) return res.status(400).send('Email not found');   // Se l'utente non esiste, manda un messaggio di errore
+    if(!user) return res.status(400).send({error: 'Email not found'});   // Se l'utente non esiste, manda un messaggio di errore
                                                                 // Altrimenti..
     const validPass = await bcrypt.compare(req.body.password, user.password);   // Controlla la correttezza della password
-    if(!validPass) return res.status(400).send('Invalid password');             // Se è invalida, manda un messaggio di errroe
+    if(!validPass) return res.status(400).send({error: 'Invalid password'});             // Se è invalida, manda un messaggio di errroe
                                                                                 // Altrimenti..
     const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);          // Crea e assegna un token utile a sapere che l'utente è loggato
-    res.header('auth-token', token).status(201).send(token);                    // Manda il token nella response
+    res.header('auth-token', token).status(201).send({token: token});                    // Manda il token nella response
 
     //res.status(201).send("logged in");
 })

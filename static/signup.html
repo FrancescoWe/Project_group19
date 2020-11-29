@@ -50,6 +50,11 @@
             }
 
             function validateFormLogin(){
+                if(loginRemake()){
+                    return true;
+                }else{
+                    return false;
+                }
                /* if(signUp()){
                     return true;
 
