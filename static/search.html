@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "UTF-8">
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1.0">
+        <title> Search Page </title>
+        <link rel="stylesheet" href = "search.css" />
+        <script 
+            src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js";
+        ></script>
+    </head>
+    <body>
+        <div class="hero">
+        <h2>Sample Page</h2>
+        <form>
+            <input type="text" id="searchbar" class="form-control" placeholder="Enter your search term...." />
+            <!-- <button type="button" onclick="fiveDayForeCast();">Search</button> -->
+            <br>
+            <button type="button" onclick="waitForElement();">Search Current</button>
+            <button type="button" id="forecast" onclick="searchForecast()">Search Forecast</button>
+            <!-- Bottone inizialmente nascosto: apparirà solo nel caso di Forecast -->
+            <button type="button" id="daysbutton1" onclick="removeday();waitForElementForecast();">&lt</button>
+            <button type="button" id="daysbutton2" onclick="addday();waitForElementForecast();">&gt</button>
+        </form>
+        <!-- Divs per le informazioni sul meteo -->
+        <br>
+        <!-- Queste due div appariranno nel caso di un Forecast -->
+        <div id="daynum"></div>
+        <div id="hours"></div>
+        <div id="name">City name: </div>
+        <div id="windSpeed">Wind speed: </div>
+        <div id="currentWeather">Current weather conditions: </div>
+
+
+
+        <div class = "container">
+        <div class = "card">
+            <div class = "card__inner">
+                <div class = "card__face card__face--front">
+                    <img src = "http://openweathermap.org/img/w/01n.png" id = "imm_uno" class = "image__icon">
+                    <h2 id = "data_uno">Date: </h2>
+                    <br>
+                    <h2 id = "cityName">City: </h2>
+                    <br>
+                    <h3 id = "max_uno">Temp Min: </h3>
+                    <br>
+                    <h3 id = "min_uno">Temp Max: </h3>
+                </div>
+           </div>
+        </div>
+
+        <div class = "card">
+            <div class = "card__inner">
+                <div class = "card__face card__face--front">
+                    <img src = "http://openweathermap.org/img/w/01n.png" id = "imm_due" class = "image__icon">
+                    <h2 id = "data_due">Date: </h2>
+                    <br>
+                    <h2 id = "cityName_due">City: </h2>
+                    <br>
+                    <h3 id = "max_due">Temp Min: </h3>
+                    <br>
+                    <h3 id = "min_due">Temp Max: </h3>
+                </div>
+           </div>
+        </div>
+
+        <div class = "card">
+            <div class = "card__inner">
+                <div class = "card__face card__face--front">
+                    <img src = "http://openweathermap.org/img/w/01n.png" id = "imm_tre" class = "image__icon">
+                    <h2 id = "data_tre">Date: </h2>
+                    <br>
+                    <h2 id = "cityName_tre">City: </h2>
+                    <br>
+                    <h3 id = "max_tre">Temp Min: </h3>
+                    <br>
+                    <h3 id = "min_tre">Temp Max: </h3>
+                </div>
+           </div>
+        </div>
+
+        <div class = "card">
+            <div class = "card__inner">
+                <div class = "card__face card__face--front">
+                    <img src = "http://openweathermap.org/img/w/01n.png" id = "imm_quattro" class = "image__icon">
+                    <h2 id = "data_quattro">Date: </h2>
+                    <br>
+                    <h2 id = "cityName_quattro">City: </h2>
+                    <br>
+                    <h3 id = "max_quattro">Temp Min: </h3>
+                    <br>
+                    <h3 id = "min_quattro">Temp Max: </h3>
+                </div>
+           </div>
+        </div>
+
+        <div class = "card">
+            <div class = "card__inner">
+                <div class = "card__face card__face--front">
+                    <img src = "http://openweathermap.org/img/w/01n.png" id = "imm_cinque" class = "image__icon">
+                    <h2 id = "data_cinque">Date: </h2>
+                    <br>
+                    <h2 id = "cityName_cinque">City: </h2>
+                    <br>
+                    <h3 id = "max_cinque">Temp Min: </h3>
+                    <br>
+                    <h3 id = "min_cinque">Temp Max: </h3>
+                </div>
+           </div>
+        </div>
+
+        <!--<div class = "card">
+            <div class = "card__inner">
+                <div class = "card__face card__face--front">
+                    <h2>Meteo</h2>
+                </div>
+                <div class = "card__face card__face--back">
+                    <div class = "card__content">
+                        <div class ="card__header">
+                            <img src = "pp.jpg" alt="" class="pp"/>
+                            <h2>This is a Name</h2>
+                        </div>
+                        <div class = "card__body">
+                            <h3>JavaScript Wizard</h3>
+                            <p> YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE. </p>
+                        </div>
+                    </div>
+                </div>
+           </div>
+        </div>-->
+        </div>
+    </div>
+
+        <script src="search.js"></script>
+    </body>
+</html>>

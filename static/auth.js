@@ -17,6 +17,7 @@ function loginRemake(){
     .then(function(data){
         console.log(data);
         if(data.error!=null){
+            alert("ERROR," + "\n" + data.error);
             console.log("ERROR");
             return false;
         }else{
@@ -47,6 +48,7 @@ function signUp(){
     .then(function(data){
         console.log(data);
         if(data.error!=null){
+            alert("ERROR," + "\n" + data.error);
             console.log("ERROR");
             return false;
         }else{
