@@ -42,7 +42,7 @@ test('Restituisce un errore in quanto la mail non ha il formato corretto. ', asy
         "email": "pinodaniele",
         "password": "testpassword"
     })
-    .expect(201)
+    .expect(400)
 })
 
 
@@ -76,4 +76,3 @@ test('Cancella un utente dal database.', async ()=>{
     await request(app).delete('/users/delete@gmail.com')
     .expect(201)    // in questo caso 200 perchè non è un 201 created ma 200 OK
 })
-

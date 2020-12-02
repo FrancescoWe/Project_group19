@@ -34,7 +34,7 @@ Richiede un oggetto JSON nel body della richiesta con i campi:
 - user_id: l'ID dell'utente a cui appartiene l'itinerario da modificare
 - itinerary_id: l'ID dell'itinerario da modificare appartenente a tale utente
 - temp_Max: la temeratura massima del nuovo meteoComponent
-- temp_Mix: la temeratura minima del nuovo meteoComponent
+- temp_Min: la temeratura minima del nuovo meteoComponent
 - date: la data corrispondente al nuovo meteoComponent
 - cityName: la città corrispondente al nuovo meteoComponent.*/
 router.post('', async (req, res) => {
