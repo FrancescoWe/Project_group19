@@ -17,7 +17,7 @@ test('Ritorna tutti i meteoComponents facenti parte di un determinato itinerario
         "itinerary_id": "5fc80233ef17af1a0467779d"
     })
     .expect(201)
-})
+}, 30000)
 
 test('Dà errore perchè non esiste uno user con tale id nè un itinerario con tale id', async()=>{
     await request(app).get('/meteoComponents')
@@ -48,7 +48,7 @@ test('Ritorna un errore poichè mancano dei campi nel body', async ()=>{
         "user_id": "5fc3c55abfcb0338d4e76eeb",
     })
     .expect(400)
-})
+}, 30000)
 
 test('Ritorna errore perchè i campi passati non sono in formato corretto', async()=>{
     await request(app).get('/meteoComponents')
