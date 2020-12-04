@@ -28,7 +28,7 @@ test('Dà errore perchè non esiste uno user con tale id nè un itinerario con t
     .expect(400)
 })
 
-test('Crea un meteoComponent e lo inserisce nell itinerario indicato di un determinato user', async ()=>{
+/*test('Crea un meteoComponent e lo inserisce nell itinerario indicato di un determinato user', async ()=>{
     await request(app).post('/meteoComponents')
     .send({
         "id": "adsifjbhoipsadgvasdf",
@@ -40,7 +40,7 @@ test('Crea un meteoComponent e lo inserisce nell itinerario indicato di un deter
         "cityName": "Trento TN"
     })
     .expect(201)
-})
+})*/
 
 test('Ritorna un errore poichè mancano dei campi nel body', async ()=>{
     await request(app).get('/meteoComponents')

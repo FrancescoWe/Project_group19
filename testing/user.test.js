@@ -64,12 +64,37 @@ test('Esiste un utente nel database.', async ()=>{
 })
 
 test('Permette all utente con email "user@domain.com" e password "abracadabra" di effettuare il login (user predefinito). ', async ()=>{
-    await request(app).get('/users')
+    await request(app).post('/users/login')
     .send({
         "email": "user@domain.com",
         "password": "abracadabra"
     })
     .expect(201)
+})
+
+test('Ritorna un errore in quanto nel login non è specificata la password', async()=>{
+    await request(app).post('/users/login')
+    .send({
+        "email": "user@domain.com"
+    })
+    .expect(400)
+})
+
+test('Ritorna un errore in quanto durante il login non esiste utente con questa determinata mail',async()=>{
+    await request(app).post('/users/login')
+    .send({
+        "email": "emailinesistente@inesistente.com",
+        "password": "passwordInesistente"
+    })
+    .expect(400)
+})
+
+test('Ritorna un errore in quanto il campo password non ha il formato corretto',async()=>{
+    await request(app).post('/users/login')
+    .send({
+        "email": "user@domain.com",
+        "password": 1234567
+    })
 })
 
 test('Cancella un utente dal database.', async ()=>{

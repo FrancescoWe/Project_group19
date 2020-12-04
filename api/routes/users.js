@@ -132,6 +132,8 @@ router.post('/login', async (req,res)=>{
     const user = await User.findOne({email: req.body.email});   // Controlla se un utente con tale mail esiste
     if(!user) return res.status(400).send({error: 'Email not found'});   // Se l'utente non esiste, manda un messaggio di errore
                                                                 // Altrimenti..
+    if(req.body.password==null) return res.status(400).send({error: 'You need to write the password too'});
+    if(typeof req.body.password!='string') return res.status(400).send({error: 'Password must be of the type STRING'});
     const validPass = await bcrypt.compare(req.body.password, user.password);   // Controlla la correttezza della password
     if(!validPass) return res.status(400).send({error: 'Invalid password'});             // Se è invalida, manda un messaggio di errroe
                                                                                 // Altrimenti..
