@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+    <!-- Classe CSS che definisce un container. -->
+    <style>
+        .container{
+            display: flex;
+            justify-content: space-between;  
+        }
+    </style>
+
+<head>
+    <meta charset="UTF-8">
+
+    <script 
+        src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js";
+    ></script>
+    <title>Sample Page</title>
+</head>
+
+<body>
+
+    <h2>Your Itineraries</h2>
+
+    <!-- Form per i pulsanti di search -->
+    <form>
+        <div>First of all type an existing email and press login</h4> <br>
+        <form action="api/v1/users" method="post" name="loginform" id="loginform">
+            <span>Logged User:</span> <br>
+            <span id="loggedUser"></span>
+            <input name="email" value="user@domain.com" id="loginEmail"/>
+            <button type="button" onclick="login()">LogIn</button>
+        </form>
+        <button type="button" onclick="viewItineraries()">View My itineraries</button>
+    </form>
+
+    <br>
+    <div class = "container">
+        <!-- Giorno uno -->
+        <h4 id="idItiner">This is the itinerary id</h4>  
+    </div>
+    <br>
+    
+    
+<!-- Esecuzione di script.js -->
+<script src="script.js"></script> 
+<!--<script src="script.js" type="module"></script> -->
+
+</body>
+
+</html>

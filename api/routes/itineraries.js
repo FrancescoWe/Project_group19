@@ -15,14 +15,14 @@ const db = mongoose.connection;
 /* Definizione del metodo GET: ricerca gli itinerari appartenenti allo user specificato.
 Richiede un oggetto JSON nel body della richiesta con il campo:
 - "user_id": l'ID dell'utente di cui si vuole ottenere la lista degli itinerari.*/
-router.get('/', async(req,res) => {
+router.get('/:user_id', async(req,res) => {
     try{
 
-        let founduser = await User.findById(req.body.user_id);      // Cerca l'utente tramite l'ID inserito nel body della request
+        let founduser = await User.findById(req.params.user_id);      // Cerca l'utente tramite l'ID inserito nel body della request
         res.status(201).json(founduser.itinerary);                  // Restituzione nella risposta della lista di itinerary dell'utente
 
-    } catch(err){                                       
-        res.status(400).send("User with id: "+req.body.user_id+" not found");      // Messaggio in caso di errore
+    } catch(err){
+        res.status(400).send("User with id: "+req.params.user_id+" not found");      // Messaggio in caso di errore
     }
 });
 

@@ -14,12 +14,12 @@ const db = mongoose.connection;
 Richiede un oggetto JSON nel body della richiesta con i campi:
 - user_id: l'ID dell'utente di cui si vogliono avere le informazioni
 - itinerary_id: l'ID dell'itinerario di cui si vogliono avere le meteoComponents.*/
-router.get('/', async(req,res) => {
+router.get('/:user_id&:itinerary_id', async(req,res) => {
     try{
         
         let founditinerary = await User.findOne(                                // Ricerca dell'utente corrispondente all'id specificato
-            {"_id": req.body.user_id},
-            { "itinerary" : {$elemMatch : {"_id" : req.body.itinerary_id}}}     // Ricerca dell'itinerary specificato
+            {"_id": req.params.user_id},
+            { "itinerary" : {$elemMatch : {"_id" : req.params.itinerary_id}}}     // Ricerca dell'itinerary specificato
         );                                                                                
 
         res.status(201).send(founditinerary.itinerary[0].meteos_dates);         // Restituzione della lista delle meteos_dates di tale itinerario

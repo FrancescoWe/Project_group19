@@ -91,7 +91,9 @@ Richiede un oggetto JSON nel body della richiesta con i campi:
 router.post('', async(req,res) =>{
 
     const emailExist = await User.findOne({email: req.body.email});     // Controlla se un utente con tale email esiste già
-    if(emailExist) return res.status(400).send('Email already exists'); // Se esiste, viene mandato un messaggio di errore
+    if(emailExist) return res.status(400).send({
+        error : 'Email already exists'
+    });                                                                 // Se esiste, viene mandato un messaggio di errore
     if(req.body.password==null){                                        // Se i campi email e/o password sono null, viene mandato un messaggio di errore
         return res.status(400).send("Error");   
     }else if(req.body.password==""){
