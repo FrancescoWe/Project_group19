@@ -10,7 +10,7 @@ beforeEach(async()=>{
         "userMail": "testfunction@gmail.com"
     })
     await request(app).delete('/users/pinodaniele')
-    .send({
+    .send({ 
         "userMail": "pinodaniele"
     })
     await request(app).post('/users')
