@@ -8,6 +8,11 @@ const ItinerarySchema = mongoose.Schema({
     
     // Il campo user_id serve per collegare un itinerario ad un utente.
     //user_id: mongoose.Schema.Types.ObjectId,
+
+    name: {
+        type: String,
+        required: [true, 'Name field is required']
+    },
     
     // Array che conterrà oggetti di tipo meteoComponent
     meteos_dates : {

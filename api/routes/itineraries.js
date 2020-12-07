@@ -35,7 +35,14 @@ router.post('/', async (req, res) => {
     try{
         let userfound = await User.findOne({_id: req.body.user_id});        // Ricerca dell'utente con l'ID specificato
 
-        let newitinerary = new Itinerary();                     
+        if(req.body.itinerary_name==null){                                        // Se i campi email e/o password sono null, viene mandato un messaggio di errore
+            return res.status(400).send({error: "Error you need to insert a name"});
+        }else if(req.body.itinerary_name==""){
+            return res.status(400).send({error: "Error you need to insert a name"});
+        }
+        let newitinerary = new Itinerary({
+            name: req.body.itinerary_name
+        });
 
         await User.updateOne(                                               // Aggiornamento della lista di itinerari di tale utente, aggiungendo un elemento
             {"_id" : userfound._id},
