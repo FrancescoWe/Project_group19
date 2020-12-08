@@ -16,8 +16,16 @@ const meteoComponentRoutes = require('./api/routes/meteoComponents');
 const itinerariesRoutes = require('./api/routes/itineraries');
 const provaVerificaRoute = require('./api/routes/provaVerifica');
 
-app.use('/', express.static('static'));
+
+// ROUTES PER LATO FRONTEND DI REACT
+app.use("/",express.static(__dirname + "/client/build"));
+app.use("/itinerary",express.static(__dirname + "/client/build"));
+app.use("/signup",express.static(__dirname + "/client/build"));
+app.use("/login",express.static(__dirname + "/client/build"));
+//app.use('/', express.static('static'));
 //app.use middlewares
+
+//ROUTES LATO BACKEND DI NODE PER LE RICHIESTE ALLA API
 app.use(bodyParser.urlencoded({extendeed:false}));
 app.use(bodyParser.json());
 app.use('/users', userRoutes);

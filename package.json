@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "npm run dev --prefix client",
-    "heroku-postbuild": "cd client && npm install",
+    "heroku-postbuild": "cd client && npm install && npm run build",
     "test": "jest --watch"
   },
   "jest": {
