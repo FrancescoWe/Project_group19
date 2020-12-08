@@ -11,7 +11,7 @@ import MapMarkerPathIcon from 'mdi-react/MapMarkerPathIcon'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(7),
+        marginTop: theme.spacing(10),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -53,7 +53,7 @@ function ItineraryList(props) {
                 component="div"
                 border={2}
                 mx={0}
-                mt={7}
+                mt={5}
                 pt={1}
                 pb={1}
                 boxShadow={10}
