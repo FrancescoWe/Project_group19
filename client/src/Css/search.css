@@ -36,9 +36,10 @@
     width: 100%;
     background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4));
     background: url("../images/background-test.jpg");
-    background-position: center;
+    background-position: fixed;
     background-size: cover;
-    position: fixed;
+    overflow-y: auto;
+    max-height: auto;
 }
 
 body, html {
@@ -48,6 +49,10 @@ body, html {
     margin: 0px;
     padding: 0px;
     color : "white";
+    background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4));
+    background: url("../images/background-test.jpg");
+    background-position: relative;
+    background-size: cover;
 }
 
 .container{
