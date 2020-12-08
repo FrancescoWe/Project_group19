@@ -11,7 +11,7 @@ import MapMarkerPathIcon from 'mdi-react/MapMarkerPathIcon'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(8),
+        marginTop: theme.spacing(7),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -30,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+//                <Typography style={{ color: "white", fontSize: "80%" }} component="h1" variant="h7">
+//                    click on the info button to get the informations about an itinerary
+//                </Typography>
+
 function ItineraryList(props) {
     
     const classes = useStyles();
@@ -38,14 +42,11 @@ function ItineraryList(props) {
         <Container component="main" maxWidth="xs" style={{ paddingTop: 0 }}>
 
             <div className={classes.paper}>
-                <MapMarkerPathIcon size = {52} style = {{color:"white"}}/>
-                <Typography style={{ color: "white", marginBottom: "5px"}} component="h1" variant="h5">
+                <MapMarkerPathIcon size = {45} style={{color: "white"}}/>
+                <Typography style={{ color: "white", marginBottom: "5px"}} component="h5" variant="h5">
                     YOUR ITINERARIES
                 </Typography>
                 <br/>
-                <Typography style={{ color: "white", fontSize: "80%" }} component="h1" variant="h7">
-                    click on one itinerary to get its informations
-                </Typography>
             </div>
 
             <Box

@@ -34,16 +34,14 @@ function ItineraryInfo(props) {
 
     const classes = useStyles();
 
-    
+
 
     return (
-        <div>
-            <h1>
-                {props.click.map(item =>
-                    item.cityName + "\n"
-                )}
-            </h1>
-        </div>
+        <h1>
+            {props.click.map(item =>
+                item.cityName + "\n"
+            )}
+        </h1>
     )
 }
 
