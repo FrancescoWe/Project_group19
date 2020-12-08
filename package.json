@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon node.js",
+    "start": "npm run dev --prefix client",
+    "heroku-postbuild": "cd client && npm install",
     "test": "jest --watch"
   },
   "jest": {
