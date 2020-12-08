@@ -9,6 +9,7 @@
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.3.0",
+    "concurrently": "^5.3.0",
     "mdi-react": "^7.4.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
@@ -44,5 +45,7 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "concurrently": "^5.3.0"
+  }
 }
