@@ -80,6 +80,7 @@ function Form() {
                 .then(response => response.json())
                 .then(response => {
                     var array = new Array();
+                    
                     for(var i=1; i<6; i++){
                         var jsonToPass={
                             icon: "http://openweathermap.org/img/wn/" + response.daily[i].weather[0].icon + "@2x.png",
