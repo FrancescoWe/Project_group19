@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react"
 import { FixedSizeList } from 'react-window'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import MapMarkerPathIcon from 'mdi-react/MapMarkerPathIcon'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -34,9 +35,10 @@ function ItineraryList(props) {
     const classes = useStyles();
 
     return (
-        <Container component="main" maxWidth="xs" style={{ paddingTop: 70 }}>
+        <Container component="main" maxWidth="xs" style={{ paddingTop: 0 }}>
 
             <div className={classes.paper}>
+                <MapMarkerPathIcon size = {52} style = {{color:"white"}}/>
                 <Typography style={{ color: "white", marginBottom: "5px"}} component="h1" variant="h5">
                     YOUR ITINERARIES
                 </Typography>
@@ -50,7 +52,7 @@ function ItineraryList(props) {
                 component="div"
                 border={2}
                 mx={0}
-                mt={1}
+                mt={7}
                 pt={1}
                 pb={1}
                 boxShadow={10}

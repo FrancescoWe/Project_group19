@@ -129,11 +129,6 @@ function Itinerary(props) {
                         </ListItem>
                     </div>
                 ))}
-                <Link to={"/yourItinerary"/*"yourItinerary"*/} style={{ textDecoration: 'none'}}>
-                                                 <Button variant="outlined" style={{color : "white"}} startIcon = {<MapMarkerPathIcon size = {18}/>}>
-                                                        Your Itineraries
-                                                 </Button>
-                                          </Link>
             </div>
         )
     }

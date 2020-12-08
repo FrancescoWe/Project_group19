@@ -57,7 +57,7 @@ function Form() {
 
     const styles = {
         width: 700,
-        marginTop: 125
+        marginTop: 35
     }
 
     const [research, setResearch] = useState("")

@@ -17,7 +17,7 @@ function HeaderBar(props){
 
        return(
               <AppBar position="static" style = {{color : "white", backgroundColor : "Black"}}>
-                     <Toolbar>
+                     <Toolbar style = {{minHeight : "50px"}}>
                             <Link to={"/"} style={{ textDecoration: 'none'}}>
                                    <Button startIcon={ <Home style = {{color : "white"}}/> } style={{color : "white"}} >
                                           Home

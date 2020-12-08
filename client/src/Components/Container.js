@@ -54,20 +54,50 @@ function Container(props) {
 
     return (
         <div>
+            <Typography variant = "h5" style={{color : "white" , marginTop : "1%"}}>
+                    Current
+            </Typography>
+            <Divider style = {{background : "rgba(255,255,255,0.15)", marginLeft : "30%", marginRight: "30%", marginBottom : "0.5%"}}/> 
+
             <Box
+                    mt="auto"
+                    mr="auto"
+                    mb="auto"
+                    ml="auto"
+                    width={250}
+                    height={300}
+                    borderRadius={16}
+                    boxShadow="10"
+                    style = {{
+                        backgroundColor : "rgba(255,255,255,0.35)"
+                    }}
+            ></Box>
+
+            <Typography variant = "h5" style={{color : "white"}}>
+                Forecast
+            </Typography>
+            <Divider style = {{background : "rgba(255,255,255,0.15)", marginLeft : "13%", marginRight: "13%", marginBottom : "0.5%"}}/>
+            
+            <Box
+                component="div"
+                display="flex"
                 mx={0}
-                mt={15}
+                mt={0}
                 pt={0}
                 pb={0}
-                width = "50%"
-                style = {{
-                    position: 'relative', 
-                    left: '50%', 
-                    top: '50%',
-                    transform: 'translate(-50%, -50%)'
-                }}
             >
-                    <Grid container direction="row" alignContent="center" alignItems="center" spacing = {2}>
+                <Card num="0" data = {incomingSecondData} />
+                <Card num="1" data = {incomingSecondData}/>
+                <Card num="2" data = {incomingSecondData}/>
+                <Card num="3" data = {incomingSecondData}/>
+                <Card num="4" data = {incomingSecondData}/>
+            </Box>
+        </div>
+    )
+
+    /*
+
+    <Grid container direction="row" alignContent="center" alignItems="center" spacing = {2}>
                         <Grid item>
                             <Paper elevation = {10} style = {paperstyles}>
                                 <img src={"http://openweathermap.org/img/wn/" + incomingData.current.weather[0].icon + "@2x.png"} alt={incomingData.daily[0].weather[0].main} />
@@ -114,23 +144,8 @@ function Container(props) {
                             </Paper>
                         </Grid>
                     </Grid>
-            </Box>
-            <Box
-                component="div"
-                display="flex"
-                mx={0}
-                mt={0}
-                pt={0}
-                pb={0}
-            >
-                <Card num="0" data = {incomingSecondData} />
-                <Card num="1" data = {incomingSecondData}/>
-                <Card num="2" data = {incomingSecondData}/>
-                <Card num="3" data = {incomingSecondData}/>
-                <Card num="4" data = {incomingSecondData}/>
-            </Box>
-        </div>
-    )
+    */
+
 
 }
 
