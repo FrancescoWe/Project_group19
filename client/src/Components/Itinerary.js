@@ -12,6 +12,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from '@material-ui/core/Button';
+import MapMarkerPathIcon from 'mdi-react/MapMarkerPathIcon'
+import {Link} from "react-router-dom"
 import Slide from '@material-ui/core/Slide';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -118,6 +120,7 @@ function Itinerary(props) {
                             style={{ color: "white" }}
                             onClick={handleClickOpen}
                             id={item._id}
+                            name={item.name}
                             style={{ background: "linear-gradient(to right, #ffffff,#5c5c5c)" }}
                         >
                             <ListItemText style={{ pointerEvents: "none", color: "black" }} >
@@ -126,6 +129,11 @@ function Itinerary(props) {
                         </ListItem>
                     </div>
                 ))}
+                <Link to={"/yourItinerary"/*"yourItinerary"*/} style={{ textDecoration: 'none'}}>
+                                                 <Button variant="outlined" style={{color : "white"}} startIcon = {<MapMarkerPathIcon size = {18}/>}>
+                                                        Your Itineraries
+                                                 </Button>
+                                          </Link>
             </div>
         )
     }

@@ -38,8 +38,9 @@ function Card(props) {
             return 'NE'
         return 'N';
     }
-
-    const date = new Date(data.daily[index].dt * 1000);
+    //console.log(data);
+    console.log(data[index].date);
+    const date = new Date(data[index].date);
 
 
     return (
@@ -70,8 +71,8 @@ function Card(props) {
                     <Grid container direction = "column" alignItems = "center" spacing = {2}>
                         <Grid item>
                                 <h3> {date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear()} </h3>
-                            <img src={"http://openweathermap.org/img/wn/" + data.daily[index].weather[0].icon + "@2x.png"} id="imm_uno" alt="Immagine" className="image__icon" />
-                            <h2>{data.daily[index].weather[0].main}</h2>
+                            <img src={data[index].icon} id="imm_uno" alt="Immagine" className="image__icon" />
+                            <h2>{data[index].main}</h2>
                         </Grid>
                         <Divider orientation="horizontal" flexItem/>
                         <Grid item>
@@ -80,15 +81,15 @@ function Card(props) {
                                     <Grid container direction = "column" alignItems = "center" spacing = {1}>
                                         <Grid item>
                                             <ThermometerIcon size = {30}/>
-                                            <h3>{data.daily[index].temp.day + "°"}</h3>
+                                            <h3>{data[index].temp + "°"}</h3>
                                         </Grid>
                                         <Grid item >
                                             <p style = {{fontWeight : "bold"}}>
                                                 <ArrowDownwardIcon style = {{color: "blue", fontSize : "15px"}}/>
-                                                {data.daily[index].temp.min}
+                                                {data[index].temp_Min}
                                                 <br/>
                                                 <ArrowUpwardIcon style = {{color: "red", fontSize : "15px"}}/>
-                                                {data.daily[index].temp.max}
+                                                {data[index].temp_Min}
                                             </p>
                                         </Grid>
                                     </Grid>
@@ -96,7 +97,7 @@ function Card(props) {
                                 <Divider orientation="vertical" flexItem/>
                                 <Grid item>
                                     <OpacityIcon style = {{ fontSize : "30px"}}/>
-                                    <h3>{data.daily[index].humidity + "%"}</h3>
+                                    <h3>{data[index].humidity + "%"}</h3>
                                 </Grid>
                                 <Divider orientation="vertical" flexItem/>
                                 <Grid item>
@@ -104,12 +105,12 @@ function Card(props) {
                                         <Grid item>
                                             <div>
                                                 <WeatherWindyIcon size = {30} />
-                                                <h3>{data.daily[index].wind_speed}</h3>
+                                                <h3>{data[index].wind_speed}</h3>
                                                 <h6>km/h</h6>
                                             </div>
                                         </Grid>
                                         <Grid item>
-                                            {toTextualDescription(data.daily[index].wind_deg)}
+                                            {toTextualDescription(data[index].wind_deg)}
                                         </Grid>
                                     </Grid>
                                 </Grid>

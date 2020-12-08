@@ -27,7 +27,7 @@ function HeaderBar(props){
                                    {props.logged ? 
                                           <Link to={"/itinerary"} style={{ textDecoration: 'none'}}>
                                                  <Button variant="outlined" style={{color : "white"}} startIcon = {<MapMarkerPathIcon size = {18}/>}>
-                                                        Your Itineraries
+                                                        Yours Itineraries
                                                  </Button>
                                           </Link>
                                    :

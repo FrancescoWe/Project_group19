@@ -63,10 +63,12 @@ function Form() {
     const [research, setResearch] = useState("")
     const [researchBefore, setResearchBefore] = useState("")
     const [data, setData] = useState(Object)
+    const [dataTwo, setSecondData] = useState(Object)
     const [loading, setLoading] = useState(false)
     const [buttonClicked, setButtonClicked] = useState(false)
 
     async function handleClick() {
+        console.log(localStorage.getItem('user-id'));
         if (research.localeCompare("") != 0 && research.localeCompare(researchBefore) != 0) {
             setResearchBefore(research)
             setLoading(true)
@@ -77,7 +79,27 @@ function Form() {
             await fetch(searchUrl)
                 .then(response => response.json())
                 .then(response => {
+                    var array = new Array();
+                    for(var i=1; i<6; i++){
+                        var jsonToPass={
+                            icon: "http://openweathermap.org/img/wn/" + response.daily[i].weather[0].icon + "@2x.png",
+                            temp_Max: response.daily[i].temp.max,
+                            temp_Min: response.daily[i].temp.min,
+                            date: response.daily[i].dt * 1000,
+                            cityName: response.timezone,
+                            temp: response.daily[i].temp.day,
+                            humidity: response.daily[i].humidity,
+                            wind_speed: response.daily[i].wind_speed,
+                            deg: response.daily[i].wind_deg,
+                            main: response.daily[i].weather[0].main
+                        }
+                        array.push(jsonToPass);
+                    }
+                    console.log(array);
+                    //console.log(array.length);
+                    //console.log(array[1]);
                     setData(response)
+                    setSecondData(array)
                     setLoading(false)
                 });
         }
@@ -151,7 +173,9 @@ function Form() {
 
 
                 {(!loading && buttonClicked) ?
-                            <Container dataToPass = {data}/>
+                            <Container dataToPass = {data}
+                                dataToPassTwo = {dataTwo}
+                            />
                         :
                             null
                 }

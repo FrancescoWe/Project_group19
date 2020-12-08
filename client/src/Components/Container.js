@@ -20,6 +20,7 @@ function Container(props) {
     //console.log(props.dataToPass)
 
     const [incomingData, setData] = useState(props.dataToPass);
+    const [incomingSecondData, setSecondData] = useState(props.dataToPassTwo)
 
     const paperstyles = {
         backgroundColor : "rgba(255,255,255,0.45)",
@@ -122,11 +123,11 @@ function Container(props) {
                 pt={0}
                 pb={0}
             >
-                <Card num="1" data = {incomingData} />
-                <Card num="2" data = {incomingData}/>
-                <Card num="3" data = {incomingData}/>
-                <Card num="4" data = {incomingData}/>
-                <Card num="5" data = {incomingData}/>
+                <Card num="0" data = {incomingSecondData} />
+                <Card num="1" data = {incomingSecondData}/>
+                <Card num="2" data = {incomingSecondData}/>
+                <Card num="3" data = {incomingSecondData}/>
+                <Card num="4" data = {incomingSecondData}/>
             </Box>
         </div>
     )

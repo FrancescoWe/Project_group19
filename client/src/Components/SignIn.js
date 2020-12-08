@@ -120,6 +120,7 @@ function SignIn(props) {
           return false;
         } else { 
           props.setLogged(data._id);
+          localStorage.setItem('user-id', data._id);
           return true
         } 
       })
@@ -149,6 +150,7 @@ function SignIn(props) {
         } else {
           //console.log(data.token);
           setLogged(true)
+          localStorage.setItem('auth-token', data.token);
           getIdFromToken(data.token)
           return true;
         }
