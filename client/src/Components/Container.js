@@ -51,6 +51,11 @@ function Container(props) {
         return 'N';
     }
 
+    function round(value, precision) {
+        var multiplier = Math.pow(10, precision || 0);
+        return Math.round(value * multiplier) / multiplier;
+    }
+
 
     return (
         <div>
@@ -60,24 +65,78 @@ function Container(props) {
             <Divider style = {{background : "rgba(255,255,255,0.15)", marginLeft : "30%", marginRight: "30%", marginBottom : "0.5%"}}/> 
 
             <Box
-                    mt="auto"
-                    mr="auto"
-                    mb="auto"
-                    ml="auto"
-                    width={250}
-                    height={300}
-                    borderRadius={16}
-                    boxShadow="10"
-                    style = {{
-                        backgroundColor : "rgba(255,255,255,0.35)"
-                    }}
-            ></Box>
+                mt="auto"
+                mr="auto"
+                mb="auto"
+                ml="auto"
+                width={350}
+                height={280}
+                borderRadius={16}
+                boxShadow="20"
+                style = {{
+                    backgroundColor : "rgba(255,255,255,0.5)"
+                }}
+            >
+                <Grid container direction="column" justify= "center" alignItems = "center">
+                    <Grid item style = {{padding : 0}}>
+                        <img src={incomingData.icon} />
+                        <h2 style = {{color : "Black", fontSize : "30px"}}>{incomingData.main}</h2>
+                    </Grid>
+                    <Grid item>
+                        <Grid container direction = "row" justify = "center" alignItems = "center" spacing = {6} style = {{marginTop : 0}}>
+                            <Grid item>
+                                <Grid item >
+                                    <Grid container direction = "column" alignItems = "center" spacing = {1}>
+                                        <Grid item>
+                                            <ThermometerIcon size = {30}/>
+                                            <h3>{round(incomingData.temp,1) + "°"}</h3>
+                                        </Grid>
+                                        <Grid item >
+                                                <p style = {{fontWeight : "bold", color:"#008fd6"}}>
+                                                    {round(incomingData.temp_Min,1) + "°"}
+                                                </p>
+                                                <p style = {{fontWeight : "bold", color:"#b30000"}}>
+                                                    {round(incomingData.temp_Max,1) + "°"}
+                                                </p>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Divider orientation="vertical" style = {{marginBottom : "5%", marginTop: "5%"}} flexItem/>
+                            <Grid item>
+                                <OpacityIcon style = {{ fontSize : "30px"}}/>
+                                <h3>{incomingData.humidity + "%"}</h3>
+                            </Grid>
+                            <Divider orientation="vertical" style = {{marginBottom : "5%", marginTop: "5%"}} flexItem/>
+                            <Grid item>
+                                <Grid container direction = "column" alignItems = "center" spacing = {1} >
+                                    <Grid item>
+                                            <WeatherWindyIcon size = {30} />
+                                            <h3>{round(incomingData.wind_speed,1)}</h3>
+                                            <h6>km/h</h6>
+                                    </Grid>
+                                    <Grid item>
+                                        {toTextualDescription(incomingData.wind_deg)}
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Divider orientation="vertical" style = {{marginBottom : "5%", marginTop: "5%"}} flexItem/>
+                            <Grid item>
+                                <SunglassesIcon size = {30} />
+                                <br/>
+                                <h3>{incomingData.uvi}</h3>
+                                <p style={{fontWeight : "bold"}}>UV</p>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Box>
 
-            <Typography variant = "h5" style={{color : "white"}}>
+            <Typography variant = "h5" style={{color : "white", marginTop : "1%"}}>
                 Forecast
             </Typography>
             <Divider style = {{background : "rgba(255,255,255,0.15)", marginLeft : "13%", marginRight: "13%", marginBottom : "0.5%"}}/>
-            
+
             <Box
                 component="div"
                 display="flex"

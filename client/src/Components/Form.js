@@ -80,7 +80,21 @@ function Form() {
                 .then(response => response.json())
                 .then(response => {
                     var array = new Array();
-                    
+                    var jsonCurrent={
+                        icon: "http://openweathermap.org/img/wn/" + response.current.weather[0].icon + "@2x.png",
+                        temp_Max: response.daily[0].temp.max,
+                        temp_Min: response.daily[0].temp.min,
+                        date: response.current.dt * 1000,
+                        cityName: response.timezone,
+                        temp: response.current.temp,
+                        humidity: response.current.humidity,
+                        wind_speed: response.current.wind_speed,
+                        deg: response.current.wind_deg,
+                        main: response.current.weather[0].main,
+                        feels_like: response.current.feels_like,
+                        uvi: response.current.uvi
+                    }
+                    //console.log(jsonCurrent.temp);
                     for(var i=1; i<6; i++){
                         var jsonToPass={
                             icon: "http://openweathermap.org/img/wn/" + response.daily[i].weather[0].icon + "@2x.png",
@@ -96,10 +110,8 @@ function Form() {
                         }
                         array.push(jsonToPass);
                     }
-                    console.log(array);
-                    //console.log(array.length);
-                    //console.log(array[1]);
-                    setData(response)
+                    console.log(array)
+                    setData(jsonCurrent)
                     setSecondData(array)
                     setLoading(false)
                 });

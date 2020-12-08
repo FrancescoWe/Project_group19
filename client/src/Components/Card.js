@@ -38,6 +38,14 @@ function Card(props) {
             return 'NE'
         return 'N';
     }
+
+
+    function round(value, precision) {
+        var multiplier = Math.pow(10, precision || 0);
+        return Math.round(value * multiplier) / multiplier;
+    }
+
+
     //console.log(data);
     console.log(data[index].date);
     const date = new Date(data[index].date);
@@ -68,44 +76,43 @@ function Card(props) {
                         backgroundColor : "rgba(255,255,255,0.35)"
                     }}
                 >
-                    <Grid container direction = "column" alignItems = "center" spacing = {2}>
+                    <Grid container direction = "column" alignItems = "center" justify = "center" spacing = {2}>
                         <Grid item>
                                 <h3> {date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear()} </h3>
                             <img src={data[index].icon} id="imm_uno" alt="Immagine" className="image__icon" />
-                            <h2>{data[index].main}</h2>
+                            <h2 style = {{color : "Black", fontSize : "30px"}}>{data[index].main}</h2>
                         </Grid>
                         <Divider orientation="horizontal" flexItem/>
                         <Grid item>
-                            <Grid container direction = "row" alignItems = "center" spacing = {3}>
+                            <Grid container direction = "row" alignItems = "center" spacing = {5}>
                                 <Grid item>
                                     <Grid container direction = "column" alignItems = "center" spacing = {1}>
                                         <Grid item>
                                             <ThermometerIcon size = {30}/>
-                                            <h3>{data[index].temp + "°"}</h3>
+                                            <h3>{round(data[index].temp,1) + "°"}</h3>
                                         </Grid>
-                                        <Grid item >
-                                            <p style = {{fontWeight : "bold"}}>
-                                                <ArrowDownwardIcon style = {{color: "blue", fontSize : "15px"}}/>
-                                                {data[index].temp_Min}
-                                                <br/>
-                                                <ArrowUpwardIcon style = {{color: "red", fontSize : "15px"}}/>
-                                                {data[index].temp_Min}
+                                        <Grid item > 
+                                            <p style = {{fontWeight : "bold", color:"#008fd6"}}>
+                                                {round(data[index].temp_Min,1) + "°"}
+                                            </p>
+                                            <p style = {{fontWeight : "bold", color:"rgba(140,0,0,0.8"}}>
+                                                {round(data[index].temp_Max,1) + "°"}
                                             </p>
                                         </Grid>
                                     </Grid>
                                 </Grid>
-                                <Divider orientation="vertical" flexItem/>
+                                <Divider orientation="vertical" style = {{marginBottom : "5%", marginTop: "5%"}} flexItem/>
                                 <Grid item>
                                     <OpacityIcon style = {{ fontSize : "30px"}}/>
                                     <h3>{data[index].humidity + "%"}</h3>
                                 </Grid>
-                                <Divider orientation="vertical" flexItem/>
+                                <Divider orientation="vertical" style = {{marginBottom : "5%", marginTop: "5%"}} flexItem/>
                                 <Grid item>
                                     <Grid container direction = "column" alignItems = "center" spacing = {1} >
                                         <Grid item>
                                             <div>
                                                 <WeatherWindyIcon size = {30} />
-                                                <h3>{data[index].wind_speed}</h3>
+                                                <h3>{round(data[index].wind_speed,1)}</h3>
                                                 <h6>km/h</h6>
                                             </div>
                                         </Grid>
