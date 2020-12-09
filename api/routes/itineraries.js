@@ -32,6 +32,12 @@ Richiede un oggetto JSON nel body della richiesta con il campo:
 - "user_id": l'ID dell'utente a cui si vuole aggiungere l'itinerario.*/
 router.post('/', async (req, res) => {
 
+    const itineraryNameExist = await User.findOne({"itinerary.name": req.body.itinerary_name, "_id": req.body.user_id});
+    console.log(itineraryNameExist);
+    if(itineraryNameExist) return res.status(400).send({
+        error: "Itinerary Name already exists"
+    });
+
     try{
         let userfound = await User.findOne({_id: req.body.user_id});        // Ricerca dell'utente con l'ID specificato
 
@@ -54,6 +60,18 @@ router.post('/', async (req, res) => {
         res.status(400).send("User with id: "+ req.body.user_id +" not found");                     // Messaggio in caso di errore
     }
 
+});
+
+router.delete('/deleleteName', async (req,res) =>{
+    try{
+        await User.updateOne(
+            { "_id": req.body.user_id},
+            {"$pull" : {"itinerary": {"name" : req.body.itinerary_name}}}
+        );
+        res.status(201).send("Itinerary "+req.body.itinerary_name+" deleted\nUser "+req.body.user_id+"updated.\n");
+    }catch(err){
+        res.status(400).send({error: err});
+    }
 });
 
 /* Definizione del metodo DELETE: elimina un determinato itinerario dalla lista di itinerari dell'utente specificato.
