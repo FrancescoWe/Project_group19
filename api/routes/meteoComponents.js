@@ -133,5 +133,45 @@ router.delete('', async (req,res)=> {
 
 });
 
+router.patch('/:userId', async (req,res)=>{
+    try{
+        User.findById(req.params.userId)
+            .then((user) => {
+            const meteos_datesA = user.itinerary.id(req.body.itinerary_id).meteos_dates.id(req.body.meteos_id);
+            //console.log("WHAAAAAAA2"+user);
+            //meteos_datesA.set(req.body); // updates the address while keeping its schema       
+            if(checkNull(req.body.cityName)) meteos_datesA.cityName=req.body.cityName;
+            if(checkNull(req.body.date)) meteos_datesA.date=req.body.date;
+            if(checkNull(req.body.dataUpdatedOn)) meteos_datesA.dataUpdatedOn=req.body.dataUpdatedOn;
+            if(checkNull(req.body.available)) meteos_datesA.available=req.body.available;
+            if(checkNull(req.body.temp_Max)) meteos_datesA.temp_Max=req.body.temp_Max;
+            if(checkNull(req.body.temp_Min)) meteos_datesA.temp_Min=req.body.temp_Min;
+            if(checkNull(req.body.humidity)) meteos_datesA.humidity=req.body.humidity;
+            if(checkNull(req.body.icon)) meteos_datesA.icon=req.body.icon;
+            if(checkNull(req.body.main)) meteos_datesA.main=req.body.main;
+            if(checkNull(req.body.wind_deg)) meteos_datesA.wind_deg=req.body.wind_deg;
+            if(checkNull(req.body.wind_speed)) meteos_datesA.wind_speed=req.body.wind_speed;
+
+
+            return user.save()    
+            })
+            .then((user) => {
+            //console.log("WHAAAAAAA"+user);
+            res.send({ user });
+        })
+        .catch(e => res.status(400).send(e));
+  ///
+    }catch(err){
+        console.log(err);
+        res.status(400).json({message: err});
+    }
+})
+
+function checkNull(variabile){
+    if (variabile==null) return false;
+    if(variabile=="") return false;
+    return true;
+}
+
 
 module.exports = router;
