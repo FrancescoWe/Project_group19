@@ -18,6 +18,7 @@ import Slide from '@material-ui/core/Slide';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import InformationOutlineIcon from "mdi-react/InformationOutlineIcon"
+import { Redirect } from "react-router-dom";
 
 // TRANSITION
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -32,17 +33,16 @@ const useStyles = makeStyles((theme) => ({
 function Itinerary(props) {
     
     const [itinData, setItinData] = useState([]);
-    const [open, setOpen] = useState(false);
-    const [clickedItinId, setClickedItinId] = useState("");
-    const [clickedItinName, setClickedItinName] = useState("");
-    const [clickedItinMeteos, setClickedItinMeteos] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [done, setDone] = useState(false);
+    // const [open, setOpen] = useState(false);
+    // const [clickedItinId, setClickedItinId] = useState("");
+    // const [clickedItinName, setClickedItinName] = useState("");
+    // const [clickedItinMeteos, setClickedItinMeteos] = useState([]);
+
+    // const [loading, setLoading] = useState(false);
     
     const classes = useStyles();
     
-    const handleClose = () => {
-        setOpen(false);
-    };
     
     useEffect(() => {
         fetching();
@@ -58,20 +58,24 @@ function Itinerary(props) {
             },
             method: 'GET'
         }).then((resp) => resp.json())
-            .then(function (data) {
-                console.log(data)
-                setItinData(data);
-            })
-            .catch(error => console.error(error))
-
+        .then(function (data) {
+            console.log(data)
+            setItinData(data);
+        })
+        .catch(error => console.error(error))
+        
     }
-
+    
+    
+//    const handleClose = () => {
+//        setOpen(false);
+//    };
 
     // FUNZIONE PER IL CLICK DELL'INFO BUTTON
     async function handleClickOpen(event) {
 
-        setClickedItinId(event.target.id);
-        setClickedItinName(event.target.getAttribute("name"))
+        props.setClickedItinId(event.target.id);
+        props.setClickedItinName(event.target.getAttribute("name"))
 
         await fetch('/meteoComponents/' + props.user + "&" + event.target.id, {
             headers: {
@@ -81,13 +85,16 @@ function Itinerary(props) {
             method: 'GET'
         }).then((resp) => resp.json())
             .then(function (data) {
-                console.log(data)
-                setClickedItinMeteos(data);
+                //(console.log(data)
+                props.setClickedItinMeteos(data);
                 // setItinData(data);
             })
             .catch(error => console.error(error))
 
-        setOpen(true);
+        // setOpen(true);
+        setDone(true);
+
+
     };
 
     // FUNZIONE PER IL CLICK DEL DELETE BUTTON
@@ -97,9 +104,7 @@ function Itinerary(props) {
 
     // FUNZIONE PER RENDERIZZARE LE RIGE DELLA LISTA
     function renderRow() {
-        // console.log("Rendering Rows...");
-        // console.log("The array has " + itinData.length + " itineraries")
-        // console.log(itinData);
+
         return (
             <div>
                 {itinData.map(item => (
@@ -145,32 +150,8 @@ function Itinerary(props) {
 
     return (
         <div>
-            <ItineraryList renderrow={renderRow} />
-            <Dialog
-                open={open}
-                keepMounted
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-slide-title"
-                aria-describedby="alert-dialog-slide-description"
-                style={{ background: "rgba(255,255,255,0.2)" }}
-            >
-                <DialogTitle id="alert-dialog-slide-title">
-                    {"INFO ABOUT THE ITINERARY '" + clickedItinName + "'"}
-                </DialogTitle>
-
-                <DialogContent>
-                    <DialogContentText component="span" id="alert-dialog-slide-description">
-                        <ItineraryInfo click={clickedItinMeteos}/>
-                    </DialogContentText>
-                </DialogContent>
-
-                <DialogActions>
-                    <Button variant="contained" onClick={handleClose} style={{ color: "white", backgroundColor: "black" , borderColor: "black" }}>
-                        OK
-                    </Button>
-                </DialogActions>
-
-            </Dialog>
+            {done ? <Redirect to={"/myitinerary"} /> : 
+                <ItineraryList renderRow={renderRow} />}
         </div>
 
     )

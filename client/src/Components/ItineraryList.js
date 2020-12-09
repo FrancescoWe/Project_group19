@@ -3,11 +3,11 @@ import Container from '@material-ui/core/Container';
 import PropTypes from 'prop-types'
 import Box from '@material-ui/core/Box';
 // import List from '@material-ui/core/List';
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { FixedSizeList } from 'react-window'
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import MapMarkerPathIcon from 'mdi-react/MapMarkerPathIcon'
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -16,18 +16,12 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         alignItems: 'center',
     },
-    root: {
-        width: '100%',
-        height: 400,
-        maxWidth: 300
-    },
-    listSection: {
-        backgroundColor: 'inherit',
-    },
-    ul: {
-        backgroundColor: 'inherit',
-        padding: 0,
-    },
+    button: {
+        marginTop: theme.spacing(3),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    }
 }));
 
 //                <Typography style={{ color: "white", fontSize: "80%" }} component="h1" variant="h7">
@@ -35,18 +29,18 @@ const useStyles = makeStyles((theme) => ({
 //                </Typography>
 
 function ItineraryList(props) {
-    
+
     const classes = useStyles();
 
     return (
         <Container component="main" maxWidth="xs" style={{ paddingTop: 0 }}>
 
             <div className={classes.paper}>
-                <MapMarkerPathIcon size = {45} style={{color: "white"}}/>
-                <Typography style={{ color: "white", marginBottom: "5px"}} component="h5" variant="h5">
+                <MapMarkerPathIcon size={45} style={{ color: "white" }} />
+                <Typography style={{ color: "white", marginBottom: "5px" }} component="h5" variant="h5">
                     YOUR ITINERARIES
                 </Typography>
-                <br/>
+                <br />
             </div>
 
             <Box
@@ -67,11 +61,20 @@ function ItineraryList(props) {
                     itemCount={1}
                     style={{ position: "relative", margin: "auto" }}
                 >
-                    {props.renderrow}
+                    {props.renderRow}
                 </FixedSizeList>
-
             </Box>
 
+            <div className={classes.button}>
+                <Button
+                    className="btn"
+                    variant="contained"
+                    size="large"
+                    startIcon={<AddIcon />}
+                >
+                    Add itinerary
+                </Button>
+            </div>
 
 
         </Container>
