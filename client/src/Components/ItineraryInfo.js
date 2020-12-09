@@ -1,14 +1,12 @@
 import { makeStyles, Typography } from "@material-ui/core"
 import Container from '@material-ui/core/Container';
 import React, { useState } from "react"
-import Box from "@material-ui/core/Box"
 import Grid from "@material-ui/core/Grid"
 import Button from "@material-ui/core/Button"
-import Divider from "@material-ui/core/Divider"
 import {Link} from "react-router-dom"
 import MeteoCard from "./MeteoCard"
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
-import { Redirect } from "react-router-dom";
+
 
 
 
@@ -26,29 +24,41 @@ function ItineraryInfo(props) {
 
     const classes = useStyles();
     const [incomingMeteos] = useState(props.clickedItinMeteos);
+    const[openPopUp, setOpenPopUp] = useState(false);
+    const [clickedMeteoComp, setClickedMeteoComp] = useState("");
 
     // console.log(props.clickedItinMeteos)
+    console.log(incomingMeteos);
 
-
-    function toTextualDescription(degree) {
-        if (degree > 337.5)
-            return 'N'
-        if (degree > 292.5)
-            return 'NW'
-        if (degree > 247.5)
-            return 'W'
-        if (degree > 202.5)
-            return 'SW'
-        if (degree > 157.5)
-            return 'S'
-        if (degree > 122.5)
-            return 'SE'
-        if (degree > 67.5)
-            return 'E'
-        if (degree > 22.5)
-            return 'NE'
-        return 'N';
+    function handleCancel(){
+        setOpenPopUp(false);
     }
+
+    function handleClickDel(event){
+        console.log(event.target)
+        setClickedMeteoComp(event.target.id)
+    }
+
+    async function handleDelete(){
+
+        console.log(props.item._id);
+        await fetch('/itineraries', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: 'DELETE', 
+            body: JSON.stringify({
+                "user_id": props.user,
+                "itinerary_id": props.item._id
+            })
+        }).then((resp) => resp.json())
+        .then(function (data) {
+            console.log(data)
+        })
+        .catch(error => console.error(error));
+    }
+
 
     function renderCards() {
         return (
@@ -60,7 +70,12 @@ function ItineraryInfo(props) {
                 spacing={3}
             >
                 {incomingMeteos.map(item => (
-                    <MeteoCard key={item._id} item={item} />
+                    <MeteoCard 
+                        key={item._id} 
+                        item={item} 
+                        handleDelete={handleDelete} 
+                        handleClickDel={handleClickDel} 
+                    />
                 ))}
             </Grid>
         )
@@ -71,19 +86,19 @@ function ItineraryInfo(props) {
     return (
         <div>
             <Link to={"/itinerary"} style={{ textDecoration: 'none'}}>
-                <Button
-                    className="btn"
-                    variant="contained"
-                    size="small"
-                    startIcon={<KeyboardBackspaceIcon />}
-                    style={{marginTop: "0.5%", 
-                        marginLeft:"0.5%", 
-                        width: "5%", 
-                        height:"1%"
-                    }}
-                >
-                    Back
-                </Button>
+            <Button
+                className="btn"
+                variant="contained"
+                size="small"
+                startIcon={<KeyboardBackspaceIcon />}
+                style={{marginTop: "0.5%", 
+                    marginLeft:"0.5%", 
+                    width: "5%", 
+                    height:"1%"
+                }}
+            >
+                Back
+            </Button>
             </Link>
             <Container
                 display="flex"
@@ -98,9 +113,7 @@ function ItineraryInfo(props) {
                     <br />
                 </div>
 
-                <div>
-                    {renderCards()}
-                </div>
+                {renderCards()}
 
             </Container>
         </div>

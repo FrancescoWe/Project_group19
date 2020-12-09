@@ -36,9 +36,6 @@ function App() {
   
   return (
     <Router>
-      {/*console.log(clickedItinId)*/}
-      {/*console.log(clickedItinName)*/}
-      {/*console.log(clickedItinMeteos)*/}
       <Box 
         component="div"
         className="hero"

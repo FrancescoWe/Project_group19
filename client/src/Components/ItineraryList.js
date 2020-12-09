@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
     },
     button: {
-        marginTop: theme.spacing(3),
+        marginTop: theme.spacing(2),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center'
@@ -227,12 +227,15 @@ function ItineraryList(props) {
             <div>
                 {itinData.map(item => (
                     <div
-                    key={item._id}
+                        key={item._id}
                         className="itineraryDiv"
                     >
                         <ListItem
-                            style={{ color: "white" }}
-                            style={{ background: "linear-gradient(to right, #ffffff,#5c5c5c)" }}
+                            style={{ 
+                                color: "white", 
+                                background: "linear-gradient(to right, rgba(255,255,255,0.8),rgba(112,112,112,0.7))" , 
+                                borderRadius : "15px"
+                            }}
                         >
                             <ListItemText style={{ pointerEvents: "none", color: "black" }} >
                                 <h2> {item.name} </h2>
@@ -274,8 +277,12 @@ function ItineraryList(props) {
                 <Container component="main" maxWidth="xs" style={{ paddingTop: 0 }}>
 
                     <div className={classes.paper}>
-                        <MapMarkerPathIcon size={45} style={{ color: "white" }} />
-                        <Typography style={{ color: "white", marginBottom: "5px" }} component="h5" variant="h5">
+                        <MapMarkerPathIcon size={45} style={{ color: "white", marginBottom: "8px" }} />
+                        <Typography 
+                            style={{ color: "white", marginBottom: "3%" }} 
+                            component="h5" 
+                            variant="h5"
+                        >
                             YOUR ITINERARIES
                         </Typography>
                         <br />
@@ -296,7 +303,7 @@ function ItineraryList(props) {
                                 <CircularProgress style={{ color: "white" }} />
                             </div> :
                             <FixedSizeList
-                                height={400}
+                                height={270}
                                 width={300}
                                 itemSize={600}
                                 itemCount={1}
@@ -314,7 +321,7 @@ function ItineraryList(props) {
                             size="large"
                             startIcon={<AddIcon />}
                             onClick={handleClick}
-                            style={{color: "black"}}
+                            style={{color: "black", borderStyle: "solid", borderColor: "black", borderWidth:"1px"}}
                         >
                             Add itinerary
                         </Button>
@@ -326,7 +333,7 @@ function ItineraryList(props) {
             <Dialog open={open} onClose={handleCancel} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">ADD A NEW ITINERARY</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
+                    <DialogContentText style={{color: "black"}}>
                         Insert the name of the new itinerary
                     </DialogContentText>
                     <CssTextField
