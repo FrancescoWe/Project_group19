@@ -6,6 +6,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const User = require("../models/user");
 const MeteoComponent = require("../models/meteoComponent");
+const request = require('request');
 
 // Connessione al DB
 const db = mongoose.connection;
@@ -39,25 +40,75 @@ Richiede un oggetto JSON nel body della richiesta con i campi:
 - cityName: la città corrispondente al nuovo meteoComponent.*/
 router.post('', async (req, res) => {
 
-    try{
-        let meteoComponents = new MeteoComponent({      // Creazione del nuovo meteoComponent
-            temp_Max : req.body.temp_Max,
-            temp_Min : req.body.temp_Min,
-            date : req.body.date,
-            cityName : req.body.cityName
-        });
+    var meteoComponents
 
+    var currentDate = new Date().getTime() / 1000
+
+    var userDate = req.body.date
+
+    if(userDate < currentDate){
+        res.status(400).send({
+            error :  "Date provided is in the past or it's today!"
+        })
+    } else {
+        const oneDay = 24 * 60 * 60
+        const diffDays = Math.ceil(Math.abs((userDate - currentDate) / oneDay))
+
+        if(diffDays > 7){
+            meteoComponents = new MeteoComponent({      // Creazione del nuovo meteoComponent
+                available : false,
+                cityName : req.body.cityName,
+                date : userDate,
+            })
+
+            res.status(201).send({
+                success : "Meteo NOT AVAILABLE added to itinerary: "+req.body.itinerary_id+"\nBinded to user: "+req.body.user_id+"\n"
+            });   // Messaggio di risposta
+
+        } else {
+
+            requestURL = "/meteos/" + req.body.cityName
+
+            console.log(diffDays)
+
+            var toSave
+
+            try{
+                request (requestURL,function(error,body,response){
+                    console.log(response)
+                    toSave = response.daily[diffDays]
+                    meteoComponents = new MeteoComponent({      // Creazione del nuovo meteoComponent
+                        available : true,
+                        cityName : req.body.cityName,
+                        date : userDate,
+                        dataUpdatedOn : currentDate,
+                        temp : toSave.temp.day,
+                        temp_Max : toSave.temp.max,
+                        temp_Min : toSave.temp.min,
+                        humidity : toSave.humidity,
+                        icon : toSave.weather[0].icon,
+                        main : toSave.weather[0].main,
+                        wind_deg : toSave.wind_deg,
+                        wind_speed : toSave.wind_speed,
+                    })
+                })
+
+                res.status(201).send({
+                    success : "Meteo AVAILABLE AND FILLED added to itinerary: "+req.body.itinerary_id+"\nBinded to user: "+req.body.user_id+"\n"
+                });   // Messaggio di risposta
+
+            }catch(err){
+                res.status(400).send({
+                    error : "Itinerary with id:"+req.body.itinerary_id+" not found"
+                });      // Messaggio in caso di errore
+            }   
+        }
+        
         await User.updateOne(              // Aggiornamento della lista di itinerari dell'utente specificato tramite l'aggiunta il meteoComponent appena creato
             {"_id": req.body.user_id, "itinerary._id" : req.body.itinerary_id},
             {"$push" : { "itinerary.$.meteos_dates" : meteoComponents } },
         );
-
-        res.status(201).send("Meteo data added to itinerary: "+req.body.itinerary_id+"\nBinded to user: "+req.body.user_id+"\n");   // Messaggio di risposta
-    
-    }catch(err){
-        res.status(400).send("Itinerary with id:"+req.body.itinerary_id+" not found");      // Messaggio in caso di errore
     }
-
 });
 
 /* Definizione del metodo DELETE: rimuove una meteocComponent dall'itinerario specificato appartenente all'utente specificato.
