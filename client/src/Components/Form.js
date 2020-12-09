@@ -9,24 +9,9 @@ import Container from "./Container"
 import EmptyContainer from "./EmptyContainer"
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
+import CssTextField from "./CssTextField"
 
 // STYLING
-const CssTextField = withStyles ({
-    root: {
-      '& label.Mui-focused': {
-        color: 'grey',
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: 'grey',
-      },
-      '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-          borderColor: 'grey',
-        },
-      }
-    },
-  
-})(TextField);
 
 const useStyles = makeStyles((theme) => ({
     cssLabel: {
