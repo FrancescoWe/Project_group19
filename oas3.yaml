@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info: 
     version: '3.0'
-    title: "API IngSoft2 group #19"
+    title: "IngSoft2 group #19"
     description: "Il nostro gruppo vorrebbe presentare come prodotto un sito web che idealmente permetta di consultare il meteo di una città ricercata dall'utente. In particolare, le features finali dovrebbero riguardare:
 
     1. Ricerca del meteo attuale
@@ -79,6 +79,37 @@ paths:
           description: "User deleted"
         '400':
           description: "User not found"
+          
+  /users/login:
+    post: 
+      description: >-
+        "login for the user"
+      summary: Login user
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              type: object
+              required: 
+                - password
+                - email
+              properties: 
+                email:
+                  type: string
+                  description: "User's email"
+                password: 
+                  type: string
+                  description: "User's password"
+      responses:
+        '201':
+          description: 'The respond provides the jwt for the user that logged in'
+          headers: 
+            'auth-token':
+              schema:
+                type: string
+        '400':
+          description: "Incorrect email or password"
+      
 
   /users/{userId}:    
     get:
