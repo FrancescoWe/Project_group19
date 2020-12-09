@@ -17,11 +17,25 @@ import Button from '@material-ui/core/Button';
 
 function MeteoCard(props) {
 
+    const [clicked] = useState(props.item._id);
+
     function round(value, precision) {
         var multiplier = Math.pow(10, precision || 0);
         return Math.round(value * multiplier) / multiplier;
     }
 
+    // console.log(props.item.date);
+    // console.log(props.item.date);
+    const date = new Date(props.item.date*1000);
+
+    // console.log(props.item._id)
+    // console.log(props.item._id)
+
+    function handleClickDel(event){
+        // console.log(clicked)
+        props.setClickedMeteoComp(clicked)
+        props.handleClickDel();
+    }
 
     return (
             <Grid item>
@@ -42,7 +56,7 @@ function MeteoCard(props) {
                             <h2 style={{ color: "Black", fontSize: "30px" }}>{props.item.cityName}</h2>
                         </Grid>
                         <Grid item>
-                            <h2 style={{ color: "Black", fontSize: "30px" }}>{props.item.date}</h2>
+                            <h2 style={{ color: "Black", fontSize: "30px" }}>{date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear()}</h2>
                         </Grid>
                         <Divider orientation="horizontal" flexItem />
                         <Grid item>
@@ -67,11 +81,10 @@ function MeteoCard(props) {
                             </Grid>
                         </Grid>
                         <Grid item>
-                            <div
-                                onClick={props.handleClickDel}
-                                id={props.item}
-                            >
-                                <IconButton style={{ pointerEvents: "none" }}>
+                            <div>
+                                <IconButton
+                                    onClick={handleClickDel}
+                                >
                                     <DeleteIcon style={{ pointerEvents: "none" }} />
                                 </IconButton>
                             </div>
