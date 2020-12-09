@@ -1,14 +1,18 @@
 import { makeStyles, Typography } from "@material-ui/core"
 import Container from '@material-ui/core/Container';
 import React, { useState } from "react"
-import Box from "@material-ui/core/Box"
 import Grid from "@material-ui/core/Grid"
 import Button from "@material-ui/core/Button"
-import Divider from "@material-ui/core/Divider"
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 import MeteoCard from "./MeteoCard"
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
-import { Redirect } from "react-router-dom";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 
 
@@ -18,37 +22,81 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-    }
+    },
+    root: {
+        display: 'flex',
+        '& > * + *': {
+            marginLeft: theme.spacing(2),
+        },
+        alignItems: "center",
+        justifyContent: "center"
+    },
 }));
 
 
 function ItineraryInfo(props) {
 
     const classes = useStyles();
-    const [incomingMeteos] = useState(props.clickedItinMeteos);
+    const [incomingMeteos, setIncomingMeteos] = useState(props.clickedItinMeteos);
+    const [openPopUp, setOpenPopUp] = useState(false);
+    const [clickedMeteoComp, setClickedMeteoComp] = useState("");
+    const [loading, setLoading] = useState(false);
 
     // console.log(props.clickedItinMeteos)
+    console.log(incomingMeteos);
 
-
-    function toTextualDescription(degree) {
-        if (degree > 337.5)
-            return 'N'
-        if (degree > 292.5)
-            return 'NW'
-        if (degree > 247.5)
-            return 'W'
-        if (degree > 202.5)
-            return 'SW'
-        if (degree > 157.5)
-            return 'S'
-        if (degree > 122.5)
-            return 'SE'
-        if (degree > 67.5)
-            return 'E'
-        if (degree > 22.5)
-            return 'NE'
-        return 'N';
+    function handleCancel() {
+        setOpenPopUp(false);
     }
+
+    function handleCancelDel() {
+        setOpenPopUp(false);
+    }
+
+    function handleClickDel(event) {
+        setOpenPopUp(true);
+        console.log(clickedMeteoComp);
+    }
+
+    async function handleDelete() {
+        // console.log(props.clickedItinId)
+        // console.log(clickedMeteoComp)
+        setLoading(true);
+        await fetch('/meteoComponents', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: 'DELETE',
+            body: JSON.stringify({
+                "user_id": props.user,
+                "itinerary_id": props.clickedItinId,
+                "meteo_id": clickedMeteoComp
+            })
+        }).then((resp) => resp.json())
+            .then(function (data) {
+                console.log(data)
+            })
+            .catch(error => console.error(error));
+        setOpenPopUp(false);
+
+        await fetch('/meteoComponents/' + props.user + "&" + props.clickedItinId, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: 'GET'
+        }).then((resp) => resp.json())
+            .then(function (data) {
+                //(console.log(data)
+                setIncomingMeteos(data);
+                setLoading(false);
+                // setItinData(data);
+            })
+            .catch(error => console.error(error))
+
+    }
+
 
     function renderCards() {
         return (
@@ -60,30 +108,35 @@ function ItineraryInfo(props) {
                 spacing={3}
             >
                 {incomingMeteos.map(item => (
-                    <MeteoCard key={item._id} item={item} />
+                    <MeteoCard
+                        key={item._id}
+                        item={item}
+                        handleClickDel={handleClickDel}
+                        setClickedMeteoComp={setClickedMeteoComp}
+                    />
                 ))}
             </Grid>
         )
 
     }
 
-
     return (
         <div>
-            <Link to={"/itinerary"} style={{ textDecoration: 'none'}}>
+            <Link to={"/itinerary"} style={{ textDecoration: 'none' }}>
                 <Button
                     className="btn"
                     variant="contained"
                     size="small"
                     startIcon={<KeyboardBackspaceIcon />}
-                    style={{marginTop: "0.5%", 
-                        marginLeft:"0.5%", 
-                        width: "5%", 
-                        height:"1%"
+                    style={{
+                        marginTop: "0.5%",
+                        marginLeft: "0.5%",
+                        width: "5%",
+                        height: "1%"
                     }}
                 >
                     Back
-                </Button>
+            </Button>
             </Link>
             <Container
                 display="flex"
@@ -98,11 +151,40 @@ function ItineraryInfo(props) {
                     <br />
                 </div>
 
-                <div>
-                    {renderCards()}
-                </div>
+                {loading ?
+                    <div className={classes.root}>
+                        <CircularProgress style={{ color: "white" }} />
+                    </div> :
+                    renderCards()
+                }
 
             </Container>
+
+            <Dialog open={openPopUp} onClose={handleCancel} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">DELETE STAGE</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete this?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCancelDel} style={{ color: "black" }}>
+                        Cancel
+                    </Button>
+
+                    <div>
+                        <Button
+                            onClick={handleDelete}
+                            variant="contained"
+                            style={{ color: "black", borderColor: "black", background: "red" }}
+                        >
+                            <p>YES</p>
+                        </Button>
+                    </div>
+
+                </DialogActions>
+            </Dialog>
+
         </div>
     )
 }
