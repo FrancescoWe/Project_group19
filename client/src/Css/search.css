@@ -90,8 +90,13 @@ body, html {
 }
 
 .itineraryDiv {
+<<<<<<< HEAD
     margin-top: 6px;
     margin-right: 10px;
+=======
+    margin-top : 6px;
+    margin-right : 10px;
+>>>>>>> main
     padding-top: 0px; 
 }
 
