@@ -63,57 +63,6 @@ function Container(props) {
         </div>
     )
 
-    /*
-
-    <Grid container direction="row" alignContent="center" alignItems="center" spacing = {2}>
-                        <Grid item>
-                            <Paper elevation = {10} style = {paperstyles}>
-                                <img src={"http://openweathermap.org/img/wn/" + incomingData.current.weather[0].icon + "@2x.png"} alt={incomingData.daily[0].weather[0].main} />
-                                <h1>{incomingData.current.weather[0].main}</h1>
-                            </Paper>
-                        </Grid>
-                        <Grid item>
-                            <Paper elevation = {4} style = {paperstyles}>
-                                <ThermometerIcon size = {37}/>
-                                <h2>{incomingData.current.temp + "°"}</h2>
-                                <br />
-                                <p>
-                                    <ArrowDownwardIcon style = {{color: "blue", fontSize : "15px"}}/>
-                                    {incomingData.daily[0].temp.min}
-                                    <br/>
-                                    <ArrowUpwardIcon style = {{color: "red", fontSize : "15px"}}/>
-                                    {incomingData.daily[0].temp.max}
-                                </p>
-                            </Paper>
-                        </Grid>
-                        <Grid item>
-                            <Paper elevation = {4} style = {paperstyles}>
-                                <OpacityIcon style = {{color: "lightblue", fontSize : "37px"}}/>
-                                <h2>{incomingData.current.humidity + "%"}</h2>
-                                <br/>
-                                <h4>Feels like</h4>
-                                <h3 style = {{color: "lightblue"}}>{incomingData.current.feels_like + "°"}</h3>
-                            </Paper>
-                        </Grid>
-                        <Grid item>
-                            <Paper elevation = {4} style = {paperstyles}>
-                                <WeatherWindyIcon size = {37} />
-                                <h2>{incomingData.current.wind_speed}</h2>
-                                <h4>km/h</h4>
-                                <br/>
-                                {" " + toTextualDescription(incomingData.current.wind_deg) + " "}
-                            </Paper>
-                        </Grid>
-                        <Grid item>
-                            <Paper elevation = {4} style = {paperstyles}>
-                                <SunglassesIcon size = {37}/>
-                                <h2>{incomingData.current.uvi}</h2>
-                                <h4>UV</h4>
-                            </Paper>
-                        </Grid>
-                    </Grid>
-    */
-
 
 }
 
