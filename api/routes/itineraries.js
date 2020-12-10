@@ -62,7 +62,7 @@ router.post('/', async (req, res) => {
 
 });
 
-router.delete('/deleleteName', async (req,res) =>{
+router.delete('/deleteName', async (req,res) =>{
     try{
         await User.updateOne(
             { "_id": req.body.user_id},

@@ -36,7 +36,6 @@ async function updateUserMeteoComponents(user_id,itinerary_id,meteoComponents){
 
 
 /* Definizione del metodo GET: ricerca i meteoComponents dell'itinerario specificato, appartenente all'utente specificato.
-Richiede un oggetto JSON nel body della richiesta con i campi:
 - user_id: l'ID dell'utente di cui si vogliono avere le informazioni
 - itinerary_id: l'ID dell'itinerario di cui si vogliono avere le meteoComponents.*/
 router.get('/:user_id&:itinerary_id', async(req,res) => {
@@ -159,6 +158,24 @@ router.post('', async (req, res) => {
                 });      // Messaggio in caso di errore
             }   
         }
+    }
+});
+
+router.delete('/deleteAll', async (req,res)=> {
+    try{
+
+        let founditinerary = await User.findOne(                                
+            {"_id": req.body.user_id},
+            { "itinerary" : {$elemMatch : {"_id" : req.body.itinerary_id}}} 
+        );        
+        console.log(founditinerary.itinerary[0].meteos_dates)   ;                                                                     
+        founditinerary.itinerary[0].meteos_dates=[];
+        founditinerary.save();
+        res.status(201).send("All meteoComponents from itinerary have been deleted");        
+
+    } catch(err){
+        console.log(err);
+        res.status(400).send({error: err});                 
     }
 });
 
