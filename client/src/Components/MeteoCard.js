@@ -11,7 +11,20 @@ import DeleteIcon from 'mdi-react/DeleteIcon'
 
 function MeteoCard(props) {
 
+    const date = new Date(props.item.date * 1000);
+    const updateDate = new Date(props.item.dataUpdatedOn * 1000)
     const [clicked] = useState(props.item._id);
+    const [availableDate] = useState(subtractDays(date));
+
+    //    console.log(props.item.date)
+    //    console.log(availableDate)
+
+    function subtractDays(data) {
+        var result = new Date(data);
+        result.setDate(result.getDate() - 7);
+        return result;
+    }
+
 
     function round(value, precision) {
         var multiplier = Math.pow(10, precision || 0);
@@ -40,7 +53,6 @@ function MeteoCard(props) {
     }
 
 
-    const date = new Date(props.item.date * 1000);
 
 
     function handleClickDel(event) {
@@ -57,111 +69,175 @@ function MeteoCard(props) {
                 mb="auto"
                 ml="auto"
                 width={250}
+                minHeight={344}
                 borderRadius={16}
                 boxShadow="20"
                 style={{
                     backgroundColor: "rgba(255,255,255,0.5)"
                 }}
             >
-                <Grid 
-                    container 
-                    direction="column" 
-                    alignItems="center" 
-                    justify="center" 
-                    spacing={1}
-                >
-                    <Grid item>
-                        <h1 style={{ color: "Black", fontSize: "27px", marginBottom: "3px", textAlign: "center"}}> 
-                            {props.item.cityName} 
-                        </h1>
-                        <h3 style={{ textAlign: "center", marginBottom: "6px" }}> 
-                            {date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()} 
-                        </h3>
-                        <img 
-                            src={"http://openweathermap.org/img/wn/" + props.item.icon + ".png"} 
-                            style={{marginLeft:"auto", marginRight:"auto", display:"block"}}>
-                        
-                        </img>
-                        <h2 style={{ color: "Black", fontSize: "25px", textAlign: "center" }}>
-                            {props.item.main}
-                        </h2>
-                    </Grid>
-                    <Divider orientation="horizontal" flexItem />
-                    <Grid item>
-                        <Grid 
-                            container 
-                            direction="row" 
-                            alignItems="center" 
-                            spacing={5}
-                        >
-                            <Grid item>
-                                <Grid 
-                                    container 
-                                    direction="column" 
-                                    alignItems="center" 
-                                    spacing={1}
-                                >
-                                    <Grid item>
-                                        <ThermometerIcon size={30} />
-                                        <h3>{round(props.item.temp, 1) + "°"}</h3>
-                                    </Grid>
-                                    <Grid item >
-                                        <p style={{ fontWeight: "bold", color: "#008fd6" }}>
-                                            {round(props.item.temp_Min, 1) + "°"}
-                                        </p>
-                                        <p style={{ fontWeight: "bold", color: "rgba(140,0,0,0.8" }}>
-                                            {round(props.item.temp_Max, 1) + "°"}
-                                        </p>
+
+                {props.item.available ?
+                    <Grid
+                        container
+                        direction="column"
+                        alignItems="center"
+                        justify="center"
+                        spacing={1}
+                    >
+                        <Grid item>
+                            <h1 style={{ color: "Black", fontSize: "27px", marginTop: "3px", marginBottom: "3px", textAlign: "center" }}>
+                                {props.item.cityName}
+                            </h1>
+                            <h3 style={{ textAlign: "center" }}>
+                                {date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()}
+                            </h3>
+                            <img
+                                src={"http://openweathermap.org/img/wn/" + props.item.icon + ".png"}
+                                style={{ marginLeft: "auto", marginRight: "auto", display: "block" }}>
+
+                            </img>
+                            <h2 style={{ color: "Black", fontSize: "25px", textAlign: "center" }}>
+                                {props.item.main}
+                            </h2>
+                        </Grid>
+                        <Divider orientation="horizontal" flexItem />
+                        <Grid item>
+                            <Grid
+                                container
+                                direction="row"
+                                alignItems="center"
+                                spacing={5}
+                            >
+                                <Grid item>
+                                    <Grid
+                                        container
+                                        direction="column"
+                                        alignItems="center"
+                                        spacing={1}
+                                    >
+                                        <Grid item>
+                                            <ThermometerIcon size={30} />
+                                            <h3>{round(props.item.temp, 1) + "°"}</h3>
+                                        </Grid>
+                                        <Grid item>
+                                            <Grid container direction="column" justify="center" alignItems="center">
+                                                <Grid item >
+                                                    <p style={{ fontWeight: "bold", color: "#008fd6" }}>
+                                                        {round(props.item.temp_Min, 1) + "°"}
+                                                    </p>
+                                                </Grid>
+                                                <Grid item>
+                                                    <p style={{ fontWeight: "bold", color: "rgba(140,0,0,0.8" }}>
+                                                        {round(props.item.temp_Max, 1) + "°"}
+                                                    </p>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
                                     </Grid>
                                 </Grid>
-                            </Grid>
-                            <Divider 
-                                orientation="vertical" 
-                                style={{ marginBottom: "5%", marginTop: "5%" }} 
-                                flexItem 
-                            />
-                            <Grid item>
-                                <OpacityIcon style={{ fontSize: "30px" }} />
-                                <h3>{props.item.humidity + "%"}</h3>
-                            </Grid>
-                            <Divider 
-                                orientation="vertical" 
-                                style={{ marginBottom: "5%", marginTop: "5%" }} 
-                                flexItem 
-                            />
-                            <Grid item>
-                                <Grid 
-                                    container 
-                                    direction="column" 
-                                    alignItems="center" 
-                                    spacing={1} 
-                                >
-                                    <Grid item>
-                                        <div>
-                                            <WeatherWindyIcon size={30} />
-                                            <h3>{round(props.item.wind_speed, 1)}</h3>
-                                            <h6>km/h</h6>
-                                        </div>
-                                    </Grid>
-                                    <Grid item>
-                                        {toTextualDescription(props.item.wind_deg)}
+                                <Divider
+                                    orientation="vertical"
+                                    style={{ marginBottom: "11%", marginTop: "11%" }}
+                                    flexItem
+                                />
+                                <Grid item>
+                                    <OpacityIcon style={{ fontSize: "30px" }} />
+                                    <h3>{props.item.humidity + "%"}</h3>
+                                </Grid>
+                                <Divider
+                                    orientation="vertical"
+                                    style={{ marginBottom: "11%", marginTop: "11%" }}
+                                    flexItem
+                                />
+                                <Grid item>
+                                    <Grid
+                                        container
+                                        direction="column"
+                                        alignItems="center"
+                                        spacing={1}
+                                    >
+                                        <Grid item>
+                                            <div>
+                                                <WeatherWindyIcon size={30} />
+                                                <h3>{round(props.item.wind_speed, 1)}</h3>
+                                                <h6>km/h</h6>
+                                            </div>
+                                        </Grid>
+                                        <Grid item>
+                                            {toTextualDescription(props.item.wind_deg)}
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
-                </Grid>
-                <Grid item>
-                    <div style={{textAlign: "center"}}>
-                        <IconButton
-                            onClick={handleClickDel}
+                        <Grid
+                            container
+                            direction="column"
+                            justify="center"
+                            alignItems="center"
+                            style={{ marginTop: "8px" }}
                         >
-                            <DeleteIcon style={{ pointerEvents: "none" }} />
-                        </IconButton>
-                    </div>
-                </Grid>
+                            <Grid item>
+                                <h6> Updated on: </h6>
+                            </Grid>
+                            <Grid item>
+                                <h6> {updateDate.getDate() + "/" + (updateDate.getMonth() + 1) + "/" + updateDate.getFullYear()} </h6>
+                            </Grid>
+                        </Grid>
+
+                        <Grid item style={{ marginTop: "-7px" }}>
+                            <div style={{ textAlign: "center" }}>
+                                <IconButton
+                                    onClick={handleClickDel}
+                                >
+                                    <DeleteIcon style={{ pointerEvents: "none" }} />
+                                </IconButton>
+                            </div>
+                        </Grid>
+                    </Grid>
+                    :
+                    <Grid
+                        container
+                        direction="column"
+                        alignItems="center"
+                        justify="center"
+                        spacing={1}
+                    >
+                        <Grid item>
+
+                            <h1 style={{ color: "Black", fontSize: "27px", marginTop: "3px", marginBottom: "3px", textAlign: "center" }}>
+                                {props.item.cityName}
+                            </h1>
+
+                            <h3 style={{ textAlign: "center", marginBottom: "100%" }}>
+                                {date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()}
+                            </h3>
+
+                        </Grid>
+                        <Grid item>
+                            <h1 style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                DATA WILL BE AVAILABLE ON:
+                                    {availableDate.getDate() + "/" +
+                                    (availableDate.getMonth() + 1) + "/" +
+                                    availableDate.getFullYear()}
+                            </h1>
+                        </Grid>
+
+                        <Grid item style={{ marginTop: "28%" }}>
+                            <div style={{ textAlign: "center" }}>
+                                <IconButton
+                                    onClick={handleClickDel}
+                                >
+                                    <DeleteIcon style={{ pointerEvents: "none" }} />
+                                </IconButton>
+                            </div>
+                        </Grid>
+                    </Grid>
+
+                }
             </Box>
-        </Grid>
+        </Grid >
     )
 }
 
