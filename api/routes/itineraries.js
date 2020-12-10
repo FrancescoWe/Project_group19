@@ -55,7 +55,9 @@ router.post('/', async (req, res) => {
             {"$push" : {"itinerary" : newitinerary}}
         );
 
-        res.status(201).send('Itinerary saved and binded successfully to user '+req.body.user_id);  // Messaggio di risposta
+        res.status(201).send({
+            success : 'Itinerary saved and binded successfully to user '+req.body.user_id
+        });  // Messaggio di risposta
     }catch{
         res.status(400).send("User with id: "+ req.body.user_id +" not found");                     // Messaggio in caso di errore
     }
@@ -87,9 +89,13 @@ router.delete('/', async (req,res)=> {
             { "$pull" :  {"itinerary" : {"_id" : req.body.itinerary_id} } }
         );
         
-        res.status(201).send("Itinerary "+req.body.itinerary_id+" deleted\nUser "+req.body.user_id+" updated.\n");  // Messaggio di risposta
+        res.status(201).send({
+            success : "Itinerary "+req.body.itinerary_id+" deleted\nUser "+req.body.user_id+" updated.\n"
+        });  // Messaggio di risposta
     }catch(err){
-        res.status(400).send("Itinerary "+req.body.itinerary_id+" not found.\n");   // Messaggio in caso di errore
+        res.status(400).send({
+            error : "Itinerary "+req.body.itinerary_id+" not found.\n"
+        });   // Messaggio in caso di errore
     }
 
 });
