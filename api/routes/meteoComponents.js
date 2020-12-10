@@ -184,45 +184,92 @@ router.delete('', async (req,res)=> {
 
 });
 
-router.patch('/:userId', async (req,res)=>{
+
+router.patch('', async (req,res)=>{
+    var tempCurrentDate = new Date().getTime() / 1000
+
+    var currentDate = tempCurrentDate.toFixed(0)
+
     try{
-        User.findById(req.params.userId)
+        var meteos_datesA
+        User.findById(req.body.user_id)
             .then((user) => {
-            const meteos_datesA = user.itinerary.id(req.body.itinerary_id).meteos_dates.id(req.body.meteos_id);
-            //console.log("WHAAAAAAA2"+user);
-            //meteos_datesA.set(req.body); // updates the address while keeping its schema       
-            if(checkNull(req.body.cityName)) meteos_datesA.cityName=req.body.cityName;
-            if(checkNull(req.body.date)) meteos_datesA.date=req.body.date;
-            if(checkNull(req.body.dataUpdatedOn)) meteos_datesA.dataUpdatedOn=req.body.dataUpdatedOn;
-            if(checkNull(req.body.available)) meteos_datesA.available=req.body.available;
-            if(checkNull(req.body.temp_Max)) meteos_datesA.temp_Max=req.body.temp_Max;
-            if(checkNull(req.body.temp_Min)) meteos_datesA.temp_Min=req.body.temp_Min;
-            if(checkNull(req.body.humidity)) meteos_datesA.humidity=req.body.humidity;
-            if(checkNull(req.body.icon)) meteos_datesA.icon=req.body.icon;
-            if(checkNull(req.body.main)) meteos_datesA.main=req.body.main;
-            if(checkNull(req.body.wind_deg)) meteos_datesA.wind_deg=req.body.wind_deg;
-            if(checkNull(req.body.wind_speed)) meteos_datesA.wind_speed=req.body.wind_speed;
+                meteos_datesA = user.itinerary.id(req.body.itinerary_id).meteos_dates.id(req.body.meteo_id);
+                const userDate = meteos_datesA.date
+                const oneDay = 24 * 60 * 60
+                const diffDays = Math.ceil(Math.abs((userDate - currentDate) / oneDay))
+                if(userDate < currentDate){
+                    deleteUserMeteoComponents(req.body.user_id,req.body.itinerary_id,req.body.meteo_id) ?
+                    res.status(200).send({
+                        success :  "Meteo Component was in the past, it was deleted."
+                    })
+                        :
+                    res.send(400).send({
+                        error : "There was an error : " + err
+                    })
+                } else {
+                    if(diffDays > 7){
+                        res.status(201).send({
+                            success : "Meteo was too in the future. Kept available = false."
+                        })
+                    } else
+                        try{
+                            requestcoords('https://photon.komoot.io/api/?q='+meteos_datesA.cityName+'&limit=1',function(err,jsoncoords){
+                                if(err){
+                                    res.status(400).send({
+                                        error : "Error in the request. Please retry."
+                                    });
+                                } else {
+                                    let lat = jsoncoords.features[0].geometry.coordinates[1];
+                                    let lon = jsoncoords.features[0].geometry.coordinates[0];
 
-
-            return user.save()    
-            })
-            .then((user) => {
-            //console.log("WHAAAAAAA"+user);
-            res.send({ user });
-        })
-        .catch(e => res.status(400).send(e));
-  ///
+                                    meteoUrl = 'https://api.openweathermap.org/data/2.5/onecall?lat='+lat+'&lon='+lon+'&exclude=minutely,hourly,alerts,current&units=metric&appid='+process.env.API_KEY;
+                                    
+                                    request(meteoUrl, function(error,response,body){  
+                                        const meteo_json=JSON.parse(body);
+                                        var toSave = meteo_json.daily[diffDays]
+                                        meteos_datesA.available = true,
+                                        //meteos_datesA.cityName = jsoncoords.features[0].properties.name,
+                                        //meteos_datesA.date = userDate,
+                                        meteos_datesA.dataUpdatedOn = currentDate,
+                                        meteos_datesA.temp = toSave.temp.day,
+                                        meteos_datesA.temp_Max = toSave.temp.max,
+                                        meteos_datesA.temp_Min = toSave.temp.min,
+                                        meteos_datesA.humidity = toSave.humidity,
+                                        meteos_datesA.icon = toSave.weather[0].icon,
+                                        meteos_datesA.main = toSave.weather[0].main,
+                                        meteos_datesA.wind_deg = toSave.wind_deg,
+                                        meteos_datesA.wind_speed = toSave.wind_speed
+                                        
+                                        res.status(201).send({
+                                            success : "Meteo PATCHED in itinerary: "+req.body.itinerary_id+"\nBinded to user: "+req.body.user_id
+                                        })
+                                        user.save()
+                                    });
+                                }
+                            });
+                        }catch(err){
+                            res.status(400).send({
+                                error : "There was an error : " + err
+                            });
+                        }
+                    }    
+            }).catch(e => res.status(400).send({
+                error : "There was an error : " + e
+            }));
     }catch(err){
-        console.log(err);
-        res.status(400).json({message: err});
+        res.status(400).send({
+            error: "There was an error : " + err
+        });
     }
 })
 
+/*
 function checkNull(variabile){
     if (variabile==null) return false;
     if(variabile=="") return false;
     return true;
 }
-
+*/
 
 module.exports = router;
