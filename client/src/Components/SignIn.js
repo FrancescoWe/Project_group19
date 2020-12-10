@@ -4,38 +4,16 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import "../Css/search.css"
 import { TextField, InputBase, withTheme, ThemeProvider, withStyles } from '@material-ui/core';
-import { createMuiTheme } from "@material-ui/core/styles"
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import { Link } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Card from "@material-ui/core/Card"
 import { grey } from '@material-ui/core/colors';
-import Itinerary from "./Itinerary"
 import { Redirect } from "react-router-dom";
+import CssTextField from "./CssTextField"
 
-
-// STYLING
-
-const CssTextField = withStyles({
-  root: {
-    '& label.Mui-focused': {
-      color: 'grey',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: 'grey',
-    },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: 'grey',
-      },
-    }
-  },
-})(TextField);
 
 const useStyles = makeStyles((theme) => ({
   paper: {
