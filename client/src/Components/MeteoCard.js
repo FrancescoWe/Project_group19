@@ -1,18 +1,12 @@
-import { makeStyles, Typography } from "@material-ui/core"
-import Container from '@material-ui/core/Container';
 import React, { useState } from "react"
 import Box from "@material-ui/core/Box"
 import Grid from "@material-ui/core/Grid"
 import Divider from "@material-ui/core/Divider"
-import ThermometerIcon from 'mdi-react/ThermometerIcon'
-import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from "@material-ui/core/IconButton"
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
+import ThermometerIcon from 'mdi-react/ThermometerIcon'
+import OpacityIcon from '@material-ui/icons/Opacity'
+import WeatherWindyIcon from 'mdi-react/WeatherWindyIcon'
+import DeleteIcon from 'mdi-react/DeleteIcon'
 
 
 function MeteoCard(props) {
@@ -24,75 +18,153 @@ function MeteoCard(props) {
         return Math.round(value * multiplier) / multiplier;
     }
 
-    // console.log(props.item.date);
-    // console.log(props.item.date);
-    const date = new Date(props.item.date*1000);
 
-    // console.log(props.item._id)
-    // console.log(props.item._id)
+    function toTextualDescription(degree) {
+        if (degree > 337.5)
+            return 'N'
+        if (degree > 292.5)
+            return 'NW'
+        if (degree > 247.5)
+            return 'W'
+        if (degree > 202.5)
+            return 'SW'
+        if (degree > 157.5)
+            return 'S'
+        if (degree > 122.5)
+            return 'SE'
+        if (degree > 67.5)
+            return 'E'
+        if (degree > 22.5)
+            return 'NE'
+        return 'N';
+    }
 
-    function handleClickDel(event){
+
+    const date = new Date(props.item.date * 1000);
+
+
+    function handleClickDel(event) {
         // console.log(clicked)
         props.setClickedMeteoComp(clicked)
         props.handleClickDel();
     }
 
     return (
-            <Grid item>
-                <Box
-                    mt="auto"
-                    mr="auto"
-                    mb="auto"
-                    ml="auto"
-                    width={250}
-                    borderRadius={16}
-                    boxShadow="20"
-                    style={{
-                        backgroundColor: "rgba(255,255,255,0.5)"
-                    }}
+        <Grid item>
+            <Box
+                mt="auto"
+                mr="auto"
+                mb="auto"
+                ml="auto"
+                width={250}
+                borderRadius={16}
+                boxShadow="20"
+                style={{
+                    backgroundColor: "rgba(255,255,255,0.5)"
+                }}
+            >
+                <Grid 
+                    container 
+                    direction="column" 
+                    alignItems="center" 
+                    justify="center" 
+                    spacing={1}
                 >
-                    <Grid container direction="column" alignItems="center" justify="center" spacing={2}>
-                        <Grid item>
-                            <h2 style={{ color: "Black", fontSize: "30px" }}>{props.item.cityName}</h2>
-                        </Grid>
-                        <Grid item>
-                            <h2 style={{ color: "Black", fontSize: "30px" }}>{date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear()}</h2>
-                        </Grid>
-                        <Divider orientation="horizontal" flexItem />
-                        <Grid item>
-                            <Grid container direction="row" alignItems="center" spacing={5}>
-                                <Divider orientation="vertical" style={{ marginBottom: "5%", marginTop: "5%" }} flexItem />
-                                <Grid item>
-                                    <Grid container direction="column" alignItems="center" spacing={1}>
-                                        <Grid item>
-                                            <ThermometerIcon size={30} />
-                                        </Grid>
-                                        <Grid item >
-                                            <p style={{ fontWeight: "bold", color: "#008fd6" }}>
-                                                {round(props.item.temp_Min, 1) + "°"}
-                                            </p>
-                                            <p style={{ fontWeight: "bold", color: "rgba(140,0,0,0.8" }}>
-                                                {round(props.item.temp_Max, 1) + "°"}
-                                            </p>
-                                        </Grid>
+                    <Grid item>
+                        <h1 style={{ color: "Black", fontSize: "27px", marginBottom: "3px", textAlign: "center"}}> 
+                            {props.item.cityName} 
+                        </h1>
+                        <h3 style={{ textAlign: "center", marginBottom: "6px" }}> 
+                            {date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()} 
+                        </h3>
+                        <img 
+                            src={"http://openweathermap.org/img/wn/" + props.item.icon + ".png"} 
+                            style={{marginLeft:"auto", marginRight:"auto", display:"block"}}>
+                        
+                        </img>
+                        <h2 style={{ color: "Black", fontSize: "25px", textAlign: "center" }}>
+                            {props.item.main}
+                        </h2>
+                    </Grid>
+                    <Divider orientation="horizontal" flexItem />
+                    <Grid item>
+                        <Grid 
+                            container 
+                            direction="row" 
+                            alignItems="center" 
+                            spacing={5}
+                        >
+                            <Grid item>
+                                <Grid 
+                                    container 
+                                    direction="column" 
+                                    alignItems="center" 
+                                    spacing={1}
+                                >
+                                    <Grid item>
+                                        <ThermometerIcon size={30} />
+                                        <h3>{round(props.item.temp, 1) + "°"}</h3>
+                                    </Grid>
+                                    <Grid item >
+                                        <p style={{ fontWeight: "bold", color: "#008fd6" }}>
+                                            {round(props.item.temp_Min, 1) + "°"}
+                                        </p>
+                                        <p style={{ fontWeight: "bold", color: "rgba(140,0,0,0.8" }}>
+                                            {round(props.item.temp_Max, 1) + "°"}
+                                        </p>
                                     </Grid>
                                 </Grid>
-                                <Divider orientation="vertical" style={{ marginBottom: "5%", marginTop: "5%" }} flexItem />
+                            </Grid>
+                            <Divider 
+                                orientation="vertical" 
+                                style={{ marginBottom: "5%", marginTop: "5%" }} 
+                                flexItem 
+                            />
+                            <Grid item>
+                                <OpacityIcon style={{ fontSize: "30px" }} />
+                                <h3>{props.item.humidity + "%"}</h3>
+                            </Grid>
+                            <Divider 
+                                orientation="vertical" 
+                                style={{ marginBottom: "5%", marginTop: "5%" }} 
+                                flexItem 
+                            />
+                            <Grid item>
+                                <Grid 
+                                    container 
+                                    direction="column" 
+                                    alignItems="center" 
+                                    spacing={1} 
+                                >
+                                    <Grid item>
+                                        <div>
+                                            <WeatherWindyIcon size={30} />
+                                            <h3>{round(props.item.wind_speed, 1)}</h3>
+                                            <h6>km/h</h6>
+                                        </div>
+                                    </Grid>
+                                    <Grid item>
+                                        {toTextualDescription(props.item.wind_deg)}
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item>
-                            <div>
-                                <IconButton
-                                    onClick={handleClickDel}
-                                >
-                                    <DeleteIcon style={{ pointerEvents: "none" }} />
-                                </IconButton>
-                            </div>
-                        </Grid>
                     </Grid>
-                </Box>
-            </Grid>
+                </Grid>
+                <Grid item>
+                    <div style={{textAlign: "center"}}>
+                        <IconButton
+                            onClick={handleClickDel}
+                        >
+                            <DeleteIcon style={{ pointerEvents: "none" }} />
+                        </IconButton>
+                    </div>
+                </Grid>
+            </Box>
+        </Grid>
     )
 }
 
 export default MeteoCard
+
+

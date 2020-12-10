@@ -38,7 +38,6 @@ function App() {
     <Router>
       <Box 
         component="div"
-        className="hero"
       >
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
           <hr />
