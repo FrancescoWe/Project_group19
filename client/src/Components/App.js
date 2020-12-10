@@ -38,6 +38,10 @@ function App() {
     <Router>
       <Box 
         component="div"
+<<<<<<< HEAD
+=======
+        className = "body"
+>>>>>>> d38197ed61e424fa156a03da97b93bd6b825e283
       >
         <MyParticles />
 

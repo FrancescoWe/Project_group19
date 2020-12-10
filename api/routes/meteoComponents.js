@@ -193,10 +193,14 @@ router.delete('', async (req,res)=> {
             {"$pull" : { "itinerary.$.meteos_dates" : {"_id" : req.body.meteo_id} } }
         );
 
-        res.status(201).send("MeteoComponent "+req.body.meteo_id+" deleted\nItinerary "+req.body.itinerary_id+" updated.\n");   // Messaggio di risposta
+        res.status(201).send({
+            success : "MeteoComponent "+req.body.meteo_id+" deleted\nItinerary "+req.body.itinerary_id+" updated.\n"
+        });   // Messaggio di risposta
     
     }catch(err){
-        res.status(400).send("Meteocomponent "+req.body.meteo_id+" not found.\n");          // Messaggio di errore
+        res.status(400).send({
+            error : "Meteocomponent "+req.body.meteo_id+" not found."
+        });          // Messaggio di errore
     }
 
 });

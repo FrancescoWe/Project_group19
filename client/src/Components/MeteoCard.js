@@ -155,16 +155,18 @@ function MeteoCard(props) {
                                         container
                                         direction="column"
                                         alignItems="center"
-                                        spacing={1}
+                                        justify="center"
                                     >
                                         <Grid item>
-                                            <div>
                                                 <WeatherWindyIcon size={30} />
-                                                <h3>{round(props.item.wind_speed, 1)}</h3>
-                                                <h6>km/h</h6>
-                                            </div>
                                         </Grid>
                                         <Grid item>
+                                            <h3>{round(props.item.wind_speed, 1)}</h3>
+                                        </Grid>
+                                        <Grid item>
+                                                <h6>km/h</h6>
+                                        </Grid>
+                                        <Grid item style = {{marginTop : "40%"}}>
                                             {toTextualDescription(props.item.wind_deg)}
                                         </Grid>
                                     </Grid>
@@ -201,22 +203,22 @@ function MeteoCard(props) {
                         container
                         direction="column"
                         alignItems="center"
-                        justify="center"
                         spacing={1}
-                    >
+                        style = {{minWidth : 250 , minHeight : 344}}
+                    > 
                         <Grid item>
 
-                            <h1 style={{ color: "Black", fontSize: "27px", marginTop: "3px", marginBottom: "3px", textAlign: "center" }}>
+                            <h1 style={{ color: "Black", fontSize: "27px", marginTop : "3%", marginBottom: "2%", textAlign: "center" }}>
                                 {props.item.cityName}
                             </h1>
 
-                            <h3 style={{ textAlign: "center", marginBottom: "100%" }}>
+                            <h3 style={{ textAlign: "center"}}>
                                 {date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()}
                             </h3>
 
                         </Grid>
-                        <Grid item>
-                            <h1 style={{ textAlign: "center", verticalAlign: "middle" }}>
+                        <Grid item style={{ textAlign: "center", verticalAlign : "center" , marginTop:"37%"}}>
+                            <h1 >
                                 DATA WILL BE AVAILABLE ON:
                                     {availableDate.getDate() + "/" +
                                     (availableDate.getMonth() + 1) + "/" +
@@ -224,8 +226,8 @@ function MeteoCard(props) {
                             </h1>
                         </Grid>
 
-                        <Grid item style={{ marginTop: "28%" }}>
-                            <div style={{ textAlign: "center" }}>
+                        <Grid item style={{ marginTop: "32%" , textAlign: "center"}}>
+                            <div>
                                 <IconButton
                                     onClick={handleClickDel}
                                 >
@@ -234,7 +236,6 @@ function MeteoCard(props) {
                             </div>
                         </Grid>
                     </Grid>
-
                 }
             </Box>
         </Grid >

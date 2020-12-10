@@ -29,6 +29,8 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        marginBottom : "1.5%",
+        marginLeft : "1%"
     },
     root: {
         display: 'flex',
@@ -272,14 +274,12 @@ function ItineraryInfo(props) {
                 spacing={3}
             >
                 {incomingMeteos.map(item => (
-                    <Grid item>
                         <MeteoCard
                             key={item._id}
                             item={item}
                             handleClickDel={handleClickDel}
                             setClickedMeteoComp={setClickedMeteoComp}
                         />
-                    </Grid>
                 ))}
             </Grid>
         )
@@ -305,13 +305,13 @@ function ItineraryInfo(props) {
                 display="flex"
                 component="main"
                 width="70%"
-                style={{ paddingTop: 0 }}
+                style={{ marginTop: "-0.25%" }}
             >
                 <div className={classes.paper}>
                     <Typography style={{ color: "white", marginBottom: "1%" }} component="h5" variant="h5">
                         STAGES OF THE ITINERARY "{props.clickedItinName}"
                     </Typography>
-                    <Grid container direction="row" spacing="2" justify="center" alignItems="center">
+                    <Grid container direction="row" spacing={2} justify="center" alignItems="center">
                         <Grid item>
                             <Button
                                 className="btn"

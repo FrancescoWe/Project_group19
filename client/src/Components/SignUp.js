@@ -145,7 +145,7 @@ function SignUp() {
   return (
     <div>
       {isRegistered ? <Redirect to={"/"} /> : 
-      <Container component="main" maxWidth="xs" style={{ paddingTop: 85 }}>
+      <Container component="main" maxWidth="xs" style={{ paddingTop: 57 }}>
         <CssBaseline />
         <div className={classes.paper}>
 
