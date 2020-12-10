@@ -1,6 +1,6 @@
 import { makeStyles, Typography } from "@material-ui/core"
 import Container from '@material-ui/core/Container';
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Grid from "@material-ui/core/Grid"
 import Button from "@material-ui/core/Button"
 import { Link } from "react-router-dom"
@@ -14,6 +14,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Toolbar from '@material-ui/core/Toolbar'
 import AddIcon from '@material-ui/icons/Add';
+import UpdateIcon from '@material-ui/icons/Update';
 import CssTextField from "./CssTextField"
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -24,7 +25,7 @@ import 'date-fns';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(6),
+        marginTop: theme.spacing(4),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -76,10 +77,46 @@ function ItineraryInfo(props) {
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState("");
     const [selectedDate, setSelectedDate] = React.useState(new Date(''));
-    const [toUnix, setToUnix] = useState(new Date(''));
 
-    
-    
+    //console.log(incomingMeteos);
+
+    useEffect(() => {
+        const ids = incomingMeteos.map(item => {
+            if(!item.available){
+                patch(props.user, props.clickedItinId, item._id);
+            }
+        } )
+        get();
+    }, [])
+
+    async function patch(user_id, itinerary_id, meteo_id){
+        await fetch("/meteoComponents" , {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: "PATCH",
+            body: JSON.stringify({
+                "user_id": user_id,
+                "itinerary_id": itinerary_id,
+                "meteo_id": meteo_id
+            })
+        }).then(response => response.json())
+        .then(function(data) {
+            console.log(data)
+            if(data.error != null){
+                window.alert(data.error);
+                console.log("ERROR");
+            } else {
+                console.log(data.success)
+            }
+        })
+        .catch(error => {
+            window.alert(error);
+            console.error(error);
+        })
+
+    }
     
     // console.log(props.clickedItinMeteos)
     // console.log(incomingMeteos);
@@ -115,7 +152,11 @@ function ItineraryInfo(props) {
         })
         .catch(error => console.error(error));
         setOpenPopUp(false);
+        get();
         
+    }
+    
+    async function get(){
         await fetch('/meteoComponents/' + props.user + "&" + props.clickedItinId, {
             headers: {
                 'Content-Type': 'application/json',
@@ -130,7 +171,6 @@ function ItineraryInfo(props) {
             // setItinData(data);
         })
         .catch(error => console.error(error))
-        
     }
     
     
@@ -156,12 +196,20 @@ function ItineraryInfo(props) {
         setOpen(false);
     }
     
+    async function handleUpdate(){
+        setLoading(true);
+        incomingMeteos.map(item => {
+            patch(props.user, props.clickedItinId, item._id);
+        })
+        get();
+    }
+
+
 //    console.log(props.user)
 //    console.log(selectedDate);
 //    console.log(toUnix);
     
     async function addStageFetch(){
-        setToUnix(new Date(selectedDate).getTime()/1000)
         const unixDate=new Date(selectedDate).getTime()/1000
         await fetch('/meteoComponents' , {
             headers: {
@@ -224,12 +272,14 @@ function ItineraryInfo(props) {
                 spacing={3}
             >
                 {incomingMeteos.map(item => (
-                    <MeteoCard
-                        key={item._id}
-                        item={item}
-                        handleClickDel={handleClickDel}
-                        setClickedMeteoComp={setClickedMeteoComp}
-                    />
+                    <Grid item>
+                        <MeteoCard
+                            key={item._id}
+                            item={item}
+                            handleClickDel={handleClickDel}
+                            setClickedMeteoComp={setClickedMeteoComp}
+                        />
+                    </Grid>
                 ))}
             </Grid>
         )
@@ -258,18 +308,33 @@ function ItineraryInfo(props) {
                 style={{ paddingTop: 0 }}
             >
                 <div className={classes.paper}>
-                    <Typography style={{ color: "white", marginBottom: "1.5%" }} component="h5" variant="h5">
+                    <Typography style={{ color: "white", marginBottom: "1%" }} component="h5" variant="h5">
                         STAGES OF THE ITINERARY "{props.clickedItinName}"
                     </Typography>
-                    <Button
-                        className="btn"
-                        variant="contained"
-                        size="medium"
-                        startIcon={<AddIcon />}
-                        onClick={handleClickAdd}
-                    >
-                        ADD STAGE
-                    </Button>
+                    <Grid container direction="row" spacing="2" justify="center" alignItems="center">
+                        <Grid item>
+                            <Button
+                                className="btn"
+                                variant="contained"
+                                size="medium"
+                                startIcon={<AddIcon />}
+                                onClick={handleClickAdd}
+                            >
+                                ADD STAGE
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                style={{background: "linear-gradient(to right, #5c5c5c, #ffffff)"}}
+                                variant="contained"
+                                size="medium"
+                                startIcon={<UpdateIcon />}
+                                onClick={handleUpdate}
+                            >
+                                UPDATE DATA
+                            </Button>
+                        </Grid>
+                    </Grid>
                     <br />
                 </div>
 

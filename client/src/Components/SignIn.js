@@ -17,25 +17,11 @@ import Card from "@material-ui/core/Card"
 import { grey } from '@material-ui/core/colors';
 import Itinerary from "./Itinerary"
 import { Redirect } from "react-router-dom";
+import CssTextField from "./CssTextField"
 
 
 // STYLING
 
-const CssTextField = withStyles({
-  root: {
-    '& label.Mui-focused': {
-      color: 'grey',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: 'grey',
-    },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: 'grey',
-      },
-    }
-  },
-})(TextField);
 
 const useStyles = makeStyles((theme) => ({
   paper: {
