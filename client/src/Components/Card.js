@@ -78,7 +78,7 @@ function Card(props) {
                 >
                     <Grid container direction = "column" alignItems = "center" justify = "center" spacing = {2}>
                         <Grid item>
-                                <h3> {date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear()} </h3>
+                            <h3> {date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear()} </h3>
                             <img src={data[index].icon} id="imm_uno" alt="Immagine" className="image__icon" />
                             <h2 style = {{color : "Black", fontSize : "30px"}}>{data[index].main}</h2>
                         </Grid>

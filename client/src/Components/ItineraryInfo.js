@@ -1,6 +1,6 @@
 import { makeStyles, Typography } from "@material-ui/core"
 import Container from '@material-ui/core/Container';
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Grid from "@material-ui/core/Grid"
 import Button from "@material-ui/core/Button"
 import { Link } from "react-router-dom"
@@ -12,13 +12,20 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
-
-
+import Toolbar from '@material-ui/core/Toolbar'
+import AddIcon from '@material-ui/icons/Add';
+import UpdateIcon from '@material-ui/icons/Update';
+import CssTextField from "./CssTextField"
+import DateFnsUtils from '@date-io/date-fns';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardDatePicker,
+} from '@material-ui/pickers';
+import 'date-fns';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(8),
+        marginTop: theme.spacing(4),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -31,33 +38,99 @@ const useStyles = makeStyles((theme) => ({
         alignItems: "center",
         justifyContent: "center"
     },
+    button: {
+        marginTop: theme.spacing(2),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+    cssLabel: {
+        color: "black"
+    },
+
+    cssOutlinedInput: {
+        '&$cssFocused $notchedOutline': {
+            borderColor: `${theme.palette.primary.main} !important`,
+        }
+    },
+
+    notchedOutline: {
+        borderWidth: '1px',
+        borderColor: 'black !important'
+    },
+
+    multilineColor: {
+        color: "black"
+    },
 }));
+
 
 
 function ItineraryInfo(props) {
 
     const classes = useStyles();
+
     const [incomingMeteos, setIncomingMeteos] = useState(props.clickedItinMeteos);
     const [openPopUp, setOpenPopUp] = useState(false);
+    const [open, setOpen] = useState(false);
     const [clickedMeteoComp, setClickedMeteoComp] = useState("");
     const [loading, setLoading] = useState(false);
+    const [name, setName] = useState("");
+    const [selectedDate, setSelectedDate] = React.useState(new Date(''));
 
-    // console.log(props.clickedItinMeteos)
-    console.log(incomingMeteos);
+    //console.log(incomingMeteos);
 
-    function handleCancel() {
-        setOpenPopUp(false);
+    useEffect(() => {
+        const ids = incomingMeteos.map(item => {
+            if(!item.available){
+                patch(props.user, props.clickedItinId, item._id);
+            }
+        } )
+        get();
+    }, [])
+
+    async function patch(user_id, itinerary_id, meteo_id){
+        await fetch("/meteoComponents" , {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: "PATCH",
+            body: JSON.stringify({
+                "user_id": user_id,
+                "itinerary_id": itinerary_id,
+                "meteo_id": meteo_id
+            })
+        }).then(response => response.json())
+        .then(function(data) {
+            console.log(data)
+            if(data.error != null){
+                window.alert(data.error);
+                console.log("ERROR");
+            } else {
+                console.log(data.success)
+            }
+        })
+        .catch(error => {
+            window.alert(error);
+            console.error(error);
+        })
+
     }
-
+    
+    // console.log(props.clickedItinMeteos)
+    // console.log(incomingMeteos);
+    
+    
     function handleCancelDel() {
         setOpenPopUp(false);
     }
-
+    
     function handleClickDel(event) {
         setOpenPopUp(true);
         console.log(clickedMeteoComp);
     }
-
+    
     async function handleDelete() {
         // console.log(props.clickedItinId)
         // console.log(clickedMeteoComp)
@@ -74,11 +147,96 @@ function ItineraryInfo(props) {
                 "meteo_id": clickedMeteoComp
             })
         }).then((resp) => resp.json())
-            .then(function (data) {
-                console.log(data)
-            })
-            .catch(error => console.error(error));
+        .then(function (data) {
+            console.log(data)
+        })
+        .catch(error => console.error(error));
         setOpenPopUp(false);
+        get();
+        
+    }
+    
+    async function get(){
+        await fetch('/meteoComponents/' + props.user + "&" + props.clickedItinId, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: 'GET'
+        }).then((resp) => resp.json())
+        .then(function (data) {
+            //(console.log(data)
+            setIncomingMeteos(data);
+            setLoading(false);
+            // setItinData(data);
+        })
+        .catch(error => console.error(error))
+    }
+    
+    
+    function handleCancelAdd() {
+        setOpen(false)
+    }
+    
+    function handleClickAdd() {
+        setOpen(true);
+    }
+    
+    function handleChange(event) {
+        setName(event.target.value);
+    }
+    
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+    };
+    
+    async function handleDone() {
+        setLoading(true);
+        addStageFetch();
+        setOpen(false);
+    }
+    
+    async function handleUpdate(){
+        setLoading(true);
+        incomingMeteos.map(item => {
+            patch(props.user, props.clickedItinId, item._id);
+        })
+        get();
+    }
+
+
+//    console.log(props.user)
+//    console.log(selectedDate);
+//    console.log(toUnix);
+    
+    async function addStageFetch(){
+        const unixDate=new Date(selectedDate).getTime()/1000
+        await fetch('/meteoComponents' , {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({
+                "itinerary_id": props.clickedItinId,
+                "user_id": props.user,
+                "cityName": name,
+                "date": unixDate,
+            })
+        }).then(resp => resp.json())
+        .then(function (data) {
+            console.log(data)
+            if(data.error != null){
+                window.alert(data.error);
+                console.log("ERROR");
+            }
+        })
+        .catch(error => {
+            window.alert(error);
+            console.error(error);
+        })
+        
+        setName("");
 
         await fetch('/meteoComponents/' + props.user + "&" + props.clickedItinId, {
             headers: {
@@ -87,17 +245,23 @@ function ItineraryInfo(props) {
             },
             method: 'GET'
         }).then((resp) => resp.json())
-            .then(function (data) {
+        .then(function (data) {
+            if(data.error != null){
+                window.alert(data.error);
+                console.log("ERROR");
+            } else {
                 //(console.log(data)
                 setIncomingMeteos(data);
                 setLoading(false);
-                // setItinData(data);
-            })
-            .catch(error => console.error(error))
-
+            }
+        })
+        .catch(error => {
+            window.alert(error)
+            console.error(error)
+        })
     }
-
-
+    
+    
     function renderCards() {
         return (
             <Grid
@@ -108,36 +272,35 @@ function ItineraryInfo(props) {
                 spacing={3}
             >
                 {incomingMeteos.map(item => (
-                    <MeteoCard
-                        key={item._id}
-                        item={item}
-                        handleClickDel={handleClickDel}
-                        setClickedMeteoComp={setClickedMeteoComp}
-                    />
+                    <Grid item>
+                        <MeteoCard
+                            key={item._id}
+                            item={item}
+                            handleClickDel={handleClickDel}
+                            setClickedMeteoComp={setClickedMeteoComp}
+                        />
+                    </Grid>
                 ))}
             </Grid>
         )
 
     }
 
+
     return (
         <div>
-            <Link to={"/itinerary"} style={{ textDecoration: 'none' }}>
-                <Button
-                    className="btn"
-                    variant="contained"
-                    size="small"
-                    startIcon={<KeyboardBackspaceIcon />}
-                    style={{
-                        marginTop: "0.5%",
-                        marginLeft: "0.5%",
-                        width: "5%",
-                        height: "1%"
-                    }}
-                >
-                    Back
-            </Button>
-            </Link>
+            <Toolbar style={{ minHeight: "40px", marginTop: "5px" }}>
+                <Link to={"/itinerary"} style={{ textDecoration: 'none' }}>
+                    <Button
+                        className="btn"
+                        variant="contained"
+                        size="small"
+                        startIcon={<KeyboardBackspaceIcon />}
+                    >
+                        Back
+                    </Button>
+                </Link>
+            </Toolbar>
             <Container
                 display="flex"
                 component="main"
@@ -145,9 +308,33 @@ function ItineraryInfo(props) {
                 style={{ paddingTop: 0 }}
             >
                 <div className={classes.paper}>
-                    <Typography style={{ color: "white", marginBottom: "1.5%" }} component="h5" variant="h5">
+                    <Typography style={{ color: "white", marginBottom: "1%" }} component="h5" variant="h5">
                         STAGES OF THE ITINERARY "{props.clickedItinName}"
                     </Typography>
+                    <Grid container direction="row" spacing="2" justify="center" alignItems="center">
+                        <Grid item>
+                            <Button
+                                className="btn"
+                                variant="contained"
+                                size="medium"
+                                startIcon={<AddIcon />}
+                                onClick={handleClickAdd}
+                            >
+                                ADD STAGE
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                style={{background: "linear-gradient(to right, #5c5c5c, #ffffff)"}}
+                                variant="contained"
+                                size="medium"
+                                startIcon={<UpdateIcon />}
+                                onClick={handleUpdate}
+                            >
+                                UPDATE DATA
+                            </Button>
+                        </Grid>
+                    </Grid>
                     <br />
                 </div>
 
@@ -160,7 +347,7 @@ function ItineraryInfo(props) {
 
             </Container>
 
-            <Dialog open={openPopUp} onClose={handleCancel} aria-labelledby="form-dialog-title">
+            <Dialog open={openPopUp} onClose={handleCancelDel} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">DELETE STAGE</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -182,6 +369,69 @@ function ItineraryInfo(props) {
                         </Button>
                     </div>
 
+                </DialogActions>
+            </Dialog>
+
+            <Dialog open={open} onClose={handleCancelAdd} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">ADD A NEW STAGE</DialogTitle>
+                <DialogContent>
+                    <DialogContentText style={{ color: "black" }}>
+                        Insert the name of the city
+                    </DialogContentText>
+                    <CssTextField
+                        autoFocus
+                        style={{ width: "100%" }}
+                        id="outlined-basic"
+                        label="City"
+                        variant="outlined"
+                        value={name}
+                        onChange={handleChange}
+                        name="cityName"
+                        InputProps={{
+                            className: classes.multilineColor,
+                            classes: {
+                                root: classes.cssOutlinedInput,
+                                notchedOutline: classes.notchedOutline
+                            }
+
+                        }}
+                        InputLabelProps={{
+                            classes: {
+                                root: classes.cssLabel,
+                            },
+                        }}
+                    />
+                    <DialogContentText style={{ color: "black", marginTop:"10px", marginBottom: "0px" }}>
+                        Pick a date
+                    </DialogContentText>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="dd/MM/yyyy"
+                            margin="normal"
+                            id="date-picker-inline"
+                            label=""
+                            value={selectedDate}
+                            onChange={handleDateChange}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change date',
+                            }}
+                            style={{color: "black"}}
+                        />
+                    </MuiPickersUtilsProvider>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCancelAdd} style={{ color: "red" }}>
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={handleDone}
+                        variant="outlined"
+                        style={{ color: "black", borderColor: "black" }}
+                    >
+                        <p>Done</p>
+                    </Button>
                 </DialogActions>
             </Dialog>
 

@@ -110,8 +110,6 @@ function Form() {
 
     return (
         <div>
-
-            <InputLabel></InputLabel>
             {/*<h2 class="title">Cerca Località: </h2>*/}
             <br />
             <form className="search__part">

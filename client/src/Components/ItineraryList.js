@@ -174,7 +174,7 @@ function ItineraryList(props) {
                 "itinerary_name": name,
                 "user_id": props.user
             })
-        }).then(response => response)
+        }).then(response => response.json())
         .then(function (data) {
             console.log(data)
             if(data.error != null){
@@ -187,8 +187,8 @@ function ItineraryList(props) {
         .catch(error => {
             window.alert(error);
             console.error(error);
-        }
-        )
+        })
+
         setName("");
         fetching();
     }
