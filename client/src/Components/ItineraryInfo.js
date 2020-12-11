@@ -82,20 +82,44 @@ function ItineraryInfo(props) {
 
     //console.log(incomingMeteos);
 
-    useEffect(() => {
-        const ids = incomingMeteos.map(item => {
+    async function cheèesternadallauseeffecteverràchiamatadfopodaquesta(){
+        const ids = await Promise.all(incomingMeteos.map(async item => {
             if(!item.available){
-                patch(function(){
-                    get();
+                await patch(props.user, props.clickedItinId, item._id);
+            }
+        }));
+        console.log("quante volte vien chiamata?")
+        get();
+    }
+
+    /*async function handleUpdate(){
+        setLoading(true);
+        await Promise.all(incomingMeteos.map(async item => {
+            await patch(function(){
+            },props.user, props.clickedItinId, item._id);
+        }));
+        get();
+        console.log("una chiamata dopo la patch nell'update")
+        console.log("solo una volta alla fine della funzione");
+    }*/
+
+
+    useEffect(() => {
+        /*const ids = incomingMeteos.map(async item => {
+            if(!item.available){
+                await patch(function(){
+                    //get();
+                    //console.log("una get dopo aver patchato se false")
                 },props.user, props.clickedItinId, item._id);
             }
-        })
-        //get();
+        });
+        console.log("quante volte vien chiamata?")
+        get();*/
+        cheèesternadallauseeffecteverràchiamatadfopodaquesta()
     }, [])
 
 
-    async function patch(_callback, user_id, itinerary_id, meteo_id){
-        //console.log("WAAAAAAAAAA"+itinerary_id);
+    async function patch(user_id, itinerary_id, meteo_id){
         await fetch("/meteoComponents" , {
             headers: {
                 'Content-Type': 'application/json',
@@ -113,17 +137,14 @@ function ItineraryInfo(props) {
             if(data.error != null){
                 window.alert(data.error);
                 console.log("ERROR");
-                //_callback();
             } else {
                 console.log(data.success);
 
-                _callback();
             }
         })
         .catch(error => {
             window.alert(error);
             console.error(error);
-            _callback()
         })
 
     }
@@ -204,23 +225,15 @@ function ItineraryInfo(props) {
         addStageFetch();
         setOpen(false);
     }
-    
-    /*async function handleUpdate(){
-        setLoading(true);
-        incomingMeteos.map(async item => {
-            await patch(props.user, props.clickedItinId, item._id);
-        })
-        get();
-    }*/
 
     async function handleUpdate(){
         setLoading(true);
-        incomingMeteos.map(async item => {
-            await patch(function(err,rows){
-                get();
-            },props.user, props.clickedItinId, item._id);
-        })
-        //get();
+        await Promise.all(incomingMeteos.map(async item => {
+            await patch(props.user, props.clickedItinId, item._id);
+        }));
+        get();
+        console.log("una chiamata dopo la patch nell'update")
+        console.log("solo una volta alla fine della funzione");
     }
 
 
