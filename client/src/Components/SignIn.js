@@ -15,12 +15,6 @@ import { Redirect } from "react-router-dom";
 import CssTextField from "./CssTextField"
 
 
-<<<<<<< HEAD
-// STYLING
-
-
-=======
->>>>>>> d38197ed61e424fa156a03da97b93bd6b825e283
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
