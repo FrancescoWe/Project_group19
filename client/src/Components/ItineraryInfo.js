@@ -82,9 +82,12 @@ function ItineraryInfo(props) {
 
     //console.log(incomingMeteos);
 
-    async function cheèesternadallauseeffecteverràchiamatadfopodaquesta(){
+    async function patchIfProblems(){
+        var tempCurrentDate = new Date().getTime() / 1000
+        var currentDate = tempCurrentDate.toFixed(0)
+
         const ids = await Promise.all(incomingMeteos.map(async item => {
-            if(!item.available){
+            if(!item.available || item.date < currentDate){
                 await patch(props.user, props.clickedItinId, item._id);
             }
         }));
@@ -115,7 +118,7 @@ function ItineraryInfo(props) {
         });
         console.log("quante volte vien chiamata?")
         get();*/
-        cheèesternadallauseeffecteverràchiamatadfopodaquesta()
+        patchIfProblems()
     }, [])
 
 
@@ -261,10 +264,9 @@ function ItineraryInfo(props) {
             if(data.error != null){
                 window.alert(data.error);
                 console.log("ERROR");
-            } else {
-                setName("");
-                get()
             }
+            setName("");
+            get()
         })
         .catch(error => {
             window.alert(error);

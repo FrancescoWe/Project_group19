@@ -34,6 +34,18 @@ async function updateUserMeteoComponents(user_id,itinerary_id,meteoComponents){
     }
 }
 
+async function deleteUserMeteoComponents(user_id,itinerary_id,meteo_id){
+    try{
+        await User.updateOne(             // Aggiornamento della lista di itinerari dell'utente specificato tramite la rimozione del meteoComponent specificato
+            {"_id": user_id, "itinerary._id" : itinerary_id},
+            {"$pull" : { "itinerary.$.meteos_dates" : {"_id" : meteo_id} } }
+        );
+        return true
+    } catch (err){
+        return false
+    }
+}
+
 
 /* Definizione del metodo GET: ricerca i meteoComponents dell'itinerario specificato, appartenente all'utente specificato.
 - user_id: l'ID dell'utente di cui si vogliono avere le informazioni
@@ -44,7 +56,7 @@ router.get('/:user_id&:itinerary_id', async(req,res) => {
         let founditinerary = await User.findOne(                                // Ricerca dell'utente corrispondente all'id specificato
             {"_id": req.params.user_id},
             { "itinerary" : {$elemMatch : {"_id" : req.params.itinerary_id}}}     // Ricerca dell'itinerary specificato
-        );                                                                                
+        );
 
         res.status(201).send(founditinerary.itinerary[0].meteos_dates);         // Restituzione della lista delle meteos_dates di tale itinerario
 
@@ -219,7 +231,7 @@ router.patch('', async (req,res)=>{
                 const userDate = meteos_datesA.date
                 console.log(userDate)
                 const oneDay = 24 * 60 * 60
-                const diffDays = Math.floor(Math.abs((userDate - currentDate) / oneDay))
+                const diffDays = Math.ceil(Math.abs((userDate - currentDate) / oneDay))
                 if(userDate < currentDate){
                     deleteUserMeteoComponents(req.body.user_id,req.body.itinerary_id,req.body.meteo_id) ?
                     res.status(200).send({

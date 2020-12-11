@@ -42,6 +42,7 @@ html {
     min-height: 100%;
     overflow : "auto";
     background: url("../images/background-test.jpg");
+    background-color: black;
     background-position: absolute;
     background-repeat: no-repeat;
     background-size: cover;
