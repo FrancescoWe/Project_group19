@@ -11,9 +11,11 @@ import MapMarkerPathIcon from 'mdi-react/MapMarkerPathIcon'
 
 function HeaderBar(props){
 
-       const handleClick = () => {
-              props.setLogged()
+       /*
+       const handleClick = e => {
+              props.setLogged(e)
        }
+       */
 
        return(
               <AppBar position="static" style = {{color : "white", backgroundColor : "Black"}}>
@@ -37,7 +39,7 @@ function HeaderBar(props){
                             <div style={{marginLeft : "auto"}}>
                                    {props.logged ?  
                                    (
-                                          <Link to={"/"} onClick = {handleClick} style={{ textDecoration: 'none'}}>
+                                          <Link to={"/"} onClick = {props.logged ? () => props.setLogged(0) : () => props.setLogged(1)} style={{ textDecoration: 'none'}}>
                                                  <Button color="inherit" startIcon = {<Person/>} style={{color : "white"}}>
                                                         LogOut
                                                  </Button>
@@ -45,7 +47,7 @@ function HeaderBar(props){
                                    )
                                           :
                                    (
-                                          <Link to={"/login"} onClick = {handleClick} style={{ textDecoration: 'none'}}>
+                                          <Link to={"/login"} onClick = {props.logged ? () => props.setLogged(0) : () => props.setLogged(1)} style={{ textDecoration: 'none'}}>
                                                  <Button color="inherit" startIcon = {<Person/>} style={{color : "white"}}>
                                                         LogIn
                                                  </Button>
