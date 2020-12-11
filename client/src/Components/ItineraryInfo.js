@@ -85,14 +85,17 @@ function ItineraryInfo(props) {
     useEffect(() => {
         const ids = incomingMeteos.map(item => {
             if(!item.available){
-                patch(props.user, props.clickedItinId, item._id);
+                patch(function(){
+                    get();
+                },props.user, props.clickedItinId, item._id);
             }
         })
-        get();
+        //get();
     }, [])
 
 
     async function patch(_callback, user_id, itinerary_id, meteo_id){
+        //console.log("WAAAAAAAAAA"+itinerary_id);
         await fetch("/meteoComponents" , {
             headers: {
                 'Content-Type': 'application/json',
@@ -110,8 +113,10 @@ function ItineraryInfo(props) {
             if(data.error != null){
                 window.alert(data.error);
                 console.log("ERROR");
+                //_callback();
             } else {
                 console.log(data.success);
+
                 _callback();
             }
         })
@@ -200,10 +205,18 @@ function ItineraryInfo(props) {
         setOpen(false);
     }
     
+    /*async function handleUpdate(){
+        setLoading(true);
+        incomingMeteos.map(async item => {
+            await patch(props.user, props.clickedItinId, item._id);
+        })
+        get();
+    }*/
+
     async function handleUpdate(){
         setLoading(true);
         incomingMeteos.map(async item => {
-            await patch(function(){
+            await patch(function(err,rows){
                 get();
             },props.user, props.clickedItinId, item._id);
         })

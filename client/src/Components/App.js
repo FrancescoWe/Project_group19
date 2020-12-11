@@ -57,8 +57,40 @@ function App() {
                 snackBarOpensSignUpControl : false})
   }
   
-
+  /*async function validToken(token){
+    await fetch("/api/provaVerifica", {
+      headers: {
+        'auth-token' : token
+    },
+      method : "GET"
+    })
+      .then((resp) => resp.json())
+      .then(function(data) {
+        if (data.error != null) {
+          alert("ERROR," + "\n" + data.error);
+          console.log("ERROR");
+          return false;
+        } else { 
+          setLogged({logged: true,
+            user_id: data._id});
+          //localStorage.setItem('user-id', data._id);
+          return true
+        } 
+      })
+        .catch(error => console.error(error));
+      return false;
+  }
   
+  async function checkToken(){
+    var token= localStorage.getItem("token");
+    if(token!=null && await validToken(token)==true){
+      console.log("user logged is:" + user.user_id);
+      return true;
+    }else{
+      return false;
+    }
+  }*/
+
   console.log("App : " + user.logged + " " + user.user_id)
   console.log("Bar Status login : " + user.snackBarOpensLoginControl)
   console.log("Bar Status logOut : " + user.snackBarOpensLogOutControl)

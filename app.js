@@ -4,6 +4,7 @@ const bodyParser = require ("body-parser");
 const mongoose = require('mongoose');
 require ('dotenv').config();
 require('dotenv').config({ path:__dirname +'/.env'})
+//const verifyToken = require('./api/routes/verifyToken')
 const request = require('request');
 const meteoUrl = 'http://api.openweathermap.org/data/2.5/weather?q=Trento,it&units=metric&appid='+ process.env.API_KEY;
 
@@ -16,7 +17,7 @@ const meteoComponentRoutes = require('./api/routes/meteoComponents');
 const itinerariesRoutes = require('./api/routes/itineraries');
 const provaVerificaRoute = require('./api/routes/provaVerifica');
 
-
+//app.use('./api/routes/itineraries', verifyToken);
 // ROUTES PER LATO FRONTEND DI REACT
 app.use("/",express.static(__dirname + "/client/build"));
 app.use("/itinerary",express.static(__dirname + "/client/build"));
