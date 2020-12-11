@@ -201,37 +201,37 @@ paths:
           
 
   /meteoComponents:  
-    get:
-      description: >-
-        Get the list of the meteoComponents corrisponding to the specified itinerary of the specified user
-      summary: Get meteoComponents
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - user_id
-                - itinerary_id
-              properties:
-                user_id:
-                  type: string
-                  description: "ID of the user to which the specified itinerary belongs"
-                itinerary_id:
-                  type: string
-                  description: "ID of the itinerary of the specified user, whose meteoComponents you want to know"
-      responses:
-        '201':
-          description: 'Collection of meteoComponents'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MeteoComponent'
-        '400':
-          description: "Error"
-          
+    #get:
+     # description: >-
+      #  Get the list of the meteoComponents corrisponding to the specified itinerary of the specified user
+      #summary: Get meteoComponents
+      #requestBody:
+      #  content:
+      #    application/json:
+      #      schema:
+      #        type: object
+      #        required:
+      #          - user_id
+      #          - itinerary_id
+      #        properties:
+      #          user_id:
+      #            type: string
+      #            description: "ID of the user to which the specified itinerary belongs"
+      #          itinerary_id:
+      #            type: string
+      #            description: "ID of the itinerary of the specified user, whose meteoComponents you want to know"
+      #responses:
+      #  '201':
+      #    description: 'Collection of meteoComponents'
+      #    content:
+      #      application/json:
+      #        schema:
+      #          type: array
+      #          items:
+      #            $ref: '#/components/schemas/MeteoComponent'
+      #  '400':
+      #    description: "Error"
+      
     post:
       description: >-
         Create a new meteoComponent, which is the set of the informations about the 
@@ -246,31 +246,33 @@ paths:
               required: 
                 - date
                 - cityName
+                - available
+                - user_id
+                - itinerary_id
               properties: 
                 user_id:
                   type: string
-                  description: 'Id of the itinerary to which the specified itinerary is linked'
+                  description: 'Id of the user to which the specified itinerary is linked'
                 itinerary_id:
                   type: string
                   description: >-
                     Id of the itinerary of the specified user to which the new meteoComponent will be linked
-                temp_Max:
+                available: 
+                  type: boolean
+                  description: >-
+                    boolean variable used to know if a meteoComponent is available to be showed or not. If the meto is available,
+                    the meteo will be showed, if it is not then there will be a message showing when will it be available
+                cityName: 
                   type: string
-                  description: 'Maximum temperature'
-                temp_Min: 
-                  type: string
-                  description: 'Minimum temperature'
+                  description: 'The name of the city that was searched by the user.'
                 date:
                   type: string
-                  description: 'Date'
-                cityName:
-                  type: string
-                  description: 'Name of the city'
+                  description: 'The date searched by the user'
       responses:
         '201':
           description: 'Meteo data added to the itinerary'
         '400':
-          description: "Itinerary not found"
+          description: "Itinerary not found or user not found"
   
     delete:
       description: >-
@@ -300,7 +302,91 @@ paths:
           description: 'meteoComponent deleted'
         '400':
           description: 'meteoComponent not found'
-                
+          
+    patch:
+      description: >-
+        Updates an existing meteoComponents, it also calls an external api in order to have the data to use to update itself
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - itinerary_id
+                - meteo_id
+              properties:
+                user_id:
+                  type: string
+                  description: "The user's id to whom the itinerary is associated with"
+                itinerary_id: 
+                  type: string
+                  description: "The itinerary's to which the meteoComponent is associated with"
+                meteo_id:
+                  type: string
+                  description: "The id of the meteo that is going to be updated"
+      responses:
+        '200':
+          description: "The meteo has been successfully updated, but it had a past date, so it was successfully deleted"
+        '201':
+          description: "The meteo has been successfully updated"
+        '400':
+          description: "Error"
+            
+  /meteoComponents/{user_id}&{itinerary_id}: 
+     get:
+      description: >-
+        Get the list of the meteoComponents corrisponding to the specified itinerary of the specified user
+      summary:  Get meteoComponents
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: 'ID of the requested user'
+        - name: itinerary_id
+          in: path
+          required: true
+          description: 'ID of the requested itinerary'
+      responses:
+        '201':
+          description: 'Collection of meteoComponents'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MeteoComponent'
+        '400':
+          description: "Error"
+          
+  /meteoComponents/deleteAll:
+    delete:
+      description: >-
+        Remove all the meteoComponents from the specified itinerary belonging to the specified user
+      summary: Delete all meteoComponents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - itinerary_id
+              properties:
+                user_id:
+                  type: string
+                  description: "Id of the user"
+                itinerary_id: 
+                  type: string
+                  description: "Id of the itinerary belonging to the specified user"
+      responses:
+        '201':
+          description: 'meteoComponents all deleted'
+        '400':
+          description: 'itinerary or user not found'
+      
+    
+  
   /meteos:
     get:
       description: >-
@@ -345,31 +431,31 @@ paths:
           description: "An error occurred"
 
   /itineraries:
-    get:
-      description: >-
-        Get the list of all the itineraries belonging to the specified user
-      summary: Get itineraries
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - user_id
-              properties:
-               user_id:
-                  type: string
-                  description: "Id of the user of which you want to get the itineraries"
-      responses:
-        '201':
-          description: 'List of the itineraries of the specified user'
-          #content:
-            #application/json:
-              #schema: 
-                #$ref: '#/components/schemas/Itinerary'
-        '400':
-          description: "User not found"
-          
+    #get:
+    # description: >-
+    #    Get the list of all the itineraries belonging to the specified user
+    #  summary: Get itineraries
+    #  requestBody:
+    #    content:
+    #      application/json:
+    #        schema:
+    #          type: object
+    #          required:
+    #            - user_id
+    #          properties:
+    #           user_id:
+    #              type: string
+    #              description: "Id of the user of which you want to get the itineraries"
+    #  responses:
+    #    '201':
+    #      description: 'List of the itineraries of the specified user'
+    #      #content:
+    #        #application/json:
+    #          #schema: 
+    #            #$ref: '#/components/schemas/Itinerary'
+    #    '400':
+    #      description: "User not found"
+    
     post:
       description: >-
         Create a new itinerary and link it to the specified user
@@ -381,15 +467,19 @@ paths:
               type: object
               required:
                 - user_id
+                - itinerary_name
               properties:
                 user_id:
                   type: string
                   description: 'ID of the user to which the itinerary will be linked'
+                itinerary_name:
+                  type: string
+                  description: 'The name of the itinerary that will be added'
       responses:
         '201':
-          description: 'Itinerary saved successfully.'
+          description: 'Itinerary saved successfully and binded to the user.'
         '400':
-          description: "User not found"
+          description: "User not found or user's already has an itinerary with that name"
     
     delete:
       description: >-
@@ -412,6 +502,51 @@ paths:
                   description: 'Id of the itinerary to be removed'
       responses:
         '200':
+          description: 'Itinerary deleted'
+        '400':
+          description: 'Itinerary not found'
+          
+  /itineraries/{user_id}:
+    get:
+      description: " Get the list of all the itineraries belonging to the specified user"
+      summary: Get itineraries
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: 'ID of the requested user'
+      responses:
+        '201':
+          description: 'List of the itineraries of the specified user'
+          #content:
+            #application/json:
+              #schema: 
+                #$ref: '#/components/schemas/Itinerary'
+        '400':
+          description: "User not found"
+  
+  /itineraries/deleteName:
+    delete:
+      description: >-
+        Delete an itinerary and remove it from the list of itineraries of the user who had it
+      summary: Delete itinerary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - itinerary_name
+              properties:
+                user_id:
+                  type: string
+                  description: 'Id of the user whose specified itinerary will be removed'
+                itinerary_name:
+                  type: string
+                  description: 'Name of the itinerary to be removed'
+      responses:
+        '201':
           description: 'Itinerary deleted'
         '400':
           description: 'Itinerary not found'
@@ -440,8 +575,6 @@ components:
       type: object
       required: 
         - date
-        - temp_Min
-        - temp_Max
         - cityName
       properties:
         date: 
@@ -456,6 +589,34 @@ components:
         cityName: 
           type: string
           description: 'The name of the city of witch the user wants to know the meteo conditions'
+        dataUpdatedOn:
+          type: string
+          description: 'The data in which the user updated his meteo'
+        available: 
+          type: boolean
+          description: >-
+            Variable used to tell the user if the data is available or not
+            If available is set to false, the meteo will be updated when the data will be
+            provided by an external api,
+            If available is set to true then the meteo is already available and will be shown
+        icon: 
+          type: string
+          description: 'Icon that indicates the general weather'
+        main: 
+          type: string
+          description: 'The main weather of the meteoComponent'
+        temp:
+          type: string
+          description: 'The general temperature of the meteo'
+        humidity:
+          type: string
+          description: 'The humidity of the meteo'
+        wind_deg:
+          type: string
+          description: 'The grades to which the wind will blow'
+        wind_speed:
+          type: string
+          description: 'The speed of the wind'
           
     Meteo:
       type: object
@@ -472,8 +633,11 @@ components:
     Itinerary:
       type: object
       required:
-        - meteos_date
+        - name
       properties:
+        name:
+          type: string
+          description: 'The name assigne to the itinerary'
         meteos_dates:
           type: array
           description: "Array of IDs of the meteoComponents belonging to the itinerary"

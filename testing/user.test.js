@@ -63,11 +63,11 @@ test('Esiste un utente nel database.', async ()=>{
     .expect(201)
 })
 
-test('Permette all utente con email "user@domain.com" e password "abracadabra" di effettuare il login (user predefinito). ', async ()=>{
+test('Permette all utente con email "user@domain.com" e password "password" di effettuare il login (user predefinito). ', async ()=>{
     await request(app).post('/users/login')
     .send({
         "email": "user@domain.com",
-        "password": "abracadabra"
+        "password": "password"
     })
     .expect(201)
 })
@@ -95,6 +95,7 @@ test('Ritorna un errore in quanto il campo password non ha il formato corretto',
         "email": "user@domain.com",
         "password": 1234567
     })
+    .expect(400)
 })
 
 test('Cancella un utente dal database.', async ()=>{
