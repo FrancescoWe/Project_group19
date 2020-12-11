@@ -98,7 +98,7 @@ function SignIn(props) {
           return false;
         } else { 
           props.setLogged(data._id);
-          localStorage.setItem('user-id', data._id);
+          //localStorage.setItem('user-id', data._id);
           return true
         } 
       })

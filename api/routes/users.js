@@ -139,7 +139,7 @@ router.post('/login', async (req,res)=>{
     const validPass = await bcrypt.compare(req.body.password, user.password);   // Controlla la correttezza della password
     if(!validPass) return res.status(400).send({error: 'Invalid password'});             // Se è invalida, manda un messaggio di errroe
                                                                                 // Altrimenti..
-    const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);          // Crea e assegna un token utile a sapere che l'utente è loggato
+    const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn: 86400});          // Crea e assegna un token utile a sapere che l'utente è loggato
     res.header('auth-token', token).status(201).send({token: token});                    // Manda il token nella response
 
     //res.status(201).send("logged in");
