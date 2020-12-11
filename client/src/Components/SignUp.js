@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // COMPONENT
-function SignUp() {
+function SignUp(props) {
   const classes = useStyles();
 
   // STATO
@@ -73,10 +73,6 @@ function SignUp() {
   const [confPass, setConfPass] = useState("");
   const [isRegistered, setRegistered] = useState(false);
 
-  // GESTIONE EVENTI E "COMPONENT DID MOUNT"
-  useEffect(() => {
-
-  }, [])
 
   function handleChangeMail(event) {
     const { value } = event.target
@@ -125,8 +121,9 @@ function SignUp() {
             return false;
           } else {
             // console.log(data);
-            setRegistered(true);
-            return true;
+            setRegistered(true)
+            props.setSignedUp()
+            return true
           }
         })
         .catch(error => {
@@ -137,7 +134,6 @@ function SignUp() {
       //console.log("the email is: "+_email);
       //console.log("you clicked sign up");
     }
-
 }
 
 

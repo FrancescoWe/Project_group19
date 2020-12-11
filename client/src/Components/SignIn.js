@@ -66,11 +66,6 @@ function SignIn(props) {
   const [password, setPassword] = useState("");
   const [isLogged, setLogged] = useState(props.logged);
 
-  // GESTIONE EVENTI E "COMPONENT DID MOUNT"
-  useEffect(() => {
-
-  }, [])
-
   function handleChangeMail(event) {
     const { value } = event.target
     setEmail(value);

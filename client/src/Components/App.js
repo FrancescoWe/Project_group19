@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react"
-import Header from "./Header"
 import Main from "./Main"
-import Footer from "./Footer"
 import Box from "@material-ui/core/Box"
 import SignIn from "./SignIn"
 import HeaderBar from "./HeaderBar"
@@ -10,25 +8,53 @@ import MyParticles from './MyParticles'
 import Itinerary from "./Itinerary"
 import ItineraryInfo from "./ItineraryInfo"
 import SignUp from "./SignUp"
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
 
 
 function App() {
 
+
   const [user, setLogged] = useState({logged : false,
-                                      user_id : ""})
-                            
+                                      user_id : "",
+                                      snackBarOpensLoginControl : false,
+                                      snackBarOpensLogOutControl : false,
+                                      snackBarOpensSignUpControl : false})
+  
   const [clickedItinMeteos, setClickedItinMeteos] = useState([]);
   const [clickedItinId, setClickedItinId] = useState("");
   const [clickedItinName, setClickedItinName] = useState("");
 
   const signInDone = (userID) => {
     setLogged({logged : true, 
-                user_id : userID})
+              user_id : userID,
+              snackBarOpensLoginControl : true,
+              snackBarOpensLogOutControl : false,
+              snackBarOpensSignUpControl : false})
   }
 
-  const logOut = () => {
+  const signUpDone = () => {
     setLogged({logged : false, 
-                user_id : ""})
+              user_id : "",
+              snackBarOpensLoginControl : false,
+              snackBarOpensLogOutControl : false,
+              snackBarOpensSignUpControl : true})
+  }
+
+  const logOut = (val) => {       //se il valore passato è 0 l' utente si slogga altrimenti si logga (necessario solo per l' alert)
+    val==0 ? 
+      setLogged({logged : false, 
+                user_id : "",
+                snackBarOpensLoginControl : false,
+                snackBarOpensLogOutControl : true,
+                snackBarOpensSignUpControl : false})
+    :
+      setLogged({logged : false, 
+                user_id : "",
+                snackBarOpensLoginControl : false,
+                snackBarOpensLogOutControl : false,
+                snackBarOpensSignUpControl : false})
   }
   
   /*async function validToken(token){
@@ -66,6 +92,9 @@ function App() {
   }*/
 
   console.log("App : " + user.logged + " " + user.user_id)
+  console.log("Bar Status login : " + user.snackBarOpensLoginControl)
+  console.log("Bar Status logOut : " + user.snackBarOpensLogOutControl)
+  console.log("Bar Status SignUp : " + user.snackBarOpensSignUpControl)
   
   return (
     <Router>
@@ -77,14 +106,75 @@ function App() {
           <Switch>
             <Route exact path="/">
               <HeaderBar logged = {user.logged} setLogged = {logOut}/> 
+
+              <Snackbar
+                  style = {{marginTop : "37px", marginRight : "6px"}}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right'
+                  }}
+
+                  open={user.snackBarOpensLogOutControl}
+                  autoHideDuration={850}
+                  onClose={() => setLogged({logged : false, 
+                                      user_id : "",
+                                      snackBarOpensLoginControl : false,
+                                      snackBarOpensLogOutControl : false,
+                                      snackBarOpensSignUpControl : false})}
+              >
+                <MuiAlert elevation={6} variant="filled" severity="success">
+                  User logged out.
+                </MuiAlert>
+              </Snackbar>
+
+              <Snackbar
+                  style = {{marginTop : "37px", marginRight : "6px"}}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right'
+                  }}
+
+                  open={user.snackBarOpensLoginControl}
+                  autoHideDuration={850}
+                  onClose={() => setLogged({logged : user.logged, 
+                                      user_id : user.user_id,
+                                      snackBarOpensLoginControl : false,
+                                      snackBarOpensLogOutControl : false,
+                                      snackBarOpensSignUpControl : false})}
+              >
+                <MuiAlert elevation={6} variant="filled" severity="success">
+                  User logged in.
+                </MuiAlert>
+              </Snackbar>
+
+              <Snackbar
+                  style = {{marginTop : "37px", marginRight : "6px"}}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right'
+                  }}
+
+                  open={user.snackBarOpensSignUpControl}
+                  autoHideDuration={850}
+                  onClose={() => setLogged({logged : user.logged, 
+                                      user_id : user.user_id,
+                                      snackBarOpensLoginControl : false,
+                                      snackBarOpensLogOutControl : false,
+                                      snackBarOpensSignUpControl : false})}
+              >
+                <MuiAlert elevation={6} variant="filled" severity="success">
+                  User signed up.
+                </MuiAlert>
+              </Snackbar>
+              
               <Main logged = {user.logged}/>
             </Route>
 
             <Route exact path="/itinerary">
               <HeaderBar logged = {user.logged} setLogged = {logOut}/>
               <Itinerary 
-                user = {user.user_id} 
-                setClickedItinMeteos={setClickedItinMeteos} 
+                user = {user.user_id}
+                setClickedItinMeteos={setClickedItinMeteos}
                 setClickedItinId={setClickedItinId}
                 setClickedItinName={setClickedItinName}
               />
@@ -102,7 +192,7 @@ function App() {
 
             <Route exact path="/signup">
               <HeaderBar logged = {user.logged} setLogged = {logOut}/>
-              <SignUp/>
+              <SignUp setSignedUp = {signUpDone}/>
             </Route>
 
             <Route exact path = "/login">
