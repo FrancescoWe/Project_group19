@@ -200,8 +200,9 @@ router.patch('', async (req,res)=>{
             .then((user) => {
                 meteos_datesA = user.itinerary.id(req.body.itinerary_id).meteos_dates.id(req.body.meteo_id);
                 const userDate = meteos_datesA.date
+                console.log(userDate)
                 const oneDay = 24 * 60 * 60
-                const diffDays = Math.ceil(Math.abs((userDate - currentDate) / oneDay))
+                const diffDays = Math.floor(Math.abs((userDate - currentDate) / oneDay))
                 if(userDate < currentDate){
                     deleteUserMeteoComponents(req.body.user_id,req.body.itinerary_id,req.body.meteo_id) ?
                     res.status(200).send({
@@ -212,6 +213,7 @@ router.patch('', async (req,res)=>{
                         error : "There was an error : " + err
                     })
                 } else {
+                    console.log("Differenza giorni da data odierna : " + diffDays)
                     if(diffDays > 7){
                         res.status(201).send({
                             success : "Meteo was too in the future. Kept available = false."

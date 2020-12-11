@@ -76,7 +76,7 @@ function ItineraryInfo(props) {
     const [openPopUp, setOpenPopUp] = useState(false);
     const [open, setOpen] = useState(false);
     const [clickedMeteoComp, setClickedMeteoComp] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [name, setName] = useState("");
     const [selectedDate, setSelectedDate] = React.useState(new Date(''));
 
@@ -87,7 +87,7 @@ function ItineraryInfo(props) {
             if(!item.available){
                 patch(props.user, props.clickedItinId, item._id);
             }
-        } )
+        })
         get();
     }, [])
 
@@ -151,11 +151,10 @@ function ItineraryInfo(props) {
         }).then((resp) => resp.json())
         .then(function (data) {
             console.log(data)
+            get();
         })
         .catch(error => console.error(error));
         setOpenPopUp(false);
-        get();
-        
     }
     
     async function get(){
@@ -231,35 +230,14 @@ function ItineraryInfo(props) {
             if(data.error != null){
                 window.alert(data.error);
                 console.log("ERROR");
+            } else {
+                setName("");
+                get()
             }
         })
         .catch(error => {
             window.alert(error);
             console.error(error);
-        })
-        
-        setName("");
-
-        await fetch('/meteoComponents/' + props.user + "&" + props.clickedItinId, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            method: 'GET'
-        }).then((resp) => resp.json())
-        .then(function (data) {
-            if(data.error != null){
-                window.alert(data.error);
-                console.log("ERROR");
-            } else {
-                //(console.log(data)
-                setIncomingMeteos(data);
-                setLoading(false);
-            }
-        })
-        .catch(error => {
-            window.alert(error)
-            console.error(error)
         })
     }
     
