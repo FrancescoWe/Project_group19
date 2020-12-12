@@ -1,27 +1,17 @@
-import React, { useEffect, useState } from "react"
-import Card from "./Card"
 import Box from "@material-ui/core/Box"
-import Button from "@material-ui/core/Button"
-import Paper from "@material-ui/core/Paper"
-import Typography from "@material-ui/core/Typography"
-import Grid from "@material-ui/core/Grid"
-import Divider from "@material-ui/core/Divider"
-import PriorityHighIcon from '@material-ui/icons/PriorityHigh'
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
-import OpacityIcon from '@material-ui/icons/Opacity'
-import ThermometerIcon from 'mdi-react/ThermometerIcon'
-import WeatherWindyIcon from 'mdi-react/WeatherWindyIcon'
-import SunglassesIcon from 'mdi-react/SunglassesIcon'
+import Card from "./Card"
 import CurrentCard from "./CurrentCard"
+import Divider from "@material-ui/core/Divider"
+import React, { useState } from "react"
+import Typography from "@material-ui/core/Typography"
 
 
 function Container(props) {
 
     //console.log(props.dataToPass)
 
-    const [incomingData, setData] = useState(props.dataToPass);
-    const [incomingSecondData, setSecondData] = useState(props.dataToPassTwo)
+    const [incomingData] = useState(props.dataToPass);
+    const [incomingSecondData] = useState(props.dataToPassTwo)
 
     const paperstyles = {
         backgroundColor : "rgba(255,255,255,0.45)",

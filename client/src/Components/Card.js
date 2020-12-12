@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from "react"
 import Box from "@material-ui/core/Box"
-import Grid from "@material-ui/core/Grid"
 import Divider from "@material-ui/core/Divider"
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
+import Grid from "@material-ui/core/Grid"
 import OpacityIcon from '@material-ui/icons/Opacity'
+import React, { useState } from "react"
 import ThermometerIcon from 'mdi-react/ThermometerIcon'
 import WeatherWindyIcon from 'mdi-react/WeatherWindyIcon'
 
 function Card(props) {
 
     
-    const [data, setData] = useState(props.data)
-    const [index,setIndex] = useState(props.num)
+    const [data] = useState(props.data)
+    const [index] = useState(props.num)
 
 
     function handleClick(){

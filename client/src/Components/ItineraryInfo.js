@@ -1,27 +1,27 @@
-import { makeStyles, Typography } from "@material-ui/core"
-import Container from '@material-ui/core/Container';
-import React, { useState, useEffect } from "react"
-import Grid from "@material-ui/core/Grid"
-import Button from "@material-ui/core/Button"
+import 'date-fns';
 import { Link } from "react-router-dom"
-import MeteoCard from "./MeteoCard"
-import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+import { makeStyles, Typography } from "@material-ui/core"
+import AddIcon from '@material-ui/icons/Add';
+import Button from "@material-ui/core/Button"
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Container from '@material-ui/core/Container';
+import CssTextField from "./CssTextField"
+import DateFnsUtils from '@date-io/date-fns';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from "@material-ui/core/Grid"
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+import MeteoCard from "./MeteoCard"
+import React, { useState, useEffect } from "react"
 import Toolbar from '@material-ui/core/Toolbar'
-import AddIcon from '@material-ui/icons/Add';
 import UpdateIcon from '@material-ui/icons/Update';
-import CssTextField from "./CssTextField"
-import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
-import 'date-fns';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         alignItems: 'center',
         marginBottom : "1.5%",
-        marginLeft : "1%"
     },
     root: {
         display: 'flex',
@@ -49,18 +48,15 @@ const useStyles = makeStyles((theme) => ({
     cssLabel: {
         color: "black"
     },
-
     cssOutlinedInput: {
         '&$cssFocused $notchedOutline': {
             borderColor: `${theme.palette.primary.main} !important`,
         }
     },
-
     notchedOutline: {
         borderWidth: '1px',
         borderColor: 'black !important'
     },
-
     multilineColor: {
         color: "black"
     },
@@ -330,6 +326,7 @@ function ItineraryInfo(props) {
                                 size="medium"
                                 startIcon={<AddIcon />}
                                 onClick={handleClickAdd}
+                                style={{minWidth:"155px"}}
                             >
                                 ADD STAGE
                             </Button>
