@@ -46,6 +46,24 @@ async function deleteUserMeteoComponents(user_id,itinerary_id,meteo_id){
     }
 }
 
+// Funzione necessaria per evitare conflitti causati dai caratteri speciali nella ricerca di una città
+function cleanUpSpecialChars(str) 
+{ 
+       str = str.replace(/[ÀÁÂÃÄÅ]/g,"A");
+       str = str.replace(/[àáâãäå]/g,"a");
+       str = str.replace(/[ÈÉÊË]/g,"E");
+       str = str.replace(/[èéëê]/g,"e");
+       str = str.replace(/[ùúûü]/g,"u");
+       str = str.replace(/[ÜÛÙÚ]/g,"U");
+       str = str.replace(/[ìíîï]/g,"i");
+       str = str.replace(/[ÏÎÍÌ]/g,"I");
+       str = str.replace(/[öôóøò]/g,"o");
+       str = str.replace(/[ØÕÖÒÔ]/g,"O");
+       str = str.replace(/[ÿý]/g,"y");
+       str = str.replace(/[Ý]/g,"Y");
+       return str.replace(/[^a-z0-9]/gi,''); 
+}
+
 
 /* Definizione del metodo GET: ricerca i meteoComponents dell'itinerario specificato, appartenente all'utente specificato.
 - user_id: l'ID dell'utente di cui si vogliono avere le informazioni
@@ -72,6 +90,9 @@ Richiede un oggetto JSON nel body della richiesta con i campi:
 - date: la data che vuole l' utente
 - cityName: la città che vuole l' utente.*/
 router.post('', async (req, res) => {
+    
+    
+    var rightCity = cleanUpSpecialChars(req.body.cityName); 
 
     var meteoComponents
 
@@ -88,12 +109,11 @@ router.post('', async (req, res) => {
     } else {
         const oneDay = 24 * 60 * 60
         const diffDays = Math.ceil(Math.abs((userDate - currentDate) / oneDay))
-        console.log("Differenza dei giorni fra data corrente e data dell' utente: " + diffDays)
 
         if(diffDays > 7){
             meteoComponents = new MeteoComponent({      // Creazione del nuovo meteoComponent
                 available : false,
-                cityName : req.body.cityName,
+                cityName : rightCity,
                 date : userDate,
             })
 
@@ -113,7 +133,7 @@ router.post('', async (req, res) => {
 
         } else {
             try{
-                requestcoords('https://photon.komoot.io/api/?q='+req.body.cityName+'&limit=1',function(err,jsoncoords){
+                requestcoords('https://photon.komoot.io/api/?q='+rightCity+'&limit=1',function(err,jsoncoords){
                     if(err){
                         res.status(400).send({
                             error : "Error in the request. Please retry."
@@ -128,14 +148,10 @@ router.post('', async (req, res) => {
                         let lat = jsoncoords.features[0].geometry.coordinates[1];
                         let lon = jsoncoords.features[0].geometry.coordinates[0];
 
-                        //console.log("Coordinate lat lon : "+lat+" "+lon);
-
                         meteoUrl = 'https://api.openweathermap.org/data/2.5/onecall?lat='+lat+'&lon='+lon+'&exclude=minutely,hourly,alerts,current&units=metric&appid='+process.env.API_KEY;
                         
                         request(meteoUrl, function(error,response,body){     // Viene mandata una richiesta all'URL specificato, passando come parametro la funzione per la gestione della response
                             const meteo_json=JSON.parse(body);                      // Parsing del body in JSON
-                            //console.log("Nome citta': "+meteo_json.name);
-                            //console.log("L' oggetto ritornato dalla richiesta alla API di operweather e' : \n" + meteo_json)
                             var toSave = meteo_json.daily[diffDays]
                             meteoComponents = new MeteoComponent({      // Creazione del nuovo meteoComponent
                                 available : true,
@@ -179,8 +195,7 @@ router.delete('/deleteAll', async (req,res)=> {
         let founditinerary = await User.findOne(                                
             {"_id": req.body.user_id},
             { "itinerary" : {$elemMatch : {"_id" : req.body.itinerary_id}}} 
-        );        
-        console.log(founditinerary.itinerary[0].meteos_dates)   ;                                                                     
+        );                                                                        
         founditinerary.itinerary[0].meteos_dates=[];
         founditinerary.save();
         res.status(201).send("All meteoComponents from itinerary have been deleted");        
@@ -217,6 +232,12 @@ router.delete('', async (req,res)=> {
 
 });
 
+/* Definizione del metodo PATCH: aggiorna una meteocComponent dall'itinerario specificato appartenente all'utente specificato.
+Richiede un oggetto JSON nel body della richiesta con i campi:
+- user_id: l'ID dell'utente a cui appartiene la meteoComponent da aggiornare
+- itinerary_id: l'ID dell'itinerario contenente la meteoComponent
+- meteo_id: l'ID della meteoComponent che dev'essere aggiornata in tale itinerario.
+*/
 
 router.patch('', async (req,res)=>{
     var tempCurrentDate = new Date().getTime() / 1000
@@ -229,7 +250,6 @@ router.patch('', async (req,res)=>{
             .then((user) => {
                 meteos_datesA = user.itinerary.id(req.body.itinerary_id).meteos_dates.id(req.body.meteo_id);
                 const userDate = meteos_datesA.date
-                console.log(userDate)
                 const oneDay = 24 * 60 * 60
                 const diffDays = Math.ceil(Math.abs((userDate - currentDate) / oneDay))
                 if(userDate < currentDate){
@@ -242,14 +262,15 @@ router.patch('', async (req,res)=>{
                         error : "There was an error : " + err
                     })
                 } else {
-                    console.log("Differenza giorni da data odierna : " + diffDays)
                     if(diffDays > 7){
                         res.status(201).send({
                             success : "Meteo was too in the future. Kept available = false."
                         })
                     } else
                         try{
-                            requestcoords('https://photon.komoot.io/api/?q='+meteos_datesA.cityName+'&limit=1',function(err,jsoncoords){
+                            var rightCity = cleanUpSpecialChars(meteos_datesA.cityName); 
+                            console.log(rightCity);
+                            requestcoords('https://photon.komoot.io/api/?q='+rightCity+'&limit=1',function(err,jsoncoords){
                                 if(err){
                                     res.status(400).send({
                                         error : "Error in the request. Please retry."
@@ -264,8 +285,6 @@ router.patch('', async (req,res)=>{
                                         const meteo_json=JSON.parse(body);
                                         var toSave = meteo_json.daily[diffDays]
                                         meteos_datesA.available = true,
-                                        //meteos_datesA.cityName = jsoncoords.features[0].properties.name,
-                                        //meteos_datesA.date = userDate,
                                         meteos_datesA.dataUpdatedOn = currentDate,
                                         meteos_datesA.temp = toSave.temp.day,
                                         meteos_datesA.temp_Max = toSave.temp.max,
@@ -298,13 +317,5 @@ router.patch('', async (req,res)=>{
         });
     }
 })
-
-/*
-function checkNull(variabile){
-    if (variabile==null) return false;
-    if(variabile=="") return false;
-    return true;
-}
-*/
 
 module.exports = router;

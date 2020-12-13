@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '100%',
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -105,13 +105,11 @@ function SignUp(props) {
         })
       }).then((resp) => resp.json())
         .then(function (data) {
-          console.log(data);
           if (data.error != null) {
             window.alert(data.error);
             console.log("ERROR");
             return false;
           } else {
-            // console.log(data);
             setRegistered(true)
             props.setSignedUp()
             return true
@@ -122,8 +120,6 @@ function SignUp(props) {
           console.error(error)
         });
       return false;
-      //console.log("the email is: "+_email);
-      //console.log("you clicked sign up");
     }
 }
 

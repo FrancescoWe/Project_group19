@@ -62,10 +62,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-//                <Typography style={{ color: "white", fontSize: "80%" }} component="h1" variant="h7">
-//                    click on the info button to get the informations about an itinerary
-//                </Typography>
-
 function Itinerary(props) {
 
     const classes = useStyles();
@@ -75,7 +71,6 @@ function Itinerary(props) {
     const [name, setName] = useState("");
     const [openPopUp, setOpenPopUp] = useState(false);
     const [delClickedItin, setDelClickedItin] = useState("");
-    // ------------------------------------------------------------
     const [itinData, setItinData] = useState([])
     const [done, setDone] = useState(false);
     const [open, setOpen] = useState(false);
@@ -83,8 +78,6 @@ function Itinerary(props) {
     // COMPONENT DID MOUNT
     useEffect(() => {
         fetching();
-        console.log("The signed-in user's id: " + props.user);
-        // renderRow()
     }, [])
 
     async function fetching() {
@@ -97,7 +90,6 @@ function Itinerary(props) {
             method: 'GET'
         }).then((resp) => resp.json())
             .then(function (data) {
-                console.log(data)
                 setItinData(data);
                 setLoading(false);
             })
@@ -122,7 +114,6 @@ function Itinerary(props) {
             })
         }).then((resp) => resp.json())
         .then(function (data) {
-            console.log(data)
         })
         .catch(error => console.error(error));
         
@@ -130,7 +121,6 @@ function Itinerary(props) {
         fetching();
         
     }
-    
     
     async function handleInfo(event) {
         
@@ -145,18 +135,12 @@ function Itinerary(props) {
             method: 'GET'
         }).then((resp) => resp.json())
         .then(function (data) {
-            //(console.log(data)
             props.setClickedItinMeteos(data);
-            // setItinData(data);
         })
         .catch(error => console.error(error))
-        
-        // setOpen(true);
         setDone(true);
         
     };
-    
-    //-----------------------------------------------------------------
     
     async function addItinerary(){
         await fetch('/itineraries' , {
@@ -171,10 +155,8 @@ function Itinerary(props) {
             })
         }).then(response => response.json())
         .then(function (data) {
-            console.log(data)
             if(data.error != null){
                 window.alert(data.error);
-                console.log("ERROR");
             }
         })
         .catch(error => {
@@ -200,7 +182,6 @@ function Itinerary(props) {
     
     function handleClickDel(event){
         setDelClickedItin(event.target.id)
-        console.log(event.target.id)
         setOpenPopUp(true);
     }
 
@@ -212,7 +193,6 @@ function Itinerary(props) {
     function handleChange(event){
         setName(event.target.value);
     }
-    
     
     // RENDER DELLE RIGHE
     function renderRow() {

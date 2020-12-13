@@ -7,15 +7,8 @@ import ThermometerIcon from 'mdi-react/ThermometerIcon'
 import WeatherWindyIcon from 'mdi-react/WeatherWindyIcon'
 
 function Card(props) {
-
-    
     const [data] = useState(props.data)
     const [index] = useState(props.num)
-
-
-    function handleClick(){
-        console.log(data)
-    }
 
     function  toTextualDescription(degree){
         if (degree>337.5) 
@@ -37,17 +30,12 @@ function Card(props) {
         return 'N';
     }
 
-
     function round(value, precision) {
         var multiplier = Math.pow(10, precision || 0);
         return Math.round(value * multiplier) / multiplier;
     }
 
-
-    //console.log(data);
-    console.log(data[index].date);
     const date = new Date(data[index].date);
-
 
     return (
         <Box
@@ -60,7 +48,6 @@ function Card(props) {
             height={300}
             borderRadius={16}
             boxShadow="10"
-            onClick={handleClick}
         >
             <Box
                 component="div"

@@ -19,7 +19,6 @@ const UserSchema = mongoose.Schema({
     E' un array di ID itineraries. */
     itinerary : {
         type : [Itinerary],
-       // required: [true, 'Every user must have an array of Itinaries initialized']
     }
     
 });

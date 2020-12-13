@@ -4,8 +4,6 @@ const mongoose = require('mongoose');
 
 const MeteoComponentSchema = mongoose.Schema({
 
-    //itinerary_id: mongoose.Schema.Types.ObjectId,
-
     cityName:{
         type: String,
         required: [true, 'The name of the city is strictly required']

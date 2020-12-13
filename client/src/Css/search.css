@@ -129,17 +129,14 @@ body{
 
 .card__header{
     position: relative;
-    /*padding: 10px 10px 10px;*/
 }
 
 .card__body{
     position: relative;
-    /*padding: 10px 10px 10px;*/
 }
 
 .container__card{
     position: center;
-    /*padding: 0px 0px 0px 60px*/
     text-align: center;
 
 }
@@ -173,7 +170,6 @@ body{
     margin: 30px 20px 50px 20px;
     cursor: pointer;
     display: block;
-    /*margin: auto;*/
     background: linear-gradient(to right, #ffffff,#5c5c5c);
     border: 0;
     outline: none;

@@ -8,7 +8,7 @@ const request = require('request');
 const Meteo = require('../models/meteo');
 
 // Variabili globali
-var meteoUrl = ""; // 'http://api.openweathermap.org/data/2.5/weather?q=Trento&units=metric&appid='+ process.env.API_KEY;
+var meteoUrl = "";
 
 
 // Definizione del metodo GET: restituisce un messaggio che informa riguardo la gestione della richiesta
@@ -31,7 +31,7 @@ function requestcoords(path,callback){
     });
 }
 
-
+// Funzione necessaria per evitare conflitti causati dai caratteri speciali nella ricerca di una città
 function cleanUpSpecialChars(str) 
 { 
        str = str.replace(/[ÀÁÂÃÄÅ]/g,"A");
@@ -46,27 +46,12 @@ function cleanUpSpecialChars(str)
        str = str.replace(/[ØÕÖÒÔ]/g,"O");
        str = str.replace(/[ÿý]/g,"y");
        str = str.replace(/[Ý]/g,"Y");
-       return str.replace(/[^a-z0-9]/gi,''); // final clean up
+       return str.replace(/[^a-z0-9]/gi,''); 
 }
-
-/*
-router.get('/testing/:cityName',function(req,res){
-    requestcoords('https://photon.komoot.io/api/?q='+req.params.cityName+'&limit=1',function(err,jsoncoords){
-        if(err){
-            res.send("Error in the request. Please retry.\n");
-        } else {
-            let lat = jsoncoords.features[0].geometry.coordinates[1];
-            let lon = jsoncoords.features[0].geometry.coordinates[0];
-            console.log("Coordinate lat lon : "+lat+" "+lon);
-            res.send("Coordinate lat lon : "+lat+" "+lon);
-        }
-    });
-});
-*/
 
 // Definizione del metodo GET con path "/cityName": ottiene i dati del meteo in forma di JSON della città "cityName".
 router.get('/:cityName', function(req,res){
-    let rightCity = cleanUpSpecialChars(req.params.cityName);
+    let rightCity = cleanUpSpecialChars(req.params.cityName); 
     if(!rightCity)
         res.status(400).send("You must provide a city name in the URL.");
     else{
@@ -78,9 +63,6 @@ router.get('/:cityName', function(req,res){
         }else {
             let lat = jsoncoords.features[0].geometry.coordinates[1];
             let lon = jsoncoords.features[0].geometry.coordinates[0];
-
-            //console.log("Coordinate lat lon : "+lat+" "+lon);
-
             meteoUrl = 'https://api.openweathermap.org/data/2.5/onecall?lat='+lat+'&lon='+lon+'&exclude=minutely,hourly,alerts&units=metric&appid='+process.env.API_KEY;
             
             request(meteoUrl, function(error,response,body){     // Viene mandata una richiesta all'URL specificato, passando come parametro la funzione per la gestione della response
@@ -89,9 +71,7 @@ router.get('/:cityName', function(req,res){
                     meteo_json.name = jsoncoords.features[0].properties.name + ", "+jsoncoords.features[0].properties.country;
                 else
                     meteo_json.name = jsoncoords.features[0].properties.name + ", "+jsoncoords.features[0].properties.county+", "+jsoncoords.features[0].properties.country;
-                //console.log("Nome citta': "+meteo_json.name);
                 res.status(200).send(meteo_json);
-                //res.status(201).json(meteo_json);                                   // Restituzione dell'oggetto in formato JSON
             });
         }
         });
@@ -102,7 +82,6 @@ router.get('/:cityName', function(req,res){
 router.post('/',function(req,res){
     Meteo.create(req.body).then(function(meteo){
         res.status(201).send(meteo);
-        console.log('Ha funzionato(!)');
     });
 });
 

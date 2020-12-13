@@ -13,7 +13,7 @@ const db = mongoose.connection;
 
 
 /* Definizione del metodo GET: ricerca gli itinerari appartenenti allo user specificato.
-Richiede un oggetto JSON nel body della richiesta con il campo:
+Richiede un oggetto JSON nei parametri della richiesta con il campo:
 - "user_id": l'ID dell'utente di cui si vuole ottenere la lista degli itinerari.*/
 router.get('/:user_id', async(req,res) => {
     try{
@@ -29,7 +29,10 @@ router.get('/:user_id', async(req,res) => {
 /* Definizione del metodo POST: crea un itinerario vuoto e lo salva,
 connettendolo ad un utente specificato.
 Richiede un oggetto JSON nel body della richiesta con il campo:
-- "user_id": l'ID dell'utente a cui si vuole aggiungere l'itinerario.*/
+- "user_id": l'ID dell'utente a cui si vuole aggiungere l'itinerario.
+- "itinerary_name": nome dell'itinerario da aggiungere all'utente
+*/
+
 router.post('/', async (req, res) => {
 
     const itineraryNameExist = await User.findOne({"itinerary.name": req.body.itinerary_name, "_id": req.body.user_id});
@@ -63,6 +66,11 @@ router.post('/', async (req, res) => {
     }
 
 });
+
+/* Definizione del metodo DELETE: elimina un determinato itinerario dalla lista di itinerari dell'utente specificato.
+Richiede un oggetto JSON nel body della richiesta con i campi:
+- "user_id": l'ID dell'utente a cui si vuole rimuovere l'itinerario
+- "itinerary_name": nome dell'itinerario da cancellare dall'utente*/
 
 router.delete('/deleteName', async (req,res) =>{
     try{

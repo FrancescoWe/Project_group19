@@ -12,7 +12,6 @@ function MyParticles(){
                         color : "#ffffff",
                         line_linked : {
                             enable: true,
-                            //distance: 150,
                             color : "#bdbdbd",
                             opacity: 0.5,
                             width : 0.5

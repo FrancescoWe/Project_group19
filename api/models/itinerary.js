@@ -6,9 +6,7 @@ const MeteoComponent = require('./meteoComponent').schema;
 
 const ItinerarySchema = mongoose.Schema({
     
-    // Il campo user_id serve per collegare un itinerario ad un utente.
-    //user_id: mongoose.Schema.Types.ObjectId,
-
+    // Il campo name serve per dare un nome all'itinerario.
     name: {
         type: String,
         required: [true, 'Name field is required']

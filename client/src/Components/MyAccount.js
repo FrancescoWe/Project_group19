@@ -64,12 +64,7 @@ function MyAccount(props) {
     const [openDelPopUp, setOpenDelPopUp] = useState(false);
     const [openEmailPopUp, setOpenEmailPopUp] = useState(false);
 
-    // console.log(currentEmail);
-
-    const tempMail="nymo@sos.it"
-
     useEffect(() => {
-        // console.log(props.user._id)
         fetchUser();
     }, [])
 
@@ -82,8 +77,6 @@ function MyAccount(props) {
             method:"GET"
         }).then(resp => resp.json())
         .then(function(data) {
-            // console.log("CONSOLE LOG")
-            console.log(data);
             setCurrentEmail(data.email)
             setNames(data.itinerary.map(item => item.name))
             setLoading(false);
@@ -125,7 +118,6 @@ function MyAccount(props) {
             })
         }).then((resp) => resp.json())
             .then(function (data) {
-                console.log(data);
             }).catch(error => console.log(error))
 
         setOpenDelPopUp(false);
@@ -152,7 +144,6 @@ function MyAccount(props) {
                     window.alert(data.error);
                     console.log("ERROR");
                 } else {
-                    console.log(data);
                     setCurrentEmail(newEmail);
                 }
         }).catch(error => console.log(error))

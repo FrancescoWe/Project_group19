@@ -49,7 +49,6 @@ function MeteoCard(props) {
     }
 
     function handleClickDel(event) {
-        // console.log(clicked)
         props.setClickedMeteoComp(clicked)
         props.handleClickDel();
     }
@@ -85,7 +84,8 @@ function MeteoCard(props) {
                             <h3 style={{ textAlign: "center" }}>
                                 {date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()}
                             </h3>
-                            <img
+                            <img 
+                                alt="weatherIcon"
                                 src={"http://openweathermap.org/img/wn/" + props.item.icon + ".png"}
                                 style={{ marginLeft: "auto", marginRight: "auto", display: "block" }}>
 

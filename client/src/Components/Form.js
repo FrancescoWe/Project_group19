@@ -49,7 +49,6 @@ function Form(props) {
     const [buttonClicked, setButtonClicked] = useState(false)
 
     async function handleClick() {
-        console.log(localStorage.getItem('user-id'));
         if (research.localeCompare("") != 0 && research.localeCompare(researchBefore) != 0) {
             setResearchBefore(research)
             setLoading(true)
@@ -75,7 +74,7 @@ function Form(props) {
                         feels_like: response.current.feels_like,
                         uvi: response.current.uvi
                     }
-                    //console.log(jsonCurrent.temp);
+
                     for(var i=1; i<6; i++){
                         var jsonToPass={
                             icon: "http://openweathermap.org/img/wn/" + response.daily[i].weather[0].icon + "@2x.png",
@@ -91,7 +90,6 @@ function Form(props) {
                         }
                         array.push(jsonToPass);
                     }
-                    console.log(array)
                     setData(jsonCurrent)
                     setSecondData(array)
                     setLoading(false)

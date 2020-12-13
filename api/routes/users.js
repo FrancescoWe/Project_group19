@@ -46,43 +46,11 @@ router.get('/:email', async (req, res) => {
                     itinerary: entry.itinerary
                 }
             });
-        //console.log(users);
         res.status(201).json(users);            // Restituzione dell'utente nella risposta
     } catch (err) {
         res.status(400).json({ message: err });   // Messaggio in caso di errore
     }
 });
-
-
-
-
-// DA RIMUOVERE (?)
-/* Definizione del metodo POST: crea uno user e lo salva nel DB.
-Richiede un oggetto JSON nel body della richiesta con i campi relativi ad uno user.
-Se esiste giù un utente con la mail specificata, restituisce un messaggio di errore. */
-/*router.post('/',async function(req,res){
-    //console.log(req.body.email);
-    try{
-    const usertwo = await User.findOne({email: req.body.email});    // Ricerca nel DB di un utente con la mail specificata
-        if(usertwo==null){                                              // Caso in cui non esiste già un utente con la mail specificata
-            User.create(req.body).then(function(user){                  // Viene creato un utente
-                if(!user.email || typeof user.email!= 'string' || !checkIfEmailInString(user.email)){   // Se la mail non è nel formato corretto, restituisce un errore
-                    res.status(400).json({ error: 'The field "email" must be a non-empty string, in email format' });
-                    return;
-                };
-                res.status(201).send(user);                                         // altrimenti, viene restituito il nuovo utente
-                console.log('Aggiunto user');
-            });
-        }else{                                                          // Caso in cui esiste già un utente con la mail specificata
-            res.status(400).json({ error: 'This email is already taken' }); // Errore
-            return;
-        }
-    }catch{
-        res.status(400).send({message: error});
-    }
-});*/
-
-
 
 /* Definizione del metodo POST: crea uno user e lo salva nel DB.
 Richiede un oggetto JSON nel body della richiesta con i campi:
@@ -142,8 +110,6 @@ router.post('/login', async (req, res) => {
     // Altrimenti..
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, { expiresIn: 86400 });          // Crea e assegna un token utile a sapere che l'utente è loggato
     res.header('auth-token', token).status(201).send({ token: token });                    // Manda il token nella response
-
-    //res.status(201).send("logged in");
 })
 
 
@@ -172,8 +138,6 @@ router.delete('', async (req, res) => {
 
 /* Definizione del metodo DELETE con path '/:email': elimina lo user identificato dalla email "email".
 */
-// DA AGGIORNARE <-----------------------------------------------------------------------------------------------------------
-
 router.delete('/:email', async (req, res) => {
     try {
         let removedUser = await User.deleteOne({ email: req.params.email })

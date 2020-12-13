@@ -25,7 +25,6 @@ function App() {
   const [clickedItinName, setClickedItinName] = useState("");
 
   useEffect(() => {
-    console.log(user.user_id)
     if(user.user_id == ""){
       checkToken()
     }
@@ -75,7 +74,7 @@ function App() {
       .then((resp) => resp.json())
       .then(function(data) {
         if (data.error != null) {
-          alert("ERROR," + "\n" + data.error);
+          alert("ERROR,\n" + data.error);
           console.log("ERROR");
           return false
         } else { 
@@ -93,19 +92,11 @@ function App() {
   }
   
   async function checkToken(){
-    console.log("sto controllando il token")
     var token= localStorage.getItem("token");
-    console.log(token)
     if(token!=null)
       await validToken(token)
   }
 
-
-  console.log("App : " + user.logged + " " + user.user_id)
-  console.log("Bar Status login : " + user.snackBarOpensLoginControl)
-  console.log("Bar Status logOut : " + user.snackBarOpensLogOutControl)
-  console.log("Bar Status SignUp : " + user.snackBarOpensSignUpControl)
-  
   return (
     <Router>
       <Box 
@@ -199,8 +190,7 @@ function App() {
                 clickedItinId={clickedItinId}
               />
             </Route>
-
-            { /*NYMO */ console.log("")}
+            
             <Route exact path="/myaccount">
               <HeaderBar logged = {user.logged} setLogged = {logOut}/> 
               <MyAccount user_id = {user.user_id} setLogged = {logOut} />

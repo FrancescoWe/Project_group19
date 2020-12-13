@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '100%', 
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -75,8 +75,6 @@ function SignIn(props) {
     setPassword(value);
   }
 
-  //console.log("SignIn : " + isLogged)
-
   async function getIdFromToken(token){
     await fetch("/api/provaVerifica", {
       headers: {
@@ -87,12 +85,11 @@ function SignIn(props) {
       .then((resp) => resp.json())
       .then(function(data) {
         if (data.error != null) {
-          alert("ERROR," + "\n" + data.error);
+          alert("ERROR,\n" + data.error);
           console.log("ERROR");
           return false;
         } else { 
           props.setLogged(data._id);
-          //localStorage.setItem('user-id', data._id);
           return true
         } 
       })
@@ -114,13 +111,11 @@ function SignIn(props) {
     })
       .then((resp) => resp.json())
       .then(function (data) {
-        console.log(data);
         if (data.error != null) {
           alert(data.error);
           console.log("ERROR");
           return false;
         } else {
-          //console.log(data.token);
           localStorage.setItem('token', data.token);
           getIdFromToken(data.token)
           setLogged(true)

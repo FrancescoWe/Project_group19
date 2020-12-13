@@ -76,8 +76,6 @@ function ItineraryInfo(props) {
     const [name, setName] = useState("");
     const [selectedDate, setSelectedDate] = React.useState(new Date(''));
 
-    //console.log(incomingMeteos);
-
     async function patchIfProblems(){
         var tempCurrentDate = new Date().getTime() / 1000
         var currentDate = tempCurrentDate.toFixed(0)
@@ -87,33 +85,10 @@ function ItineraryInfo(props) {
                 await patch(props.user, props.clickedItinId, item._id);
             }
         }));
-        console.log("quante volte vien chiamata?")
         get();
     }
 
-    /*async function handleUpdate(){
-        setLoading(true);
-        await Promise.all(incomingMeteos.map(async item => {
-            await patch(function(){
-            },props.user, props.clickedItinId, item._id);
-        }));
-        get();
-        console.log("una chiamata dopo la patch nell'update")
-        console.log("solo una volta alla fine della funzione");
-    }*/
-
-
     useEffect(() => {
-        /*const ids = incomingMeteos.map(async item => {
-            if(!item.available){
-                await patch(function(){
-                    //get();
-                    //console.log("una get dopo aver patchato se false")
-                },props.user, props.clickedItinId, item._id);
-            }
-        });
-        console.log("quante volte vien chiamata?")
-        get();*/
         patchIfProblems()
     }, [])
 
@@ -132,7 +107,6 @@ function ItineraryInfo(props) {
             })
         }).then(response => response.json())
         .then(function(data) {
-            console.log(data)
             if(data.error != null){
                 window.alert(data.error);
                 console.log("ERROR");
@@ -148,22 +122,15 @@ function ItineraryInfo(props) {
 
     }
     
-    // console.log(props.clickedItinMeteos)
-    // console.log(incomingMeteos);
-    
-    
     function handleCancelDel() {
         setOpenPopUp(false);
     }
     
     function handleClickDel(event) {
         setOpenPopUp(true);
-        console.log(clickedMeteoComp);
     }
     
     async function handleDelete() {
-        // console.log(props.clickedItinId)
-        // console.log(clickedMeteoComp)
         setLoading(true);
         await fetch('/meteoComponents', {
             headers: {
@@ -178,7 +145,6 @@ function ItineraryInfo(props) {
             })
         }).then((resp) => resp.json())
         .then(function (data) {
-            console.log(data)
             get();
         })
         .catch(error => console.error(error));
@@ -194,10 +160,8 @@ function ItineraryInfo(props) {
             method: 'GET'
         }).then((resp) => resp.json())
         .then(function (data) {
-            //(console.log(data)
             setIncomingMeteos(data);
             setLoading(false);
-            // setItinData(data);
         })
         .catch(error => console.error(error))
     }
@@ -231,14 +195,7 @@ function ItineraryInfo(props) {
             await patch(props.user, props.clickedItinId, item._id);
         }));
         get();
-        console.log("una chiamata dopo la patch nell'update")
-        console.log("solo una volta alla fine della funzione");
     }
-
-
-//    console.log(props.user)
-//    console.log(selectedDate);
-//    console.log(toUnix);
     
     async function addStageFetch(){
         const unixDate=new Date(selectedDate).getTime()/1000
@@ -256,7 +213,6 @@ function ItineraryInfo(props) {
             })
         }).then(resp => resp.json())
         .then(function (data) {
-            console.log(data)
             if(data.error != null){
                 window.alert(data.error);
                 console.log("ERROR");

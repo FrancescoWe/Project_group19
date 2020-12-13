@@ -7,20 +7,8 @@ import Typography from "@material-ui/core/Typography"
 
 
 function Container(props) {
-
-    //console.log(props.dataToPass)
-
     const [incomingData] = useState(props.dataToPass);
     const [incomingSecondData] = useState(props.dataToPassTwo)
-
-    const paperstyles = {
-        backgroundColor : "rgba(255,255,255,0.45)",
-        margin : "auto"
-    }
-
-    const textStyle = {
-        color : "white"
-    }
 
     return (
         <div>
