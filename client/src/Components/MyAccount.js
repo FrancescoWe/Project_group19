@@ -153,12 +153,11 @@ function MyAccount(props) {
                     console.log("ERROR");
                 } else {
                     console.log(data);
+                    setCurrentEmail(newEmail);
                 }
         }).catch(error => console.log(error))
 
-
         setOpenEmailPopUp(false);
-        setCurrentEmail(newEmail);
         setNewEmail("")
         setLoading(false);
 
