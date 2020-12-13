@@ -31,6 +31,24 @@ function requestcoords(path,callback){
     });
 }
 
+
+function cleanUpSpecialChars(str) 
+{ 
+       str = str.replace(/[ÀÁÂÃÄÅ]/g,"A");
+       str = str.replace(/[àáâãäå]/g,"a");
+       str = str.replace(/[ÈÉÊË]/g,"E");
+       str = str.replace(/[èéëê]/g,"e");
+       str = str.replace(/[ùúûü]/g,"u");
+       str = str.replace(/[ÜÛÙÚ]/g,"U");
+       str = str.replace(/[ìíîï]/g,"i");
+       str = str.replace(/[ÏÎÍÌ]/g,"I");
+       str = str.replace(/[öôóøò]/g,"o");
+       str = str.replace(/[ØÕÖÒÔ]/g,"O");
+       str = str.replace(/[ÿý]/g,"y");
+       str = str.replace(/[Ý]/g,"Y");
+       return str.replace(/[^a-z0-9]/gi,''); // final clean up
+}
+
 /*
 router.get('/testing/:cityName',function(req,res){
     requestcoords('https://photon.komoot.io/api/?q='+req.params.cityName+'&limit=1',function(err,jsoncoords){
@@ -48,10 +66,11 @@ router.get('/testing/:cityName',function(req,res){
 
 // Definizione del metodo GET con path "/cityName": ottiene i dati del meteo in forma di JSON della città "cityName".
 router.get('/:cityName', function(req,res){
-    if(!req.params.cityName)
+    let rightCity = cleanUpSpecialChars(req.params.cityName);
+    if(!rightCity)
         res.status(400).send("You must provide a city name in the URL.");
     else{
-        requestcoords('https://photon.komoot.io/api/?q='+req.params.cityName+'&limit=1',function(err,jsoncoords){
+        requestcoords('https://photon.komoot.io/api/?q='+rightCity+'&limit=1',function(err,jsoncoords){
         if(err){
             res.status(400).send("Error in the request. Please retry.");
         } else if(Object.keys(jsoncoords.features).length == 0){
