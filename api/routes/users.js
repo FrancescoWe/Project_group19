@@ -25,6 +25,16 @@ router.get('/', async(req,res,next) => {
     }
 });
 
+// Definizione del metodo GET con path "/:userId": ottiene le informazioni sullo user con id "userId" utilizzando la API.
+router.get('/:userId', async (req,res)=>{
+    try{
+        const user = await User.findById(req.params.userId);        // Ricerca dell'utente con tale ID
+        res.status(201).json(user);                                 // Restituzione dell'utente nella risposta
+    }catch(err){
+        res.status(400).json({message: err});   // Messaggio in caso di errore
+    }
+});
+
 // Definizione del metodo GET con path "/:email": ottiene le informazioni sullo user con la mail "email" utilizzando la API.
 router.get('/:email', async (req,res)=> {
     try{
@@ -44,15 +54,6 @@ router.get('/:email', async (req,res)=> {
 });
 
 
-// Definizione del metodo GET con path "/:userId": ottiene le informazioni sullo user con id "userId" utilizzando la API.
-router.get('/:userId', async (req,res)=>{
-    try{
-        const user = await User.findById(req.params.userId);        // Ricerca dell'utente con tale ID
-        res.status(201).json(user);                                 // Restituzione dell'utente nella risposta
-    }catch(err){
-        res.status(400).json({message: err});   // Messaggio in caso di errore
-    }
-});
 
 
 // DA RIMUOVERE (?)

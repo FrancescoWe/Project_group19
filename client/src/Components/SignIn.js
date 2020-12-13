@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import "../Css/search.css"
+import { grey } from '@material-ui/core/colors';
+import { Link } from "react-router-dom";
+import { makeStyles } from '@material-ui/core/styles';
+import { Redirect } from "react-router-dom";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import "../Css/search.css"
-import { TextField, InputBase, withTheme, ThemeProvider, withStyles } from '@material-ui/core';
-import { Link } from "react-router-dom";
+import CssTextField from "./CssTextField"
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import { grey } from '@material-ui/core/colors';
-import { Redirect } from "react-router-dom";
-import CssTextField from "./CssTextField"
 
 
 const useStyles = makeStyles((theme) => ({

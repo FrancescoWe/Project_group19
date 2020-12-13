@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react"
 import Box from "@material-ui/core/Box"
-import Grid from "@material-ui/core/Grid"
 import Divider from "@material-ui/core/Divider"
+import Grid from "@material-ui/core/Grid"
 import OpacityIcon from '@material-ui/icons/Opacity'
+import React from "react"
+import SunglassesIcon from 'mdi-react/SunglassesIcon'
 import ThermometerIcon from 'mdi-react/ThermometerIcon'
 import WeatherWindyIcon from 'mdi-react/WeatherWindyIcon'
-import SunglassesIcon from 'mdi-react/SunglassesIcon'
 
 function CurrentCard(props) {
 

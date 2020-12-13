@@ -1,23 +1,21 @@
-import React, { useState } from "react"
 import Box from "@material-ui/core/Box"
-import Grid from "@material-ui/core/Grid"
-import Divider from "@material-ui/core/Divider"
-import IconButton from "@material-ui/core/IconButton"
-import ThermometerIcon from 'mdi-react/ThermometerIcon'
-import OpacityIcon from '@material-ui/icons/Opacity'
-import WeatherWindyIcon from 'mdi-react/WeatherWindyIcon'
 import DeleteIcon from 'mdi-react/DeleteIcon'
+import Divider from "@material-ui/core/Divider"
+import Grid from "@material-ui/core/Grid"
+import IconButton from "@material-ui/core/IconButton"
+import OpacityIcon from '@material-ui/icons/Opacity'
+import React, { useState } from "react"
+import ThermometerIcon from 'mdi-react/ThermometerIcon'
+import WeatherWindyIcon from 'mdi-react/WeatherWindyIcon'
 
 
 function MeteoCard(props) {
 
     const date = new Date(props.item.date * 1000);
+
     const updateDate = new Date(props.item.dataUpdatedOn * 1000)
     const [clicked] = useState(props.item._id);
     const [availableDate] = useState(subtractDays(date));
-
-    //    console.log(props.item.date)
-    //    console.log(availableDate)
 
     function subtractDays(data) {
         var result = new Date(data);
@@ -25,12 +23,10 @@ function MeteoCard(props) {
         return result;
     }
 
-
     function round(value, precision) {
         var multiplier = Math.pow(10, precision || 0);
         return Math.round(value * multiplier) / multiplier;
     }
-
 
     function toTextualDescription(degree) {
         if (degree > 337.5)
@@ -51,9 +47,6 @@ function MeteoCard(props) {
             return 'NE'
         return 'N';
     }
-
-
-
 
     function handleClickDel(event) {
         // console.log(clicked)

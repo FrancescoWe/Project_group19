@@ -1,37 +1,35 @@
-import React, { useState, useEffect } from "react"
-import Main from "./Main"
-import Box from "@material-ui/core/Box"
-import SignIn from "./SignIn"
-import HeaderBar from "./HeaderBar"
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import MyParticles from './MyParticles'
+import Box from "@material-ui/core/Box"
+import Form from "./Form"
+import HeaderBar from "./HeaderBar"
 import Itinerary from "./Itinerary"
 import ItineraryInfo from "./ItineraryInfo"
+import MuiAlert from '@material-ui/lab/Alert';
+import MyAccount from "./MyAccount"
+import MyParticles from './MyParticles'
+import React, { useState, useEffect } from "react"
+import SignIn from "./SignIn"
 import SignUp from "./SignUp"
 import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
-
 
 
 function App() {
-
 
   const [user, setLogged] = useState({logged : false,
                                       user_id : "",
                                       snackBarOpensLoginControl : false,
                                       snackBarOpensLogOutControl : false,
                                       snackBarOpensSignUpControl : false})
-  
   const [clickedItinMeteos, setClickedItinMeteos] = useState([]);
   const [clickedItinId, setClickedItinId] = useState("");
   const [clickedItinName, setClickedItinName] = useState("");
 
-    useEffect(() => {
-      console.log(user.user_id)
-      if(user.user_id == ""){
-        checkToken()
-      }
-    },[])
+  useEffect(() => {
+    console.log(user.user_id)
+    if(user.user_id == ""){
+      checkToken()
+    }
+  },[])
 
   const signInDone = (userID) => {
     setLogged({logged : true,//checkToken()
@@ -101,6 +99,7 @@ function App() {
     if(token!=null)
       await validToken(token)
   }
+
 
   console.log("App : " + user.logged + " " + user.user_id)
   console.log("Bar Status login : " + user.snackBarOpensLoginControl)
@@ -178,7 +177,7 @@ function App() {
                 </MuiAlert>
               </Snackbar>
               
-              <Main logged = {user.logged}/>
+              <Form logged = {user.logged}/>
             </Route>
 
             <Route exact path="/itinerary">
@@ -199,6 +198,12 @@ function App() {
                 clickedItinName={clickedItinName}
                 clickedItinId={clickedItinId}
               />
+            </Route>
+
+            { /*NYMO */ console.log("")}
+            <Route exact path="/myaccount">
+              <HeaderBar logged = {user.logged} setLogged = {logOut}/> 
+              <MyAccount user_id = {user.user_id} setLogged = {logOut} />
             </Route>
 
             <Route exact path="/signup">

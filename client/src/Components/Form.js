@@ -1,15 +1,11 @@
-// import { type } from "os";
-import React, { useEffect, useState } from "react"
+import { makeStyles } from '@material-ui/core/styles';
 import Button from "@material-ui/core/Button"
-import TextField from "@material-ui/core/TextField"
-import InputLabel from "@material-ui/core/InputLabel"
-import InputAdornment from '@material-ui/core/InputAdornment'
-import Search from "@material-ui/icons/Search"
-import Container from "./Container"
-import EmptyContainer from "./EmptyContainer"
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import Container from "./Container"
 import CssTextField from "./CssTextField"
+import InputAdornment from '@material-ui/core/InputAdornment'
+import React, { useState } from "react"
+import Search from "@material-ui/icons/Search"
 
 // STYLING
 
@@ -36,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function Form() {
+function Form(props) {
 
     const classes = useStyles();
 
