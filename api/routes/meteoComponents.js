@@ -61,7 +61,7 @@ function cleanUpSpecialChars(str)
        str = str.replace(/[ØÕÖÒÔ]/g,"O");
        str = str.replace(/[ÿý]/g,"y");
        str = str.replace(/[Ý]/g,"Y");
-       return str.replace(/[^a-z0-9]/gi,''); 
+       return str 
 }
 
 
@@ -268,8 +268,7 @@ router.patch('', async (req,res)=>{
                         })
                     } else
                         try{
-                            var rightCity = cleanUpSpecialChars(meteos_datesA.cityName); 
-                            console.log(rightCity);
+                            var rightCity = cleanUpSpecialChars(meteos_datesA.cityName);
                             requestcoords('https://photon.komoot.io/api/?q='+rightCity+'&limit=1',function(err,jsoncoords){
                                 if(err){
                                     res.status(400).send({

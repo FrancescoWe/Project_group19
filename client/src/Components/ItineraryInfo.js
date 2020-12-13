@@ -112,7 +112,6 @@ function ItineraryInfo(props) {
                 console.log("ERROR");
             } else {
                 console.log(data.success);
-
             }
         })
         .catch(error => {

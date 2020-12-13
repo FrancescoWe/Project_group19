@@ -46,7 +46,7 @@ function cleanUpSpecialChars(str)
        str = str.replace(/[ØÕÖÒÔ]/g,"O");
        str = str.replace(/[ÿý]/g,"y");
        str = str.replace(/[Ý]/g,"Y");
-       return str.replace(/[^a-z0-9]/gi,''); 
+       return str
 }
 
 // Definizione del metodo GET con path "/cityName": ottiene i dati del meteo in forma di JSON della città "cityName".
