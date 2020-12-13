@@ -26,8 +26,15 @@ function App() {
   const [clickedItinId, setClickedItinId] = useState("");
   const [clickedItinName, setClickedItinName] = useState("");
 
+    useEffect(() => {
+      console.log(user.user_id)
+      if(user.user_id == ""){
+        checkToken()
+      }
+    },[])
+
   const signInDone = (userID) => {
-    setLogged({logged : true, 
+    setLogged({logged : true,//checkToken()
               user_id : userID,
               snackBarOpensLoginControl : true,
               snackBarOpensLogOutControl : false,
@@ -42,7 +49,10 @@ function App() {
               snackBarOpensSignUpControl : true})
   }
 
+
+
   const logOut = (val) => {       //se il valore passato è 0 l' utente si slogga altrimenti si logga (necessario solo per l' alert)
+    localStorage.setItem('token',"");
     val==0 ? 
       setLogged({logged : false, 
                 user_id : "",
@@ -57,7 +67,7 @@ function App() {
                 snackBarOpensSignUpControl : false})
   }
   
-  /*async function validToken(token){
+  async function validToken(token){
     await fetch("/api/provaVerifica", {
       headers: {
         'auth-token' : token
@@ -69,27 +79,28 @@ function App() {
         if (data.error != null) {
           alert("ERROR," + "\n" + data.error);
           console.log("ERROR");
-          return false;
+          return false
         } else { 
-          setLogged({logged: true,
-            user_id: data._id});
+          setLogged({logged : true,
+                    user_id : data._id,
+                    snackBarOpensLoginControl : false,
+                    snackBarOpensLogOutControl : false,
+                    snackBarOpensSignUpControl : false})
           //localStorage.setItem('user-id', data._id);
           return true
         } 
       })
         .catch(error => console.error(error));
-      return false;
+      return false
   }
   
   async function checkToken(){
+    console.log("sto controllando il token")
     var token= localStorage.getItem("token");
-    if(token!=null && await validToken(token)==true){
-      console.log("user logged is:" + user.user_id);
-      return true;
-    }else{
-      return false;
-    }
-  }*/
+    console.log(token)
+    if(token!=null)
+      await validToken(token)
+  }
 
   console.log("App : " + user.logged + " " + user.user_id)
   console.log("Bar Status login : " + user.snackBarOpensLoginControl)

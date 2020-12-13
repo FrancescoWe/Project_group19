@@ -28,6 +28,7 @@ function Itinerary(props) {
     
     const classes = useStyles();
 
+    console.log("test user id : " + props.user)
 
     return (
         <div>

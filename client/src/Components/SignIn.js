@@ -122,9 +122,9 @@ function SignIn(props) {
           return false;
         } else {
           //console.log(data.token);
-          setLogged(true)
-          localStorage.setItem('auth-token', data.token);
+          localStorage.setItem('token', data.token);
           getIdFromToken(data.token)
+          setLogged(true)
           return true;
         }
       })
