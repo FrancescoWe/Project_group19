@@ -10,6 +10,11 @@ beforeEach(async()=>{
         "user_id" : "5fd2357bbab8df19cc70942e",
         "itinerary_id": "5fd23739bab8df19cc70942f"
     })
+    await request(app).post('/itineraries')
+    .send({
+        "user_id": "5fd228f6cb193459c49725ff",
+        "itinerary_name": "ProvaOne"
+    })
 })
 afterEach(()=>{
 
@@ -30,7 +35,7 @@ test('Crea un meteoComponent e lo inserisce nell itinerario indicato di un deter
     .send({
         "user_id": "5fd2357bbab8df19cc70942e",
         "itinerary_id": "5fd23739bab8df19cc70942f",
-        "date": "1607814000",
+        "date": "2523032400",
         "cityName": "Trento"
     })
     .expect(201)
@@ -46,6 +51,15 @@ test('Ritorna errore perchè i campi passati non sono in formato corretto', asyn
     .expect(404)
 })
 
+test('Elimina tutti i meteoComponents facenti parte di un determinato itinerario', async()=>{
+    await request(app).delete('/meteoComponents/deleteAllName')
+    .send({
+        "itinerary_name": "ProvaOne",
+        "user_id": "5fd228f6cb193459c49725ff"
+    })
+    .expect(201)
+})
+
 test('Restituisce errore in quanto la data è nel passato', async ()=>{
     await request(app).post('/meteoComponents')
     .send({
@@ -56,5 +70,6 @@ test('Restituisce errore in quanto la data è nel passato', async ()=>{
     })
     .expect(400)
 })
+
 
 

@@ -232,7 +232,30 @@ router.delete('', async (req,res)=> {
 
 });
 
-/* Definizione del metodo PATCH: aggiorna una meteocComponent dall'itinerario specificato appartenente all'utente specificato.
+/* Definizione del metodo DELETE con url "/deleteAllName": elimina tutti i meteoComponents facenti parte 
+dell'itinerario specificato. Prende in input nel body della request un oggetto JSON con i seguenti parametri:
+- user_id: l'id dell'utente a cui apparteiene l'itinerario
+- itinerary_name: il nome dell'itinerario di cui vanno eliminati i meteoComponents */
+
+router.delete('/deleteAllName', async (req,res)=> {
+    try{
+
+        let founditinerary = await User.findOne(
+            {"_id": req.body.user_id},
+            { "itinerary" : {$elemMatch : {"name" : req.body.itinerary_name}}} 
+        );
+        console.log(founditinerary.itinerary[0].meteos_dates)   ;
+        founditinerary.itinerary[0].meteos_dates=[];
+        founditinerary.save();
+        res.status(201).send("All meteoComponents from itinerary have been deleted");
+
+    } catch(err){
+        console.log(err);
+        res.status(400).send({error: err});
+    }
+});
+
+/* Definizione del metodo PATCH: aggiorna una meteoComponent dall'itinerario specificato appartenente all'utente specificato.
 Richiede un oggetto JSON nel body della richiesta con i campi:
 - user_id: l'ID dell'utente a cui appartiene la meteoComponent da aggiornare
 - itinerary_id: l'ID dell'itinerario contenente la meteoComponent
