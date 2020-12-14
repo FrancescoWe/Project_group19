@@ -384,6 +384,32 @@ paths:
           description: 'meteoComponents all deleted'
         '400':
           description: 'itinerary or user not found'
+          
+  /meteoComponents/deleteAllName:
+    delete:
+      description: >-
+        Remove all the meteoComponents from the specified itinerary belonging to the specified user
+      summary: Delete all meteoComponents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - itinerary_name
+              properties:
+                user_id:
+                  type: string
+                  description: "Id of the user"
+                itinerary_id: 
+                  type: string
+                  description: "Name of the itinerary belonging to the specified user"
+      responses:
+        '201':
+          description: 'meteoComponents all deleted'
+        '400':
+          description: 'itinerary or user not found'
       
     
   
@@ -552,7 +578,33 @@ paths:
           description: 'Itinerary not found'
           
   #/provaVerifica
-
+  
+  /provaVerifica:
+    get:
+      description: >-
+        Se viene passato il token restituisce lo user associato
+      summary: Get userid from token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - auth-token
+              properties:
+                auth-token:
+                  type: string
+                  description: 'token that is associated to the user'
+      responses:
+        '401':
+          description: 'Access denied because no token was passed'
+        '403':
+          description: "token was invalid"
+        
+        
+        
+      
+  
 components:
   schemas:
     User:
