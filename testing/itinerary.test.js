@@ -65,3 +65,20 @@ test('Elimina un itinerario di un determinato user', async ()=>{
     })
     .expect(201)
 })
+
+test('Dà errore in quanto manca il campo nome', async ()=>{
+    await request(app).post('/itineraries')
+    .send({
+        "user_id": "5fd228f6cb193459c49725ff",
+    })
+    .expect(400)
+}, 30000)
+
+test('Dà errore in quanto il formato di itinerary_name è scorretto', async ()=>{
+    await request(app).post('/itineraries')
+    .send({
+        "user_id": "5fd228f6cb193459c49725ff",
+        "itinerary_name": 11111
+    })
+    .expect(400)
+})
