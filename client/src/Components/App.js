@@ -26,7 +26,7 @@ function App() {
 
   useEffect(() => {
     if(user.user_id == ""){
-      checkToken()
+      checkToken();
     }
   },[])
 
@@ -92,10 +92,21 @@ function App() {
   }
   
   async function checkToken(){
-    var token= localStorage.getItem("token");
-    if(token!=null)
-      await validToken(token)
-  }
+    const token= localStorage.getItem('token');
+    const expiryTime = localStorage.getItem('expiry');
+    if(token!=null){
+      var now = Math.round((new Date().getTime())/1000);
+	    if (now > expiryTime) {
+        localStorage.setItem('token', "");
+        localStorage.setItem('expiry', 0);
+      }
+      await validToken(localStorage.getItem('token'));
+    }else{
+      localStorage.setItem('token', "");
+      localStorage.setItem('expiry', 0);
+      await validToken(localStorage.getItem('token'));
+    }
+	}
 
   return (
     <Router>
