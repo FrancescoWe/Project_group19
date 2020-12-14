@@ -269,7 +269,7 @@ function Itinerary(props) {
                         pt={1}
                         pb={1}
                         boxShadow={10}
-                        style={{ textAlign: "center", borderColor: "rgba(0,0,0,0.3)", color: "white", background: "rgba(0,0,0,0.2)" }}
+                        style={{ textAlign: "center", borderColor: "rgba(0,0,0,0.3)", color: "white", background: "rgba(0,0,0,0.2)", borderRadius : "16px" }}
                     >
                         {loading ?
                             <div className={classes.root}>

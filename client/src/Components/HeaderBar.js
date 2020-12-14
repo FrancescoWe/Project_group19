@@ -74,7 +74,7 @@ function HeaderBar(props) {
                                                                style={{ color: "white" }}
                                                                aria-controls="simple-menu"
                                                                aria-haspopup="true"
-                                                               onMouseOver={handleMouseOver}
+                                                               onClick={handleMouseOver}
                                                         >
                                                                MENÙ
                                                         </Button>
@@ -85,6 +85,7 @@ function HeaderBar(props) {
                                                                anchorEl={anchorEl}
                                                                open={openMenu}
                                                                onClose={handleClose}
+                                                               style = {{marginTop : "1%"}}
                                                         >
                                                                <Link
                                                                       to={"/myaccount"}
