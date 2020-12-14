@@ -179,7 +179,28 @@ function Form(props) {
                                         </Grid>
                                         <Grid item>
                                             <p style={{fontSize : "200%", color : "white", fontSmooth : "always", fontStyle : "italic", fontWeight : "bold"}}>
-                                                <TextLoop springConfig={{ stiffness: 180, damping: 10 }} children = {["sunny","rainy","foggy","snowy"]} interval = "2500"/>
+                                                <TextLoop springConfig={{ stiffness: 180, damping: 10 }} children = {[
+                                                        "sunny",
+                                                        "rainy",
+                                                        "foggy",
+                                                        "snowy",
+                                                        "hazy",
+                                                        "cold",
+                                                        "hot",
+                                                        "a good day",
+                                                        "clear",
+                                                        "wet",
+                                                        "humid",
+                                                        "warm",
+                                                        "chill",
+                                                        "stormy",
+                                                        "mild",
+                                                        "cloudy",
+                                                        "sunny",
+                                                        "windy",
+                                                        "dry"
+                                                    ]}
+                                                    interval = "2500"/>
                                             </p>
                                         </Grid>
                                     </Grid>
