@@ -18,6 +18,8 @@ import MeteoCard from "./MeteoCard"
 import React, { useState, useEffect } from "react"
 import Toolbar from '@material-ui/core/Toolbar'
 import UpdateIcon from '@material-ui/icons/Update';
+import alasql from 'alasql';
+
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
@@ -62,6 +64,16 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+/*function GetSortOrder(prop) {    
+    return function(a, b) {    
+        if (a[prop] > b[prop]) {    
+            return 1;    
+        } else if (a[prop] < b[prop]) {    
+            return -1;    
+        }    
+        return 0;    
+    }    
+}    */
 
 
 function ItineraryInfo(props) {
@@ -159,7 +171,8 @@ function ItineraryInfo(props) {
             method: 'GET'
         }).then((resp) => resp.json())
         .then(function (data) {
-            setIncomingMeteos(data);
+            var res1 = alasql('SELECT * FROM ? ORDER BY date',[data]);
+            setIncomingMeteos(res1);
             setLoading(false);
         })
         .catch(error => console.error(error))
