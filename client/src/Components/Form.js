@@ -6,6 +6,8 @@ import CssTextField from "./CssTextField"
 import InputAdornment from '@material-ui/core/InputAdornment'
 import React, { useState } from "react"
 import Search from "@material-ui/icons/Search"
+import TextLoop from "react-text-loop";
+import Grid from "@material-ui/core/Grid"
 
 // STYLING
 
@@ -167,7 +169,42 @@ function Form(props) {
                                 dataToPassTwo = {dataTwo}
                             />
                         :
-                            null
+                            <Grid container direction="column" justify = "center" alignItems = "center" style = {{marginTop : "4%"}}>
+                                <Grid item>
+                                    <Grid container direction="column" justify = "center" alignItems = "center">
+                                        <Grid item>
+                                            <p style={{fontSize : "150%", color : "#9c9c9c", fontSmooth : "always"}}>
+                                                Today it's 
+                                            </p>
+                                        </Grid>
+                                        <Grid item>
+                                            <p style={{fontSize : "200%", color : "white", fontSmooth : "always", fontStyle : "italic", fontWeight : "bold"}}>
+                                                <TextLoop springConfig={{ stiffness: 180, damping: 10 }} children = {["sunny","rainy","foggy","snowy"]} interval = "2500"/>
+                                            </p>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid item>
+                                    <Grid container direction="column" justify = "center" alignItems = "center" style = {{marginTop : "12%"}} spacing = {2}>
+                                        <Grid item>
+                                            <p style={{fontSize : "125%", color : "#9c9c9c", fontSmooth : "always"}}>
+                                                Look up a city to get its {" "}
+                                                <TextLoop springConfig={{ stiffness: 180, damping: 10 }} children = {["current","forecast"]} interval = "1500"/> {" weather"}
+                                            </p>
+                                        </Grid>
+                                        <Grid item>
+                                            <p style={{fontSize : "125%", color : "#9c9c9c", fontSmooth : "always"}}>
+                                                LogIn
+                                            </p>
+                                        </Grid>
+                                        <Grid item>
+                                            <p style={{fontSize : "125%", color : "#9c9c9c", fontSmooth : "always"}}>
+                                                Start planning your trip
+                                            </p>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
                 }
 
                 {/*<button type="button" class="btn" id="forecast" onClick={this.handleClick}><i class="fa fa-search"></i> Search </button>*/}

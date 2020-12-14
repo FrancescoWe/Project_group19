@@ -200,10 +200,11 @@ function MyAccount(props) {
                             pb={1}
                             pl={3}
                             pr={3}
-                            boxShadow={10}
+                            boxShadow={13}
                             style={{ 
                                 textAlign: "center", 
                                 borderColor: "rgba(0,0,0,0.3)", 
+                                borderRadius : "16px",
                                 color: "white", 
                                 background: "rgba(0,0,0,0.2)" 
                             }}

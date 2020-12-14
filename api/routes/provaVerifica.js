@@ -7,7 +7,6 @@ const User = require('../models/user');
 
 // Definizione del metodo GET 
 router.get('/', verify, async (req,res) => {
-    console.log(req.user);
     let usertry = await User.findOne({_id: req.user._id});
     res.send(usertry);
 });
