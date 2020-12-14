@@ -102,3 +102,21 @@ test('Cancella un utente dal database.', async ()=>{
     await request(app).delete('/users/delete@gmail.com')
     .expect(201)    // in questo caso 200 perchè non è un 201 created ma 200 OK
 })
+
+test('Restituisce un errore in quanto la mail non è una stringa', async ()=>{
+    await request(app).post('/users')
+    .send({
+        "email": 12345,
+        "password": "testpassword"
+    })
+    .expect(400)
+})
+
+test('Ritorna un errore in quanto la password è errata', async ()=>{
+    await request(app).post('/users/login')
+    .send({
+        "email": "user@domain.com",
+        "password": "passwordErrata"
+    })
+    .expect(400)
+})

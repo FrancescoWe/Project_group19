@@ -46,6 +46,15 @@ test('Ritorna errore perchè i campi passati non sono in formato corretto', asyn
     .expect(404)
 })
 
-
+test('Restituisce errore in quanto la data è nel passato', async ()=>{
+    await request(app).post('/meteoComponents')
+    .send({
+        "user_id": "5fd2357bbab8df19cc70942e",
+        "itinerary_id": "5fd23739bab8df19cc70942f",
+        "date": "1607814000",
+        "cityName": "Trento"
+    })
+    .expect(400)
+})
 
 
