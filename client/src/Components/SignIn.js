@@ -116,7 +116,11 @@ function SignIn(props) {
           console.log("ERROR");
           return false;
         } else {
+
+          var date= Math.round((new Date().getTime())/1000)+300;
+
           localStorage.setItem('token', data.token);
+          localStorage.setItem('expiry', date);
           getIdFromToken(data.token)
           setLogged(true)
           return true;
