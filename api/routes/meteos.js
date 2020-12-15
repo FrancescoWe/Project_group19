@@ -55,7 +55,7 @@ router.get('/:cityName', function(req,res){
     if(!rightCity)
         res.status(400).send("You must provide a city name in the URL.");
     else{
-        requestcoords('https://photon.komoot.io/api/?q='+rightCity+'&limit=1',function(err,jsoncoords){
+        requestcoords('https://photon.komoot.io/api/?q='+rightCity+'&limit=1&lang=en',function(err,jsoncoords){
         if(err){
             res.status(400).send("Error in the request. Please retry.");
         } else if(Object.keys(jsoncoords.features).length == 0){

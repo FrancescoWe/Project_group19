@@ -104,7 +104,7 @@ router.post('', async (req, res) => {
 
     if(userDate < currentDate){
         res.status(400).send({
-            error :  "Date provided is in the past or it's today!"
+            error :  "Provided date is in the past or it's today!"
         })
     } else {
         const oneDay = 24 * 60 * 60
@@ -133,7 +133,8 @@ router.post('', async (req, res) => {
 
         } else {
             try{
-                requestcoords('https://photon.komoot.io/api/?q='+rightCity+'&limit=1',function(err,jsoncoords){
+                requestcoords('https://photon.komoot.io/api/?q='+rightCity+'&limit=1&lang=en',function(err,jsoncoords){
+                    //console.log(jsoncoords)
                     if(err){
                         res.status(400).send({
                             error : "Error in the request. Please retry."
@@ -152,6 +153,7 @@ router.post('', async (req, res) => {
                         
                         request(meteoUrl, function(error,response,body){     // Viene mandata una richiesta all'URL specificato, passando come parametro la funzione per la gestione della response
                             const meteo_json=JSON.parse(body);                      // Parsing del body in JSON
+                            //console.log(meteo_json)
                             var toSave = meteo_json.daily[diffDays]
                             meteoComponents = new MeteoComponent({      // Creazione del nuovo meteoComponent
                                 available : true,
@@ -292,7 +294,7 @@ router.patch('', async (req,res)=>{
                     } else
                         try{
                             var rightCity = cleanUpSpecialChars(meteos_datesA.cityName);
-                            requestcoords('https://photon.komoot.io/api/?q='+rightCity+'&limit=1',function(err,jsoncoords){
+                            requestcoords('https://photon.komoot.io/api/?q='+rightCity+'&limit=1&lang=en',function(err,jsoncoords){
                                 if(err){
                                     res.status(400).send({
                                         error : "Error in the request. Please retry."
