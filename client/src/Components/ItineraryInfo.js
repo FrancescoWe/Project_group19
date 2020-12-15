@@ -123,7 +123,7 @@ function ItineraryInfo(props) {
                 window.alert(data.error);
                 console.log("ERROR");
             } else {
-                console.log(data.success);
+                //console.log(data.success);
             }
         })
         .catch(error => {

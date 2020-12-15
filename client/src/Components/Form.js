@@ -104,11 +104,18 @@ function Form(props) {
         setResearch(value)
     }
 
+    function onFormSubmit(e){
+        e.preventDefault();
+    }
+
     return (
         <div>
             {/*<h2 class="title">Cerca Località: </h2>*/}
             <br />
-            <form className="search__part">
+            <form 
+                className="search__part"
+                onSubmit={onFormSubmit}
+            >
                 <CssTextField
                     style={styles}
                     id="outlined-basic"
@@ -144,6 +151,7 @@ function Form(props) {
 
                 <div style = {{position : "relative"}}>
                     <Button
+                        type="submit"
                         className="btn"
                         variant="contained"
                         onClick={handleClick}
@@ -153,6 +161,7 @@ function Form(props) {
                     >
                         Search
                     </Button>
+
                     {loading && <CircularProgress size={24} style={{
                         color: "white",
                         position: 'absolute',
@@ -162,23 +171,26 @@ function Form(props) {
                         marginLeft: -12,
                     }} />}
                 </div>
+            </form>
 
 
                 {(!loading && buttonClicked) ?
-                            <Container dataToPass = {data}
-                                dataToPassTwo = {dataTwo}
-                            />
+                            <div className="search__part">
+                                <Container dataToPass = {data}
+                                    dataToPassTwo = {dataTwo}
+                                />
+                            </div>
                         :
                             <Grid container direction="column" justify = "center" alignItems = "center" style = {{marginTop : "4%"}}>
                                 <Grid item>
                                     <Grid container direction="column" justify = "center" alignItems = "center">
                                         <Grid item>
-                                            <p style={{fontSize : "150%", color : "#9c9c9c", fontSmooth : "always"}}>
+                                            <div style={{fontSize : "150%", color : "#9c9c9c", fontSmooth : "always"}}>
                                                 Today it's 
-                                            </p>
+                                            </div>
                                         </Grid>
                                         <Grid item>
-                                            <p style={{fontSize : "200%", color : "white", fontSmooth : "always", fontStyle : "italic", fontWeight : "bold"}}>
+                                            <div style={{fontSize : "200%", color : "white", fontSmooth : "always", fontStyle : "italic", fontWeight : "bold"}}>
                                                 <TextLoop springConfig={{ stiffness: 180, damping: 10 }} children = {[
                                                         "sunny",
                                                         "rainy",
@@ -201,27 +213,27 @@ function Form(props) {
                                                         "dry"
                                                     ]}
                                                     interval = "2500"/>
-                                            </p>
+                                            </div>
                                         </Grid>
                                     </Grid>
                                 </Grid>
                                 <Grid item>
                                     <Grid container direction="column" justify = "center" alignItems = "center" style = {{marginTop : "12%"}} spacing = {2}>
                                         <Grid item>
-                                            <p style={{fontSize : "125%", color : "#9c9c9c", fontSmooth : "always"}}>
+                                            <div style={{fontSize : "125%", color : "#9c9c9c", fontSmooth : "always"}}>
                                                 Look up a city to get its {" "}
                                                 <TextLoop springConfig={{ stiffness: 180, damping: 10 }} children = {["current","forecast"]} interval = "1500"/> {" weather"}
-                                            </p>
+                                            </div>
                                         </Grid>
                                         <Grid item>
-                                            <p style={{fontSize : "125%", color : "#9c9c9c", fontSmooth : "always"}}>
+                                            <div style={{fontSize : "125%", color : "#9c9c9c", fontSmooth : "always"}}>
                                                 LogIn
-                                            </p>
+                                            </div>
                                         </Grid>
                                         <Grid item>
-                                            <p style={{fontSize : "125%", color : "#9c9c9c", fontSmooth : "always"}}>
+                                            <div style={{fontSize : "125%", color : "#9c9c9c", fontSmooth : "always"}}>
                                                 Start planning your trip
-                                            </p>
+                                            </div>
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -229,7 +241,6 @@ function Form(props) {
                 }
 
                 {/*<button type="button" class="btn" id="forecast" onClick={this.handleClick}><i class="fa fa-search"></i> Search </button>*/}
-            </form>
             <br />
         </div>
     )

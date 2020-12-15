@@ -75,6 +75,10 @@ function SignIn(props) {
     setPassword(value);
   }
 
+  function onFormSubmit(e){
+    e.preventDefault();
+  }
+
   async function getIdFromToken(token){
     await fetch("/api/provaVerifica", {
       headers: {
@@ -146,7 +150,7 @@ function SignIn(props) {
             SIGN IN
           </Typography>
 
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate onSubmit={onFormSubmit}>
             <CssTextField
               onChange={handleChangeMail}
               variant="outlined"
@@ -197,6 +201,7 @@ function SignIn(props) {
             />
 
             <Button
+              type="submit"
               className={classes.submit}
               fullWidth
               variant="contained"

@@ -80,6 +80,10 @@ function SignUp(props) {
     setConfPass(value);
   }
 
+  function onFormSubmit(e){
+    e.preventDefault();
+  }
+
   async function handleClick() {
     if(password.localeCompare(confPass) !== 0 || email.localeCompare("")===0 || password.localeCompare("")===0){
 
@@ -140,7 +144,7 @@ function SignUp(props) {
             SIGN UP
           </Typography>
 
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate onSubmit={onFormSubmit}>
             <CssTextField
               onChange={handleChangeMail}
               variant="outlined"
@@ -215,6 +219,7 @@ function SignUp(props) {
             />
 
             <Button
+              type="submit"
               className={classes.submit}
               fullWidth
               variant="contained"

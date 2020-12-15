@@ -20,6 +20,9 @@ app.use("/",express.static(__dirname + "/client/build"));
 app.use("/itinerary",express.static(__dirname + "/client/build"));
 app.use("/signup",express.static(__dirname + "/client/build"));
 app.use("/login",express.static(__dirname + "/client/build"));
+app.use("/myitinerary",express.static(__dirname + "/client/build"));
+app.use("/myaccount",express.static(__dirname + "/client/build"));
+
 
 //ROUTES LATO BACKEND DI NODE PER LE RICHIESTE ALLA API
 app.use(bodyParser.urlencoded({extendeed:false}));

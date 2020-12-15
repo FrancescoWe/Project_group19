@@ -36,7 +36,7 @@ Richiede un oggetto JSON nel body della richiesta con il campo:
 router.post('/', async (req, res) => {
 
     const itineraryNameExist = await User.findOne({"itinerary.name": req.body.itinerary_name, "_id": req.body.user_id});
-    console.log(itineraryNameExist);
+    //console.log(itineraryNameExist);
     if(itineraryNameExist) return res.status(400).send({
         error: "Itinerary Name already exists"
     });

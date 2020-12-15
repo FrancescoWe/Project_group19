@@ -74,8 +74,7 @@ function App() {
       .then((resp) => resp.json())
       .then(function(data) {
         if (data.error != null) {
-          alert("ERROR,\n" + data.error);
-          console.log("ERROR");
+          //console.log(data.error);
           return false
         } else { 
           setLogged({logged : true,
@@ -216,11 +215,6 @@ function App() {
                 <HeaderBar logged = {user.logged} setLogged = {logOut}/>
                 <SignIn logged = {user.logged} setLogged = {signInDone} />
             </Route>
-
-            <Route exact path="/logout">
-              <HeaderBar logged = {user.logged} setLogged = {logOut}/>
-            </Route>
-
           </Switch>
       </Box>
     </Router>
